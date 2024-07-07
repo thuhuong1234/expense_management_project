@@ -14,6 +14,18 @@ const handleFetchUsers = async () => {
     console.log(error);
   }
 };
+const handleDeleteUser = async (userId) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+      method: "DELETE",
+    });
+    if (response.ok) {
+      users.value = users.value.filter((item) => item.id !== userId);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 onMounted(() => {
   handleFetchUsers();
@@ -53,7 +65,15 @@ onMounted(() => {
             <td>
               <span>{{ user.isAdmin ? "Admin" : "User" }}</span>
             </td>
-            <td></td>
+            <td>
+              <button
+                class="button"
+                type="submit"
+                @click="handleDeleteUser(user.id)"
+              >
+                Delete
+              </button>
+            </td>
           </tr>
         </table>
       </div>
