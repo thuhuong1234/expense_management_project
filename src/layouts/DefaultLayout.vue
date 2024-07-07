@@ -1,5 +1,6 @@
 <script setup>
 import AppHeader from "@/components/AppHeader.vue";
+import AppFooter from "@/components/AppFooter.vue";
 </script>
 
 <template>
@@ -12,10 +13,7 @@ import AppHeader from "@/components/AppHeader.vue";
     <main class="home-content">
       <slot />
     </main>
-    <footer class="home-footer">
-      <p class="copyright-text">&copy; 2024 Expense Management App</p>
-      <RouterLink class="footer-link" to="/about">About project</RouterLink>
-    </footer>
+    <AppFooter />
   </div>
 </template>
 
