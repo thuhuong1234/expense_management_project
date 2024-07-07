@@ -1,9 +1,13 @@
 <script setup>
 import DashboardLayout from "../layouts/DashboardLayout.vue";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, reactive } from "vue";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const todoList = ref([]);
 
+const todoForm = reactive({
+  name: undefined,
+  amountOfMoney: undefined,
+});
 const handleFetchTodos = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/todos`);
@@ -14,7 +18,24 @@ const handleFetchTodos = async () => {
     console.log(error);
   }
 };
+const handleCreateTodo = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/todos`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(todoForm),
+    });
 
+    if (response.ok) {
+      const newTodo = await response.json();
+      todoList.value.push(newTodo);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 onMounted(() => {
   handleFetchTodos();
 });
@@ -24,12 +45,18 @@ onMounted(() => {
   <DashboardLayout>
     <div class="todo-page">
       <div class="todos-page">
-        <form class="todo-form">
-          <input class="input" type="text" placeholder="Enter title" />
+        <form class="todo-form" @submit.prevent="handleCreateTodo">
+          <input
+            class="input"
+            type="text"
+            placeholder="Enter title"
+            v-model="todoForm.name"
+          />
           <input
             class="input"
             type="text"
             placeholder="Enter amount of money"
+            v-model="todoForm.amountOfMoney"
           />
           <button class="button" type="submit">Save</button>
         </form>
