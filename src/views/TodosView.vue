@@ -49,6 +49,50 @@ const handleDeleteTodo = async (id) => {
     console.log(error);
   }
 };
+const editingTodo = ref();
+const handleEditTodo = (todo) => {
+  editingTodo.value = todo;
+  // Copy todo data to form
+  todoForm.name = todo.name;
+  todoForm.amountOfMoney = todo.amountOfMoney;
+};
+
+const handleUpdateTodo = async (todoId, payload) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/todos/${todoId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+      const updatedTodo = await response.json();
+      const index = todoList.value.findIndex(
+        (todo) => todo.id === updatedTodo.id
+      );
+      todoList.value[index] = updatedTodo;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const handleSubmit = async () => {
+  try {
+    if (editingTodo.value) {
+      await handleUpdateTodo(editingTodo.value.id, todoForm);
+      editingTodo.value = undefined;
+    } else {
+      await handleCreateTodo(todoForm);
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    todoForm.name = undefined;
+    todoForm.amountOfMoney = undefined;
+  }
+};
 
 onMounted(() => {
   handleFetchTodos();
@@ -59,7 +103,7 @@ onMounted(() => {
   <DashboardLayout>
     <div class="todo-page">
       <div class="todos-page">
-        <form class="todo-form" @submit.prevent="handleCreateTodo">
+        <form class="todo-form" @submit.prevent="handleSubmit">
           <input
             class="input"
             type="text"
@@ -89,6 +133,7 @@ onMounted(() => {
                 currency: "VND",
               }).format(todo.amountOfMoney)
             }}</span>
+            <button class="button" @click="handleEditTodo(todo)">Edit</button>
             <button
               class="button"
               type="submit"
