@@ -4,6 +4,12 @@ import { onMounted, ref, reactive } from "vue";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const users = ref([]);
 
+const userForm = reactive({
+  name: undefined,
+  email: undefined,
+  password: undefined,
+});
+
 const handleFetchUsers = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/users`);
@@ -26,6 +32,26 @@ const handleDeleteUser = async (userId) => {
     console.error(error);
   }
 };
+const handleAddUser = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userForm),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      users.value.push(data);
+      userForm.name = undefined;
+      userForm.email = undefined;
+      userForm.password = undefined;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 onMounted(() => {
   handleFetchUsers();
@@ -35,11 +61,26 @@ onMounted(() => {
 <template>
   <DashboardLayout>
     <div class="users-page">
-      <div class="user-form">
+      <div class="user-form" @submit.prevent="handleAddUser">
         <form>
-          <input class="input" type="text" placeholder="Name" />
-          <input class="input" type="email" placeholder="Email" />
-          <input class="input" type="password" placeholder="Password" />
+          <input
+            class="input"
+            type="text"
+            placeholder="Name"
+            v-model="userForm.name"
+          />
+          <input
+            class="input"
+            type="email"
+            placeholder="Email"
+            v-model="userForm.email"
+          />
+          <input
+            class="input"
+            type="password"
+            placeholder="Password"
+            v-model="userForm.password"
+          />
           <button class="button" type="submit">Save</button>
         </form>
       </div>
