@@ -1,11 +1,10 @@
 <template>
   <div class="dashboard-page">
-    <header class="dashboard-header">
-      <h1 class="title"><RouterLink> Expense Management </RouterLink></h1>
-      <div class="action-bar">
-        <button class="button-logout">Logout</button>
-      </div>
-    </header>
+    <AppHeader>
+      <template #action-bar>
+        <RouterLink class="button-logout" to="/logout"> Logout </RouterLink>
+      </template>
+    </AppHeader>
     <main class="dashboard-content">
       <aside class="dashboard-sidebar">
         <nav class="navigation-bar">
@@ -28,7 +27,9 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup>
+import AppHeader from "@/components/AppHeader.vue";
+</script>
 
 <style scoped>
 .dashboard-page {

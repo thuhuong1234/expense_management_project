@@ -1,15 +1,14 @@
-<script setup></script>
+<script setup>
+import AppHeader from "@/components/AppHeader.vue";
+</script>
 
 <template>
   <div class="home-page">
-    <header class="home-header">
-      <h1 class="title">
-        <RouterLink to="/"> Expense Management </RouterLink>
-      </h1>
-      <div class="action-bar">
-        <button class="button-login">Login</button>
-      </div>
-    </header>
+    <AppHeader>
+      <template #action-bar>
+        <RouterLink class="button-login" to="/login"> Login </RouterLink>
+      </template>
+    </AppHeader>
     <main class="home-content">
       <slot />
     </main>
