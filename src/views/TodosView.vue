@@ -36,6 +36,20 @@ const handleCreateTodo = async () => {
     console.log(error);
   }
 };
+
+const handleDeleteTodo = async (id) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/todos/${id}`, {
+      method: "DELETE",
+    });
+    if (response.ok) {
+      todoList.value = todoList.value.filter((todo) => todo.id !== id);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 onMounted(() => {
   handleFetchTodos();
 });
@@ -75,6 +89,13 @@ onMounted(() => {
                 currency: "VND",
               }).format(todo.amountOfMoney)
             }}</span>
+            <button
+              class="button"
+              type="submit"
+              @click="handleDeleteTodo(todo.id)"
+            >
+              Delete
+            </button>
           </div>
           <div v-else>No todos found</div>
         </div>
@@ -110,5 +131,13 @@ onMounted(() => {
 .todo-item > .title {
   flex: 1;
   font-weight: bold;
+}
+.button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
 }
 </style>
