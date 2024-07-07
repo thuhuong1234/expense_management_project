@@ -49,7 +49,6 @@ const handleDeleteCategory = async (id) => {
     console.log(error);
   }
 };
-
 onMounted(() => {
   handleFetchCategories();
 });
