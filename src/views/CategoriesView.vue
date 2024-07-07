@@ -49,6 +49,47 @@ const handleDeleteCategory = async (id) => {
     console.log(error);
   }
 };
+const editingCategory = ref();
+const handleEditCategory = (category) => {
+  editingCategory.value = category;
+  categoryForm.name = category.name;
+};
+
+const handleUpdateCategory = async (categoryId, payload) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/categories/${categoryId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+      const updatedCategory = await response.json();
+      const index = categoryList.value.findIndex(
+        (todo) => todo.id === updatedCategory.id
+      );
+      categoryList.value[index] = updatedCategory;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+const handleSubmit = async () => {
+  try {
+    if (editingCategory.value) {
+      await handleUpdateCategory(editingCategory.value.id, categoryForm);
+      editingCategory.value = undefined;
+    } else {
+      await handleCreateCategory(categoryForm);
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    categoryForm.name = undefined;
+  }
+};
+
 onMounted(() => {
   handleFetchCategories();
 });
@@ -57,7 +98,7 @@ onMounted(() => {
 <template>
   <DashboardLayout>
     <div class="categories-page">
-      <form class="category-form" @submit.prevent="handleCreateCategory">
+      <form class="category-form" @submit.prevent="handleSubmit">
         <input
           class="input"
           type="text"
@@ -75,6 +116,9 @@ onMounted(() => {
         >
           <span class="no">{{ index + 1 }}</span>
           <span class="title">{{ category.name }}</span>
+          <button class="button" @click="handleEditCategory(category)">
+            Edit
+          </button>
           <button
             class="button"
             type="submit"
