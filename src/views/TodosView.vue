@@ -1,5 +1,23 @@
 <script setup>
 import DashboardLayout from "../layouts/DashboardLayout.vue";
+import { onMounted, ref } from "vue";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const todoList = ref([]);
+
+const handleFetchTodos = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/todos`);
+    if (response.ok) {
+      todoList.value = await response.json();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+onMounted(() => {
+  handleFetchTodos();
+});
 </script>
 
 <template>
@@ -16,21 +34,22 @@ import DashboardLayout from "../layouts/DashboardLayout.vue";
           <button class="button" type="submit">Save</button>
         </form>
         <div class="todo-list">
-          <div class="todo-item">
-            <span class="no">1</span>
-            <span class="title">Buy a new car</span>
-            <span class="money">$50,000</span>
+          <div
+            v-if="todoList.length"
+            class="todo-item"
+            v-for="(todo, index) in todoList"
+            :key="todo.id"
+          >
+            <span class="no">{{ index + 1 }}</span>
+            <span class="title">{{ todo.name }}</span>
+            <span class="money">{{
+              new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              }).format(todo.amountOfMoney)
+            }}</span>
           </div>
-          <div class="todo-item">
-            <span class="no">2</span>
-            <span class="title">Buy a new house</span>
-            <span class="money">$150,000</span>
-          </div>
-          <div class="todo-item">
-            <span class="no">3</span>
-            <span class="title">Buy a new laptop</span>
-            <span class="money">$150,000</span>
-          </div>
+          <div v-else>No todos found</div>
         </div>
       </div>
     </div>
