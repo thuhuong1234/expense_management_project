@@ -53,6 +53,52 @@ const handleAddUser = async () => {
   }
 };
 
+const editingUser = ref();
+const handleEditUser = (user) => {
+  editingUser.value = user;
+  userForm.name = user.name;
+  userForm.email = user.email;
+  userForm.password = user.password;
+};
+
+const handleUpdateUser = async (userId, payload) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+      const updatedUser = await response.json();
+      const index = users.value.findIndex((user) => user.id === updatedUser.id);
+      if (index !== -1) {
+        users.value[index] = updatedUser;
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const handleSubmit = async () => {
+  try {
+    if (editingUser.value) {
+      await handleUpdateUser(editingUser.value.id, userForm);
+      editingUser.value = undefined;
+    } else {
+      await handleAddUser();
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    userForm.name = undefined;
+    userForm.email = undefined;
+    userForm.password = undefined;
+  }
+};
+
 onMounted(() => {
   handleFetchUsers();
 });
@@ -61,7 +107,7 @@ onMounted(() => {
 <template>
   <DashboardLayout>
     <div class="users-page">
-      <div class="user-form" @submit.prevent="handleAddUser">
+      <div class="user-form" @submit.prevent="handleSubmit">
         <form>
           <input
             class="input"
@@ -107,6 +153,14 @@ onMounted(() => {
               <span>{{ user.isAdmin ? "Admin" : "User" }}</span>
             </td>
             <td>
+              <button
+                class="button"
+                type="submit"
+                style="margin-right: 8px"
+                @click="handleEditUser(user)"
+              >
+                Edit
+              </button>
               <button
                 class="button"
                 type="submit"
