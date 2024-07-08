@@ -10,20 +10,22 @@ const todoForm = reactive({
   amountOfMoney: undefined,
   categoryId: undefined,
 });
+
+const addCategoryNamesToTodos = (todos) => {
+  return todos.map((todo) => {
+    const category = categoryList.value.find(
+      (category) => category.id === todo.categoryId
+    );
+    return { ...todo, categoryName: category ? category.name : "Unknown" };
+  });
+};
 const handleFetchTodos = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/todos`);
     if (response.ok) {
       todoList.value = await response.json();
-      await handleFetchCategories();
       // Add category names to todos
-      const updatedTodos = todoList.value.map((todo) => {
-        const category = categoryList.value.find(
-          (category) => category.id === todo.categoryId
-        );
-        return { ...todo, categoryName: category ? category.name : "Unknown" };
-      });
-      todoList.value = updatedTodos;
+      todoList.value = addCategoryNamesToTodos(todoList.value);
     }
   } catch (error) {
     console.log(error);
@@ -41,7 +43,8 @@ const handleCreateTodo = async () => {
 
     if (response.ok) {
       const newTodo = await response.json();
-      todoList.value.push(newTodo);
+      const updatedTodo = addCategoryNamesToTodos([newTodo])[0];
+      todoList.value.push(updatedTodo);
     }
   } catch (error) {
     console.log(error);
@@ -66,6 +69,7 @@ const handleEditTodo = (todo) => {
   // Copy todo data to form
   todoForm.name = todo.name;
   todoForm.amountOfMoney = todo.amountOfMoney;
+  todoForm.categoryId = todo.categoryId;
 };
 
 const handleUpdateTodo = async (todoId, payload) => {
@@ -82,7 +86,7 @@ const handleUpdateTodo = async (todoId, payload) => {
       const index = todoList.value.findIndex(
         (todo) => todo.id === updatedTodo.id
       );
-      todoList.value[index] = updatedTodo;
+      todoList.value[index] = addCategoryNamesToTodos([updatedTodo])[0];
     }
   } catch (error) {
     console.log(error);
@@ -102,6 +106,7 @@ const handleSubmit = async () => {
   } finally {
     todoForm.name = undefined;
     todoForm.amountOfMoney = undefined;
+    todoForm.categoryId = undefined;
   }
 };
 const handleFetchCategories = async () => {
@@ -114,8 +119,9 @@ const handleFetchCategories = async () => {
     console.log(error);
   }
 };
-onMounted(() => {
-  handleFetchTodos();
+onMounted(async () => {
+  await handleFetchCategories();
+  await handleFetchTodos();
 });
 </script>
 
@@ -137,8 +143,8 @@ onMounted(() => {
             v-model="todoForm.amountOfMoney"
           />
           <div class="dropdown">
-            <select class="dropbtn input" v-model="todoForm.category">
-              <option disabled value="">Category</option>
+            <select class="dropbtn input" v-model="todoForm.categoryId">
+              <option disabled selected value="">Category</option>
               <option
                 v-for="category in categoryList"
                 :key="category.id"
