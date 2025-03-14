@@ -31,13 +31,15 @@
                                 <div class="text-center text-muted mb-4">
                                     <small>Or sign in with credentials</small>
                                 </div>
-                                <form role="form" class="text-start">
+                                <form role="form" class="text-start" @submit.prevent="onSubmit">
+                                    
+
                                     <div class="mb-3">
-                                        <argon-input id="email" type="email" placeholder="Email" aria-label="Email" />
+                                        <argon-input name="email" id="email" type="email" placeholder="Email" />
                                     </div>
                                     <div class="mb-3">
-                                        <argon-input id="password" type="password" placeholder="Password"
-                                            aria-label="Password" />
+                                        <argon-input name="password" id="password" type="password"
+                                            placeholder="Password" />
                                     </div>
                                     <argon-switch id="rememberMe" name="rememberMe">
                                         Remember me
@@ -56,8 +58,7 @@
                                     <div class="text-center">
                                         <argon-button color="dark" variant="gradient"
                                             @click="$router.push({ name: 'register' })" full-width
-                                            class="mt-2 mb-4 text-white">Sign
-                                            up</argon-button>
+                                            class="mt-2 mb-4 text-white">Sign up</argon-button>
                                     </div>
                                 </form>
                             </div>
@@ -70,9 +71,45 @@
     <app-footer />
 </template>
 <script setup>
+import { ref } from 'vue';
 import ArgonInput from '@/components/Icons/ArgonInput.vue';
 import ArgonSwitch from '@/components/Icons/ArgonSwitch.vue';
 import ArgonButton from '@/components/Icons/ArgonButton.vue';
+import axios from '@/configs/axios.js';
+import { useAuthStore } from '@/stores/authStore';
+import { useForm, useField } from 'vee-validate';
+import * as yup from 'yup';
+import router from '@/router';
+
+const authStore = useAuthStore();
+const errorMessage = ref('');
+const schema = yup.object({
+    email: yup.string()
+        .email('Email không hợp lệ')
+        .required('Email là bắt buộc'),
+
+    password: yup.string()
+        .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
+        .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ cái viết hoa (A-Z)')
+        .matches(/[\W_]/, 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt (@, $, !, %, *, ?, &...)')
+        .required('Mật khẩu là bắt buộc')
+});
+
+const { handleSubmit } = useForm({
+    validationSchema: schema
+});
+
+const onSubmit = handleSubmit(async (values) => {
+    try {
+        const response = await axios.post('auth/login', values);
+        if (response?.success) {
+            authStore.login(response?.data?.user, response?.data?.token);
+            return router.push({ name: 'dashboard' });
+        }
+    } catch (errorMessage) {
+        errorMessage.value = error.response?.data?.message;
+    }
+});
 </script>
 <style scoped>
 :deep(.bg-gradient-success) {
