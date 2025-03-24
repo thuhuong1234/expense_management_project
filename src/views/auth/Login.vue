@@ -31,8 +31,11 @@
                                 <div class="text-center text-muted mb-4">
                                     <small>Or sign in with credentials</small>
                                 </div>
+                                <ArgonAlert color="danger" class="text-red" v-if="errorMessage">
+                                    {{ errorMessage }}
+                                </ArgonAlert>
                                 <form role="form" class="text-start" @submit.prevent="onSubmit">
-                                    
+
 
                                     <div class="mb-3">
                                         <argon-input name="email" id="email" type="email" placeholder="Email" />
@@ -46,8 +49,8 @@
                                     </argon-switch>
 
                                     <div class="text-center">
-                                        <argon-button color="success" type="submit" variant="gradient" full-width
-                                            class="my-4 mb-2 text-white ">Sign in</argon-button>
+                                        <argon-button @click="onSubmit" color="success" type="submit" variant="gradient"
+                                            full-width class="my-4 mb-2 text-white ">Sign in</argon-button>
                                     </div>
                                     <div class="mb-2 position-relative text-center">
                                         <p
@@ -75,9 +78,10 @@ import { ref } from 'vue';
 import ArgonInput from '@/components/Icons/ArgonInput.vue';
 import ArgonSwitch from '@/components/Icons/ArgonSwitch.vue';
 import ArgonButton from '@/components/Icons/ArgonButton.vue';
+import ArgonAlert from '@/components/Icons/ArgonAlert.vue';
 import axios from '@/configs/axios.js';
 import { useAuthStore } from '@/stores/authStore';
-import { useForm, useField } from 'vee-validate';
+import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import router from '@/router';
 
@@ -102,14 +106,17 @@ const { handleSubmit } = useForm({
 const onSubmit = handleSubmit(async (values) => {
     try {
         const response = await axios.post('auth/login', values);
-        if (response?.success) {
+        console.log(response.data);
+
+        if (response?.data) {
             authStore.login(response?.data?.user, response?.data?.token);
             return router.push({ name: 'dashboard' });
         }
-    } catch (errorMessage) {
+    } catch (error) {
+        console.log(errorMessage);
         errorMessage.value = error.response?.data?.message;
     }
-});
+}); 
 </script>
 <style scoped>
 :deep(.bg-gradient-success) {
