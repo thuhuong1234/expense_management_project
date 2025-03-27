@@ -17,18 +17,19 @@
                             <div class="card-header bg-transparent">
                                 <h5 class="text-dark text-center mt-2 mb-3">Sign in</h5>
                                 <div class="btn-wrapper text-center">
-                                    <a href="javascript:;" class="btn btn-neutral btn-icon btn-sm mb-0 me-2  shadow">
+                                    <a href="javascript:;"
+                                        class="btn btn-neutral btn-icon btn-sm mb-0 me-2  shadow fs-8">
                                         <img class="w-30" src="@/assets/img/logos/github.svg" />
                                         Github
                                     </a>
-                                    <a href="javascript:;" class="btn btn-neutral btn-icon btn-sm mb-0  shadow">
+                                    <a href="javascript:;" class="btn btn-neutral btn-icon btn-sm mb-0  shadow fs-8">
                                         <img class="w-30" src="@/assets/img/logos/google.svg" />
                                         Google
                                     </a>
                                 </div>
                             </div>
-                            <div class="card-body px-lg-5 pt-0">
-                                <div class="text-center text-muted mb-4">
+                            <div class="card-body px-lg-5 pt-0 ">
+                                <div class="text-center text-muted mb-4 ">
                                     <small>Or sign in with credentials</small>
                                 </div>
                                 <ArgonAlert color="danger" class="text-red" v-if="errorMessage">
@@ -38,15 +39,21 @@
 
 
                                     <div class="mb-3">
-                                        <argon-input name="email" id="email" type="email" placeholder="Email" />
+                                        <argon-input name="email" id="email" type="email" placeholder="Email"
+                                            :api-error="apiErrors.email" />
                                     </div>
                                     <div class="mb-3">
                                         <argon-input name="password" id="password" type="password"
-                                            placeholder="Password" />
+                                            placeholder="Password" :api-error="apiErrors.password" />
                                     </div>
-                                    <argon-switch id="rememberMe" name="rememberMe">
-                                        Remember me
-                                    </argon-switch>
+                                    <div class=" d-flex justify-content-between">
+                                        <argon-switch id=" rememberMe" name="rememberMe">
+                                            <p class="fs-6">Remember me</p>
+                                        </argon-switch>
+                                        <router-link :to="{ name: 'forgot-password' }"
+                                            class="forgot-password fs-6">Forgot password?</router-link
+                                            :to="{ name: 'forgot-password' }">
+                                    </div>
 
                                     <div class="text-center">
                                         <argon-button @click="onSubmit" color="success" type="submit" variant="gradient"
@@ -84,14 +91,13 @@ import { useAuthStore } from '@/stores/authStore';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
 import router from '@/router';
-
+const apiErrors = ref({});
 const authStore = useAuthStore();
 const errorMessage = ref('');
 const schema = yup.object({
     email: yup.string()
         .email('Email không hợp lệ')
         .required('Email là bắt buộc'),
-
     password: yup.string()
         .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
         .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ cái viết hoa (A-Z)')
@@ -105,16 +111,20 @@ const { handleSubmit } = useForm({
 
 const onSubmit = handleSubmit(async (values) => {
     try {
+        apiErrors.value = {};
         const response = await axios.post('auth/login', values);
-        console.log(response.data);
-
         if (response?.data) {
             authStore.login(response?.data?.user, response?.data?.token);
             return router.push({ name: 'dashboard' });
         }
     } catch (error) {
-        console.log(errorMessage);
-        errorMessage.value = error.response?.data?.message;
+        if (error.response?.data?.details) {
+            error.response.data.details.forEach(err => {
+                apiErrors.value[err.field] = err.message;
+            });
+        } else {
+            errorMessage.value = error.response?.data?.message || 'Có lỗi xảy ra';
+        }
     }
 }); 
 </script>
@@ -144,5 +154,9 @@ const onSubmit = handleSubmit(async (values) => {
     height: 100%;
     background: rgba(0, 0, 0, 0.4);
     z-index: 0;
+}
+
+.fs-6 {
+    font-size: 16px !important;
 }
 </style>
