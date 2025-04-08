@@ -15,29 +15,13 @@
                     <div class="col-lg-4 col-md-7 mt-2">
                         <div class="card border-0 mb-0 ">
                             <div class="card-header bg-transparent">
-                                <h5 class="text-dark text-center mt-2 mb-3">Sign in</h5>
-                                <div class="btn-wrapper text-center">
-                                    <a href="javascript:;"
-                                        class="btn btn-neutral btn-icon btn-sm mb-0 me-2  shadow fs-8">
-                                        <img class="w-30" src="@/assets/img/logos/github.svg" />
-                                        Github
-                                    </a>
-                                    <a href="javascript:;" class="btn btn-neutral btn-icon btn-sm mb-0  shadow fs-8">
-                                        <img class="w-30" src="@/assets/img/logos/google.svg" />
-                                        Google
-                                    </a>
-                                </div>
+                                <h5 class="text-dark text-center mt-2 mb-3">Login</h5>
                             </div>
-                            <div class="card-body px-lg-5 pt-0 ">
+                            <div class="card-body pt-0 ">
                                 <div class="text-center text-muted mb-4 ">
-                                    <small>Or sign in with credentials</small>
+                                    <small>Enter your login information to gain access!</small>
                                 </div>
-                                <ArgonAlert color="danger" class="text-red" v-if="errorMessage">
-                                    {{ errorMessage }}
-                                </ArgonAlert>
                                 <form role="form" class="text-start" @submit.prevent="onSubmit">
-
-
                                     <div class="mb-3">
                                         <argon-input name="email" id="email" type="email" placeholder="Email"
                                             :api-error="apiErrors.email" />
@@ -46,29 +30,19 @@
                                         <argon-input name="password" id="password" type="password"
                                             placeholder="Password" :api-error="apiErrors.password" />
                                     </div>
-                                    <div class=" d-flex justify-content-between">
-                                        <argon-switch id=" rememberMe" name="rememberMe">
-                                            <p class="fs-6">Remember me</p>
-                                        </argon-switch>
+                                    <div class=" d-flex justify-content-between fs-6">
+                                        <div class=" login">
+                                            Don't have an account?
+                                            <router-link :to="{ name: 'register' }" class="register fs-6">
+                                                Register</router-link :to="{ name: 'register' }">
+                                        </div>
                                         <router-link :to="{ name: 'forgot-password' }"
-                                            class="forgot-password fs-6">Forgot password?</router-link
-                                            :to="{ name: 'forgot-password' }">
-                                    </div>
-
-                                    <div class="text-center">
-                                        <argon-button @click="onSubmit" color="success" type="submit" variant="gradient"
-                                            full-width class="my-4 mb-2 text-white ">Sign in</argon-button>
-                                    </div>
-                                    <div class="mb-2 position-relative text-center">
-                                        <p
-                                            class="text-sm font-weight-bold mb-2 text-secondary text-border d-inline z-index-2 bg-white px-3">
-                                            or
-                                        </p>
+                                            class="forgot-password fs-6">Forgot
+                                            password?</router-link :to="{ name: 'forgot-password' }">
                                     </div>
                                     <div class="text-center">
-                                        <argon-button color="dark" variant="gradient"
-                                            @click="$router.push({ name: 'register' })" full-width
-                                            class="mt-2 mb-4 text-white">Sign up</argon-button>
+                                        <argon-button color="success" type="submit" variant="gradient" full-width
+                                            class="my-4 mb-2 text-white ">Login</argon-button>
                                     </div>
                                 </form>
                             </div>
@@ -83,14 +57,14 @@
 <script setup>
 import { ref } from 'vue';
 import ArgonInput from '@/components/Icons/ArgonInput.vue';
-import ArgonSwitch from '@/components/Icons/ArgonSwitch.vue';
 import ArgonButton from '@/components/Icons/ArgonButton.vue';
-import ArgonAlert from '@/components/Icons/ArgonAlert.vue';
 import axios from '@/configs/axios.js';
 import { useAuthStore } from '@/stores/authStore';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
-import router from '@/router';
+import { useRouter } from 'vue-router';
+import { showToast } from '@/helpers/sweetalertHelper';
+const router = useRouter();
 const apiErrors = ref({});
 const authStore = useAuthStore();
 const errorMessage = ref('');
@@ -118,13 +92,9 @@ const onSubmit = handleSubmit(async (values) => {
             return router.push({ name: 'dashboard' });
         }
     } catch (error) {
-        if (error.response?.data?.details) {
-            error.response.data.details.forEach(err => {
-                apiErrors.value[err.field] = err.message;
-            });
-        } else {
-            errorMessage.value = error.response?.data?.message || 'Có lỗi xảy ra';
-        }
+        errorMessage.value = error.response?.data.message || error.message;
+        showToast(errorMessage.value, 'error');
+
     }
 }); 
 </script>
@@ -157,6 +127,6 @@ const onSubmit = handleSubmit(async (values) => {
 }
 
 .fs-6 {
-    font-size: 16px !important;
+    font-size: 14px !important;
 }
 </style>
