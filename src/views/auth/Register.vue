@@ -53,8 +53,8 @@
                                     </div>
                                     <p class="text-center mt-3 mb-0 fs-6">
                                         Already have an account?
-                                        <router-link :to="{ name: 'login' }"
-                                            class="text-dark font-weight-bolder fs-6">Sign in</router-link>
+                                        <router-link :to="{ name: 'login' }" class="text-dark font-weight-bolder fs-6"
+                                            style="text-decoration: none;">Sign in</router-link>
                                     </p>
                                 </form>
                             </div>

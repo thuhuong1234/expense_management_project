@@ -33,11 +33,12 @@
                                     <div class=" d-flex justify-content-between fs-6">
                                         <div class=" login">
                                             Don't have an account?
-                                            <router-link :to="{ name: 'register' }" class="register fs-6">
+                                            <router-link :to="{ name: 'register' }" class="register fs-6"
+                                                style="text-decoration: none;">
                                                 Register</router-link :to="{ name: 'register' }">
                                         </div>
-                                        <router-link :to="{ name: 'forgot-password' }"
-                                            class="forgot-password fs-6">Forgot
+                                        <router-link :to="{ name: 'forgot-password' }" class="forgot-password fs-6"
+                                            style="text-decoration: none;">Forgot
                                             password?</router-link :to="{ name: 'forgot-password' }">
                                     </div>
                                     <div class="text-center">

@@ -15,16 +15,16 @@
                     <div class="col-lg-4 col-md-7 mt-2">
                         <div class="card border-0 mb-0 ">
                             <div class="card-header bg-transparent">
-                                <h5 class="text-dark text-center mt-2 mb-3">Forgot password</h5>
+                                <h5 class="text-dark text-center mt-2 mb-3">Reset password</h5>
                             </div>
                             <div class="card-body pt-0 ">
                                 <div class="text-center text-muted mb-4 ">
-                                    <small>Enter your email for reset password!</small>
+                                    <small>Enter your new password!</small>
                                 </div>
                                 <form role="form" class="text-start" @submit.prevent="onSubmit">
                                     <div class="mb-3">
-                                        <argon-input name="email" id="email" type="email" placeholder="Email"
-                                            :api-error="apiErrors.email" />
+                                        <argon-input name="password" id="password" type="password"
+                                            placeholder="New password" :api-error="apiErrors.password" />
                                     </div>
                                     <div class=" d-flex justify-content-between fs-6">
                                         <div class="d-flex align-items-center">
@@ -35,10 +35,14 @@
                                             <router-link :to="{ name: 'register' }" class="register fs-6"
                                                 style="text-decoration: none;">
                                                 Register</router-link :to="{ name: 'register' }">
+                                            <span class="mx-1">|</span>
+                                            <router-link :to="{ name: 'forgot-password' }" class=" fs-6"
+                                                style="text-decoration: none;">
+                                                Forgot password</router-link :to="{ name: 'forgot-password' }">
                                         </div>
                                         <div class="text-center">
                                             <argon-button color="success" type="submit" variant="gradient" full-width
-                                                class="btn-send text-white fs-6">Send Email</argon-button>
+                                                class="btn-save text-white fs-6">Save</argon-button>
                                         </div>
                                     </div>
 
@@ -59,14 +63,18 @@ import ArgonButton from '@/components/Icons/ArgonButton.vue';
 import axios from '@/configs/axios.js';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
-import { useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { showToast } from '@/helpers/sweetalertHelper';
+const router = useRoute();
+const token = router.params.token;
 const apiErrors = ref({});
 const errorMessage = ref('');
 const schema = yup.object({
-    email: yup.string()
-        .email('Invalid email!')
-        .required('Email is required'),
+    password: yup.string()
+        .min(8, 'Password must have at least 8 characters')
+        .matches(/[A-Z]/, 'Password must have at least one uppercase letter(A-Z)')
+        .matches(/[\W_]/, 'Password must have at least one special character(@, $, !, %, *, ?, &...)')
+        .required('Password is required'),
 });
 
 const { handleSubmit } = useForm({
@@ -76,10 +84,14 @@ const { handleSubmit } = useForm({
 const onSubmit = handleSubmit(async (values) => {
     try {
         apiErrors.value = {};
-        const email = values.email;
-        const response = await axios.post(`auth/forgot-password/?email=${encodeURIComponent(email)}`);
+        console.log(token);
+
+        const response = await axios.post(`/auth/reset-password`, {
+            token,
+            password: values.password,
+        });
         if (response?.data) {
-            showToast('Check your email!', 'success');
+            showToast('Password reset successfully', 'success');
         }
     } catch (error) {
         errorMessage.value = error.response?.data.message || error.message;
@@ -120,14 +132,14 @@ const onSubmit = handleSubmit(async (values) => {
     font-size: 14px !important;
 }
 
-.btn-send {
+.btn-save {
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
     font-size: 16px;
 }
 
-.btn-send:hover {
+.btn-save:hover {
     transform: translateY(-2px)
 }
 </style>
