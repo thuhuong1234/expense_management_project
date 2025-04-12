@@ -1,11 +1,10 @@
 <script setup>
-import DefaultLayout from "@/layouts/DefaultLayout.vue";
+import DashboardLayout from '@/layouts/DashboardLayout.vue';
 </script>
-
 <template>
-  <DefaultLayout>
-    <div class="home-page">Home Page</div>
-  </DefaultLayout>
+  <DashboardLayout>
+    <template #template>
+      <div class="home-page">Home Page</div>
+    </template>
+  </DashboardLayout>
 </template>
-
-<style scoped></style>

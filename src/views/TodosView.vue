@@ -24,7 +24,6 @@ const handleFetchTodos = async () => {
     const response = await fetch(`${API_BASE_URL}/todos`);
     if (response.ok) {
       todoList.value = await response.json();
-      // Add category names to todos
       todoList.value = addCategoryNamesToTodos(todoList.value);
     }
   } catch (error) {
@@ -66,7 +65,6 @@ const handleDeleteTodo = async (id) => {
 const editingTodo = ref();
 const handleEditTodo = (todo) => {
   editingTodo.value = todo;
-  // Copy todo data to form
   todoForm.name = todo.name;
   todoForm.amountOfMoney = todo.amountOfMoney;
   todoForm.categoryId = todo.categoryId;
@@ -130,26 +128,12 @@ onMounted(async () => {
     <div class="todo-page">
       <div class="todos-page">
         <form class="todo-form" @submit.prevent="handleSubmit">
-          <input
-            class="input"
-            type="text"
-            placeholder="Enter title"
-            v-model="todoForm.name"
-          />
-          <input
-            class="input"
-            type="text"
-            placeholder="Enter amount of money"
-            v-model="todoForm.amountOfMoney"
-          />
+          <input class="input" type="text" placeholder="Enter title" v-model="todoForm.name" />
+          <input class="input" type="text" placeholder="Enter amount of money" v-model="todoForm.amountOfMoney" />
           <div class="dropdown">
             <select class="dropbtn input" v-model="todoForm.categoryId">
               <option disabled selected value="">Category</option>
-              <option
-                v-for="category in categoryList"
-                :key="category.id"
-                :value="category.id"
-              >
+              <option v-for="category in categoryList" :key="category.id" :value="category.id">
                 {{ category.name }}
               </option>
             </select>
@@ -157,12 +141,7 @@ onMounted(async () => {
           <button class="button" type="submit">Save</button>
         </form>
         <div class="todo-list">
-          <div
-            v-if="todoList.length"
-            class="todo-item"
-            v-for="(todo, index) in todoList"
-            :key="todo.id"
-          >
+          <div v-if="todoList.length" class="todo-item" v-for="(todo, index) in todoList" :key="todo.id">
             <span class="no">{{ index + 1 }}</span>
             <span class="title">{{ todo.name }}</span>
             <span class="title">{{ todo.categoryName }}</span>
@@ -174,11 +153,7 @@ onMounted(async () => {
             }}</span>
 
             <button class="button" @click="handleEditTodo(todo)">Edit</button>
-            <button
-              class="button"
-              type="submit"
-              @click="handleDeleteTodo(todo.id)"
-            >
+            <button class="button" type="submit" @click="handleDeleteTodo(todo.id)">
               Delete
             </button>
           </div>
@@ -195,11 +170,13 @@ onMounted(async () => {
   gap: 16px;
   margin-bottom: 32px;
 }
-.todo-form > .input {
+
+.todo-form>.input {
   width: 30%;
   padding: 8px;
 }
-.todo-form > .button {
+
+.todo-form>.button {
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
@@ -207,16 +184,19 @@ onMounted(async () => {
   color: #fff;
   cursor: pointer;
 }
+
 .todo-item {
   display: flex;
   padding: 8px;
   gap: 8px;
   border-bottom: 1px solid #ccc;
 }
-.todo-item > .title {
+
+.todo-item>.title {
   flex: 1;
   font-weight: bold;
 }
+
 .button {
   padding: 8px 16px;
   border: none;
@@ -225,12 +205,14 @@ onMounted(async () => {
   color: #fff;
   cursor: pointer;
 }
+
 .dropdown {
   position: relative;
   display: inline-block;
   width: 15%;
   padding: 8px;
 }
+
 .dropbtn {
   width: 100%;
   padding: 8px;
@@ -241,6 +223,7 @@ onMounted(async () => {
   font-size: 16px;
   text-align: left;
 }
+
 .dropdown-content {
   display: none;
   position: absolute;
@@ -249,17 +232,20 @@ onMounted(async () => {
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
+
 .dropdown-content a {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
 }
+
 .dropdown-content a:hover {
   color: black;
   background-color: #f1f1f1;
   display: block;
 }
+
 .dropdown:hover .dropdown-content {
   display: block;
 }

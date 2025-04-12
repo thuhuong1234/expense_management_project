@@ -99,31 +99,18 @@ onMounted(() => {
   <DashboardLayout>
     <div class="categories-page">
       <form class="category-form" @submit.prevent="handleSubmit">
-        <input
-          class="input"
-          type="text"
-          placeholder="Category name"
-          v-model="categoryForm.name"
-        />
+        <input class="input" type="text" placeholder="Category name" v-model="categoryForm.name" />
         <button class="button" type="submit">Save</button>
       </form>
       <div class="category-list">
-        <div
-          v-if="categoryList.length"
-          class="category-item"
-          v-for="(category, index) in categoryList"
-          :key="category.id"
-        >
+        <div v-if="categoryList.length" class="category-item" v-for="(category, index) in categoryList"
+          :key="category.id">
           <span class="no">{{ index + 1 }}</span>
           <span class="title">{{ category.name }}</span>
           <button class="button" @click="handleEditCategory(category)">
             Edit
           </button>
-          <button
-            class="button"
-            type="submit"
-            @click="handleDeleteCategory(category.id)"
-          >
+          <button class="button" type="submit" @click="handleDeleteCategory(category.id)">
             Delete
           </button>
         </div>
@@ -139,11 +126,13 @@ onMounted(() => {
   gap: 16px;
   margin-bottom: 32px;
 }
-.category-form > .input {
+
+.category-form>.input {
   width: 30%;
   padding: 8px;
 }
-.category-form > .button {
+
+.category-form>.button {
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
@@ -151,16 +140,19 @@ onMounted(() => {
   color: #fff;
   cursor: pointer;
 }
+
 .category-item {
   display: flex;
   padding: 8px;
   gap: 8px;
   border-bottom: 1px solid #ccc;
 }
-.category-item > .title {
+
+.category-item>.title {
   flex: 1;
   font-weight: bold;
 }
+
 .button {
   padding: 8px 16px;
   border: none;

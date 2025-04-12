@@ -15,11 +15,21 @@ const router = createRouter({
       component: () => import("../views/AboutView.vue"),
     },
     {
-      path: "/dashboard",
-      name: "dashboard",
-      component: () => import("@/views/DashboardView.vue"),
+      path: "/dashboards",
+      component: () => import("@/layouts/DashboardLayout.vue"),
+      children: [
+        {
+          path: "landing",
+          name: "landing",
+          component: () => import("@/views/dashboards/Landing.vue"),
+        },
+        {
+          path: "default",
+          name: "default",
+          component: () => import("@/views/dashboards/Default.vue"),
+        },
+      ],
     },
-
     {
       path: "/todos",
       name: "todos",

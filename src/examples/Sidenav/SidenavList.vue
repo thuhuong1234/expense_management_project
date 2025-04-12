@@ -1,0 +1,127 @@
+<script setup>
+import { useRoute } from "vue-router";
+import { useUiStore } from "@/stores/uiStore";
+
+import SidenavItem from "./SidenavItem.vue";
+import SidenavCollapse from "./SidenavCollapse.vue";
+import SidenavCollapseItem from "./SidenavCollapseItem.vue";
+const store = useUiStore();
+
+const getRoute = () => {
+    const route = useRoute();
+    const routeArr = route.path.split("/");
+    return routeArr[1];
+};
+</script>
+<template>
+    <div id="sidenav-collapse-main" class=" navbar-collapse w-auto h-auto h-100">
+        <ul class="navbar-nav ">
+            <li class="nav-item ">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Tổng quan"
+                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                    <template #icon>
+                        <i class="ni ni-shop text-primary text-sm opacity-10"></i>
+                    </template>
+                    <template #list>
+                        <ul class="nav ms-4">
+                            <sidenav-item :to="{ name: 'home' }" mini-icon="L" text="Landing" />
+                            <sidenav-item :to="{ name: 'home' }" mini-icon="D" text="Default" />
+                        </ul>
+                    </template>
+                </sidenav-collapse>
+            </li>
+
+            <li class="nav-item ">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Danh mục "
+                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                    <template #icon>
+                        <i class="ni ni-folder-17 text-primary text-sm opacity-10"></i>
+                    </template>
+                    <template #list>
+                        <ul class="nav ms-4">
+                            <sidenav-item :to="{ name: 'home' }" mini-icon="L" text="Chi tiêu" />
+                            <sidenav-item :to="{ name: 'home' }" mini-icon="D" text="Thu nhập " />
+                        </ul>
+                    </template>
+                </sidenav-collapse>
+            </li>
+            <li class="nav-item ">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Phòng "
+                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                    <template #icon>
+                        <i class="ni ni-building text-primary text-sm opacity-10"></i>
+                    </template>
+                    <template #list>
+                        <ul class="nav ms-4">
+                            <sidenav-item :to="{ name: '' }" mini-icon="L" text="Phòng" />
+                            <sidenav-item :to="{ name: '' }" mini-icon="D" text="Danh mục" />
+                        </ul>
+                    </template>
+                </sidenav-collapse>
+            </li>
+            <li class="nav-item ">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Thông báo"
+                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                    <template #icon>
+                        <i class="ni ni-bell-55 text-primary text-sm opacity-10"></i>
+                    </template>
+                    <template #list>
+                        <ul class="nav ms-4">
+                            <sidenav-item :to="{ name: 'home' }" mini-icon="L" text="Chi tiêu" />
+                            <sidenav-item :to="{ name: 'home' }" mini-icon="D" text="Thu nhập " />
+                        </ul>
+                    </template>
+                </sidenav-collapse>
+            </li>
+            <li class="mt-3 nav-item ">
+                <hr class="mt-0 horizontal white" />
+                <h6 class="text-xs ps-4 ms-2 text-uppercase font-weight-bolder opacity-6 white"
+                    :class="store.isRTL ? 'me-4' : 'ms-2'">
+                    Trang tài khoản
+                </h6>
+            </li>
+            <li class="nav-item ">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Hồ sơ"
+                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                    <template #icon>
+                        <i class="ni ni-single-02 text-primary text-sm opacity-10"></i>
+                    </template>
+                </sidenav-collapse>
+            </li>
+            <li class="nav-item ">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Đăng ký "
+                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                    <template #icon>
+                        <i class="ni ni-collection text-primary text-sm opacity-10"></i>
+                    </template>
+                </sidenav-collapse>
+            </li>
+            <li class="nav-item ">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Đăng nhập"
+                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                    <template #icon>
+                        <i class="ni ni-lock-circle-open text-primary text-sm opacity-10"></i>
+                    </template>
+                </sidenav-collapse>
+            </li>
+        </ul>
+    </div>
+
+</template>
+<style lang="scss" scoped>
+::v-deep(.nav-item .nav-link:hover) {
+    background-color: #ee3672 !important;
+}
+
+::v-deep(.nav-item) {
+    color: #ffffff !important;
+
+    .nav-link,
+    span,
+    h6,
+    i {
+        color: #ffffff !important;
+    }
+}
+
+</style>

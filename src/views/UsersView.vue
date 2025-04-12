@@ -109,24 +109,9 @@ onMounted(() => {
     <div class="users-page">
       <div class="user-form" @submit.prevent="handleSubmit">
         <form>
-          <input
-            class="input"
-            type="text"
-            placeholder="Name"
-            v-model="userForm.name"
-          />
-          <input
-            class="input"
-            type="email"
-            placeholder="Email"
-            v-model="userForm.email"
-          />
-          <input
-            class="input"
-            type="password"
-            placeholder="Password"
-            v-model="userForm.password"
-          />
+          <input class="input" type="text" placeholder="Name" v-model="userForm.name" />
+          <input class="input" type="email" placeholder="Email" v-model="userForm.email" />
+          <input class="input" type="password" placeholder="Password" v-model="userForm.password" />
           <button class="button" type="submit">Save</button>
         </form>
       </div>
@@ -153,19 +138,10 @@ onMounted(() => {
               <span>{{ user.isAdmin ? "Admin" : "User" }}</span>
             </td>
             <td>
-              <button
-                class="button"
-                type="submit"
-                style="margin-right: 8px"
-                @click="handleEditUser(user)"
-              >
+              <button class="button" type="submit" style="margin-right: 8px" @click="handleEditUser(user)">
                 Edit
               </button>
-              <button
-                class="button"
-                type="submit"
-                @click="handleDeleteUser(user.id)"
-              >
+              <button class="button" type="submit" @click="handleDeleteUser(user.id)">
                 Delete
               </button>
             </td>
@@ -182,6 +158,7 @@ onMounted(() => {
   gap: 16px;
   margin-bottom: 32px;
 }
+
 .button {
   padding: 8px 16px;
   border: none;
@@ -190,15 +167,18 @@ onMounted(() => {
   color: #fff;
   cursor: pointer;
 }
+
 .table {
   width: 100%;
 }
+
 th {
   background-color: #007bff;
   color: #fff;
   text-align: left;
   padding: 8px;
 }
+
 .user-form {
   display: flex;
   justify-content: center;
@@ -216,10 +196,11 @@ form {
 .input {
   border-radius: 10px;
   height: 40px;
-  margin-bottom: 5px; /* Optional: adds spacing between inputs */
+  margin-bottom: 5px;
+  /* Optional: adds spacing between inputs */
 }
 
-form > .button {
+form>.button {
   width: 30%;
 }
 </style>
