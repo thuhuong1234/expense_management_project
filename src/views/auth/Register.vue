@@ -67,7 +67,6 @@
 import { ref } from 'vue';
 import ArgonInput from '@/components/Icons/ArgonInput.vue';
 import ArgonButton from '@/components/Icons/ArgonButton.vue';
-import { useAuthStore } from '@/stores/authStore';
 import axios from '@/configs/axios.js';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';

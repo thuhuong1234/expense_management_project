@@ -1,48 +1,37 @@
 <template>
-    <div class="container top-0 position-sticky z-index-sticky">
-        <div class="row">
-            <div class="col-12">
-                <navbar is-blur="blur border-radius-lg my-3 py-2 start-0 end-0 mx-4 shadow"
-                    btn-background="bg-gradient-success" :dark-mode="true" />
-            </div>
-        </div>
-    </div>
     <main class="main-content main-content-bg mt-0">
         <div class="page-header min-vh-100 ">
-            <span class="mask bg-gradient-dark opacity-6"></span>
             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-4 col-md-7 mt-2">
-                        <div class="card border-0 mb-0 ">
-                            <div class="card-header bg-transparent">
-                                <h5 class="text-dark text-center mt-2 mb-3">Reset password</h5>
+                <div class="row">
+                    <div class="mx-auto col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0">
+                        <div class="card card-plain ">
+                            <div class="pb-0 card-header text-start">
+                                <h4 class="font-weight-bolder">Tạo mật khẩu </h4>
+                                <p class="mb-0">Nhập mật khẩu mới </p>
                             </div>
-                            <div class="card-body pt-0 ">
-                                <div class="text-center text-muted mb-4 ">
-                                    <small>Enter your new password!</small>
-                                </div>
+                            <div class="card-body">
                                 <form role="form" class="text-start" @submit.prevent="onSubmit">
                                     <div class="mb-3">
                                         <argon-input name="password" id="password" type="password"
-                                            placeholder="New password" :api-error="apiErrors.password" />
+                                            placeholder="Mật khẩu mới" :api-error="apiErrors.password" />
                                     </div>
                                     <div class=" d-flex justify-content-between fs-6">
                                         <div class="d-flex align-items-center">
                                             <router-link :to="{ name: 'login' }" class="login fs-6"
                                                 style="text-decoration: none;">
-                                                Login</router-link :to="{ name: 'login' }">
+                                                Đăng ký</router-link :to="{ name: 'login' }">
                                             <span class="mx-1">|</span>
                                             <router-link :to="{ name: 'register' }" class="register fs-6"
                                                 style="text-decoration: none;">
-                                                Register</router-link :to="{ name: 'register' }">
+                                                Đăng nhập</router-link :to="{ name: 'register' }">
                                             <span class="mx-1">|</span>
                                             <router-link :to="{ name: 'forgot-password' }" class=" fs-6"
                                                 style="text-decoration: none;">
-                                                Forgot password</router-link :to="{ name: 'forgot-password' }">
+                                                Quên mật khẩu</router-link :to="{ name: 'forgot-password' }">
                                         </div>
                                         <div class="text-center">
-                                            <argon-button color="success" type="submit" variant="gradient" full-width
-                                                class="btn-save text-white fs-6">Save</argon-button>
+                                            <argon-button color="" type="submit" variant="gradient" full-width
+                                                class="btn-send text-white fs-6">Lưu</argon-button>
                                         </div>
                                     </div>
 
@@ -71,10 +60,11 @@ const apiErrors = ref({});
 const errorMessage = ref('');
 const schema = yup.object({
     password: yup.string()
-        .min(8, 'Password must have at least 8 characters')
-        .matches(/[A-Z]/, 'Password must have at least one uppercase letter(A-Z)')
-        .matches(/[\W_]/, 'Password must have at least one special character(@, $, !, %, *, ?, &...)')
-        .required('Password is required'),
+        .min(8, 'Mật khẩu ít nhất 8 ký tự')
+        .matches(/[A-Z]/, ' Mật khẩu chứa ít nhất 1 chữ cái hoa [A-Z]')
+        .matches(/[\W_]/, 'Mật khẩu chứa ít nhất 1 ký tự đặc biệt [@, $, !, %, *, ?, &...]')
+        .matches(/[0-9]/, 'Mật khẩu chứa ít nhất 1 số [0-9]')
+        .required('Mật khẩu là bắt buộc'),
 });
 
 const { handleSubmit } = useForm({
@@ -91,7 +81,7 @@ const onSubmit = handleSubmit(async (values) => {
             password: values.password,
         });
         if (response?.data) {
-            showToast('Password reset successfully', 'success');
+            showToast('Tạo mật khẩu thành công!', 'success');
         }
     } catch (error) {
         errorMessage.value = error.response?.data.message || error.message;
@@ -101,16 +91,7 @@ const onSubmit = handleSubmit(async (values) => {
 }); 
 </script>
 <style scoped>
-:deep(.bg-gradient-success) {
-    background: linear-gradient(87deg, #2dce89 0, #2dcecc 100%) !important;
-}
-
-:deep(.bg-gradient-dark) {
-    background: linear-gradient(87deg, #212429 0, #212429 100%) !important;
-}
-
 .page-header {
-    background-image: url("https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-basic.jpg");
     background-size: cover;
     background-position: center;
     display: flex;
@@ -124,7 +105,6 @@ const onSubmit = handleSubmit(async (values) => {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
     z-index: 0;
 }
 
@@ -132,14 +112,33 @@ const onSubmit = handleSubmit(async (values) => {
     font-size: 14px !important;
 }
 
-.btn-save {
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    font-size: 16px;
+.main-content {
+    font-family: 'Lora' !important;
 }
 
-.btn-save:hover {
-    transform: translateY(-2px)
+.btn-send {
+    background-color: #ee3672 !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 16px;
+    font-family: 'Lora' !important;
+}
+
+.img-login {
+    background-position: center center;
+    background-size: cover;
+    background-image: url('@/assets/img/img-2.jpg');
+}
+
+.card .card-body {
+    font-family: 'Lora' !important;
+    color: #3e3e46 !important;
+}
+
+.card-header,
+h4 {
+    background-color: #f8f9fa !important;
+    color: #3e3e46 !important;
 }
 </style>
