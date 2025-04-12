@@ -45,11 +45,10 @@
                             <span class="mask bg-gradient-danger opacity-5"></span>
 
                             <h5 class="mt-5 text-white font-weight-bolder position-relative">
-                                "Attention is the new currency"
+                                "Tiền không mua được hạnh phúc, nhưng quản lý tiền tốt sẽ giúp bạn hạnh phúc hơn."
                             </h5>
                             <p class="text-white position-relative">
-                                The more effortless the writing looks, the more effort the
-                                writer actually put into the process.
+                                Theo dõi – Kiểm soát – Tự do tài chính.
                             </p>
                         </div>
                     </div>

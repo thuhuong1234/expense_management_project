@@ -1,26 +1,15 @@
 <template>
-    <div class="container top-0 position-sticky z-index-sticky">
-        <div class="row">
-            <div class="col-12">
-                <navbar is-blur="blur border-radius-lg my-3 py-2 start-0 end-0 mx-4 shadow"
-                    btn-background="bg-gradient-success" :dark-mode="true" />
-            </div>
-        </div>
-    </div>
     <main class="main-content main-content-bg mt-0">
         <div class="page-header min-vh-100 ">
-            <span class="mask bg-gradient-dark opacity-6"></span>
             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-4 col-md-7 mt-2">
-                        <div class="card border-0 mb-0 ">
-                            <div class="card-header bg-transparent">
-                                <h5 class="text-dark text-center mt-2 mb-3">Sign up</h5>
+                <div class="row">
+                    <div class="mx-auto col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0">
+                        <div class="card card-plain ">
+                            <div class="pb-0 card-header text-start">
+                                <h4 class="font-weight-bolder">Đăng ký </h4>
+                                <p class="mb-0">Nhập đầy đủ thống tin đăng ký</p>
                             </div>
-                            <div class="card-body px-lg-5 pt-0">
-                                <div class="text-center text-muted mb-4 fs-6">
-                                    <p>Or sign in with credentials </p>
-                                </div>
+                            <div class="card-body">
                                 <form role="form" class="text-start" @submit.prevent="onSubmit">
                                     <div class="mb-3">
                                         <argon-input name="name" id="name" type="text" placeholder="Họ và tên"
@@ -32,32 +21,40 @@
                                     </div>
                                     <div class="mb-3">
                                         <argon-input name="password" id="password" type="password"
-                                            placeholder="Password" aria-label="Password"
+                                            placeholder="Mật khẩu" aria-label="Password"
                                             :api-error="apiErrors.password" />
                                     </div>
                                     <div class="mb-3">
                                         <argon-input name="phone" id="phone" type="text" placeholder="Phone"
                                             aria-label="Phone" :api-error="apiErrors.phone" />
                                     </div>
-                                    <argon-checkbox>
-                                        <label class="form-check-label text-dark fs-6" for="flexCheckDefault">
-                                            I agree the
-                                            <a href="javascript:;" class="text-dark font-weight-bolder">Terms and
-                                                Conditions</a>
-                                        </label>
-                                    </argon-checkbox>
                                     <div class="text-center">
-                                        <argon-button color="success" type="submit" variant="gradient" full-width
-                                            class="my-4 mb-2 text-white ">
-                                            Sign up</argon-button>
+                                        <argon-button color="#ee3672" type="submit" variant="gradient" full-width
+                                            class="my-4 mb-2 text-white btn-register ">
+                                            Đăng ký</argon-button>
                                     </div>
                                     <p class="text-center mt-3 mb-0 fs-6">
-                                        Already have an account?
+                                        Đã có tài khoản?
                                         <router-link :to="{ name: 'login' }" class="text-dark font-weight-bolder fs-6"
-                                            style="text-decoration: none;">Sign in</router-link>
+                                            style="text-decoration: none;">Đăng nhập</router-link>
                                     </p>
                                 </form>
                             </div>
+                        </div>
+                    </div>
+                    <div
+                        class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
+                        <div
+                            class=" img-login position-relative h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden">
+                            <span class="mask bg-gradient-danger opacity-5"></span>
+
+                            <h5 class="mt-5 text-white font-weight-bolder position-relative">
+                                "Hành trình của bạn bắt đầu từ đây"
+                            </h5>
+                            <p class="text-white position-relative">
+                                Cũng giống như một công ty cần có để duy trì một sản phẩm, một cộng đồng cần có để duy
+                                trì một giao thức.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -70,7 +67,6 @@
 import { ref } from 'vue';
 import ArgonInput from '@/components/Icons/ArgonInput.vue';
 import ArgonButton from '@/components/Icons/ArgonButton.vue';
-import ArgonCheckbox from '@/components/Icons/ArgonCheckbox.vue';
 import { useAuthStore } from '@/stores/authStore';
 import axios from '@/configs/axios.js';
 import { useForm } from 'vee-validate';
@@ -79,20 +75,19 @@ import { useRouter } from 'vue-router';
 import { showToast } from '@/helpers/sweetalertHelper';
 const router = useRouter();
 const apiErrors = ref({});
-const authStore = useAuthStore();
 const errorMessage = ref('');
 const schema = yup.object({
-    name: yup.string().default('').required('Name is required'),
+    name: yup.string().default('').required('Họ và tên là bắt buộc'),
     email: yup.string()
-        .email('Email is incorrect')
-        .required('Email is required'),
+        .email('Email không hợp lệ')
+        .required('Email là bắt buộc'),
     password: yup.string()
-        .min(8, 'Password must have at least 8 characters')
-        .matches(/[A-Z]/, 'Password must have at least one uppercase letter[A-Z]')
-        .matches(/[\W_]/, 'Password must have at least one special character[@, $, !, %, *, ?, &...]')
-        .matches(/[0-9]/, 'Password must have at least one number[0-9]')
+        .min(8, 'Mật khẩu ít nhất 8 ký tự')
+        .matches(/[A-Z]/, ' Mật khẩu chứa ít nhất 1 chữ cái hoa [A-Z]')
+        .matches(/[\W_]/, 'Mật khẩu chứa ít nhất 1 ký tự đặc biệt [@, $, !, %, *, ?, &...]')
+        .matches(/[0-9]/, 'Mật khẩu chứa ít nhất 1 số [0-9]')
         .required('Mật khẩu là bắt buộc'),
-    phone: yup.string().required('Phone number is required').matches(/^\+?\d{10,15}$/, 'Phone number is incorrect'),
+    phone: yup.string().required('Số điện thoại là bắt buộc').matches(/^\+?\d{10,15}$/, 'Số điện thoại không hợp lệ'),
 });
 
 const { handleSubmit } = useForm({
@@ -105,7 +100,7 @@ const onSubmit = handleSubmit(async (values) => {
 
         const response = await axios.post('users', values);
         if (response?.data) {
-            await showToast("Sign up successfully!", "success");
+            await showToast("Đăng ký thành công!", "success");
             return router.push({ name: 'dashboard' });
         }
     } catch (error) {
@@ -116,16 +111,7 @@ const onSubmit = handleSubmit(async (values) => {
 
 </script>
 <style scoped>
-:deep(.bg-gradient-success) {
-    background: linear-gradient(87deg, #2dce89 0, #2dcecc 100%) !important;
-}
-
-:deep(.bg-gradient-dark) {
-    background: linear-gradient(87deg, #212429 0, #212429 100%) !important;
-}
-
 .page-header {
-    background-image: url("https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-basic.jpg");
     background-size: cover;
     background-position: center;
     display: flex;
@@ -139,11 +125,40 @@ const onSubmit = handleSubmit(async (values) => {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
     z-index: 0;
 }
 
 .fs-6 {
     font-size: 16px !important;
+}
+
+.main-content {
+    font-family: 'Lora' !important;
+}
+
+.btn-register {
+    background-color: #ee3672 !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 16px;
+    font-family: 'Lora' !important;
+}
+
+.img-login {
+    background-position: center center;
+    background-size: cover;
+    background-image: url('@/assets/img/img-1.jpg');
+}
+
+.card .card-body {
+    font-family: 'Lora' !important;
+    color: #3e3e46 !important;
+}
+
+.card-header,
+h4 {
+    background-color: #f8f9fa !important;
+    color: #3e3e46 !important;
 }
 </style>
