@@ -24,8 +24,8 @@ const getRoute = () => {
                     </template>
                     <template #list>
                         <ul class="nav ms-4">
-                            <sidenav-item :to="{ name: 'home' }" mini-icon="L" text="Landing" />
-                            <sidenav-item :to="{ name: 'home' }" mini-icon="D" text="Default" />
+                            <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="L" text="Landing" />
+                            <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="D" text="Default" />
                         </ul>
                     </template>
                 </sidenav-collapse>
@@ -39,8 +39,8 @@ const getRoute = () => {
                     </template>
                     <template #list>
                         <ul class="nav ms-4">
-                            <sidenav-item :to="{ name: 'home' }" mini-icon="L" text="Chi tiêu" />
-                            <sidenav-item :to="{ name: 'home' }" mini-icon="D" text="Thu nhập " />
+                            <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="L" text="Chi tiêu" />
+                            <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="D" text="Thu nhập " />
                         </ul>
                     </template>
                 </sidenav-collapse>
@@ -67,8 +67,8 @@ const getRoute = () => {
                     </template>
                     <template #list>
                         <ul class="nav ms-4">
-                            <sidenav-item :to="{ name: 'home' }" mini-icon="L" text="Chi tiêu" />
-                            <sidenav-item :to="{ name: 'home' }" mini-icon="D" text="Thu nhập " />
+                            <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="L" text="Chi tiêu" />
+                            <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="D" text="Thu nhập " />
                         </ul>
                     </template>
                 </sidenav-collapse>
@@ -123,5 +123,4 @@ const getRoute = () => {
         color: #ffffff !important;
     }
 }
-
 </style>
