@@ -1,24 +1,16 @@
 <script setup>
-import { useRoute } from "vue-router";
 import { useUiStore } from "@/stores/uiStore";
 
 import SidenavItem from "./SidenavItem.vue";
 import SidenavCollapse from "./SidenavCollapse.vue";
 import SidenavCollapseItem from "./SidenavCollapseItem.vue";
 const store = useUiStore();
-
-const getRoute = () => {
-    const route = useRoute();
-    const routeArr = route.path.split("/");
-    return routeArr[1];
-};
 </script>
 <template>
     <div id="sidenav-collapse-main" class=" navbar-collapse w-auto h-auto h-100">
         <ul class="navbar-nav ">
             <li class="nav-item ">
-                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Tổng quan"
-                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Tổng quan">
                     <template #icon>
                         <i class="ni ni-shop text-primary text-sm opacity-10"></i>
                     </template>
@@ -32,8 +24,7 @@ const getRoute = () => {
             </li>
 
             <li class="nav-item ">
-                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Danh mục "
-                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Danh mục ">
                     <template #icon>
                         <i class="ni ni-folder-17 text-primary text-sm opacity-10"></i>
                     </template>
@@ -46,8 +37,7 @@ const getRoute = () => {
                 </sidenav-collapse>
             </li>
             <li class="nav-item ">
-                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Phòng "
-                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Phòng ">
                     <template #icon>
                         <i class="ni ni-building text-primary text-sm opacity-10"></i>
                     </template>
@@ -60,8 +50,7 @@ const getRoute = () => {
                 </sidenav-collapse>
             </li>
             <li class="nav-item ">
-                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Thông báo"
-                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Thông báo">
                     <template #icon>
                         <i class="ni ni-bell-55 text-primary text-sm opacity-10"></i>
                     </template>
@@ -81,24 +70,21 @@ const getRoute = () => {
                 </h6>
             </li>
             <li class="nav-item ">
-                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Hồ sơ"
-                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Hồ sơ">
                     <template #icon>
                         <i class="ni ni-single-02 text-primary text-sm opacity-10"></i>
                     </template>
                 </sidenav-collapse>
             </li>
             <li class="nav-item ">
-                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Đăng ký "
-                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Đăng ký ">
                     <template #icon>
                         <i class="ni ni-collection text-primary text-sm opacity-10"></i>
                     </template>
                 </sidenav-collapse>
             </li>
             <li class="nav-item ">
-                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Đăng nhập"
-                    :class="getRoute() === 'dashboards' ? 'active' : ''">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Đăng nhập">
                     <template #icon>
                         <i class="ni ni-lock-circle-open text-primary text-sm opacity-10"></i>
                     </template>

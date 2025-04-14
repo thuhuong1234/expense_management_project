@@ -7,10 +7,9 @@ const router = createRouter({
     {
       path: "/dashboards",
       name: "Bảng điều khiển",
-      component: () => import("@/layouts/DashboardLayout.vue"),
       children: [
         {
-          path: "/",
+          path: "",
           name: "Trang chủ",
           component: HomeView,
         },
@@ -45,6 +44,11 @@ const router = createRouter({
           path: "/users",
           name: "users",
           component: () => import("@/views/UsersView.vue"),
+        },
+        {
+          path: "profile",
+          name: "Tài khoản",
+          component: () => import("@/views/auth/Profile.vue"),
         },
       ],
     },

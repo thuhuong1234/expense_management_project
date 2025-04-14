@@ -77,3 +77,8 @@ const getFontSize = computed(() => {
         </div>
     </div>
 </template>
+<style scoped>
+.form-group {
+    font-family: 'Lora' !important;
+}
+</style>

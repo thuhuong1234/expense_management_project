@@ -23,7 +23,7 @@ const sidebarType = computed(() => store.sidebarType);
 </template>
 <style lang="scss" scoped>
 #sidenav-main {
-  background-color: #3e3e46 !important;
+  background-color: #344767 !important;
   color: #fdfdfd !important;
 
   a,

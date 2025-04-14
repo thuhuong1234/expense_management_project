@@ -8,7 +8,7 @@ import { createPinia } from "pinia";
 import "./assets/css/nucleo-icons.css";
 import "./assets/css/nucleo-svg.css";
 import ArgonDashboard from "@/argon-dashboard";
-
+import "@/assets/css/fonts.css";
 const app = createApp(App);
 const pinia = createPinia();
 

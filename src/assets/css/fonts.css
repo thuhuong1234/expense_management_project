@@ -1,0 +1,28 @@
+body {
+  font-family: "Lora", serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Lora", serif;
+}
+
+p,
+a,
+button,
+label,
+input,
+textarea,
+select,
+option,
+span,
+div,
+ul,
+li,
+ol {
+  font-family: "Lora", serif !important;
+}

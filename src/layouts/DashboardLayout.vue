@@ -4,14 +4,12 @@ import Navbar from "@/examples/Navbars/Navbar.vue";
 </script>
 <template>
   <div class="d-flex min-vh-100">
-    <sidenav class="w-25" />
-    <main class="main-content position-relative w-75 ">
+    <sidenav />
+    <main class="main-content position-relative max-height-vh-100 h-100 w-100">
       <navbar />
       <div class="container-fluid">
-        <slot name="template"> </slot>
+        <slot />
       </div>
     </main>
-
   </div>
-
 </template>

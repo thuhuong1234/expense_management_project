@@ -9,7 +9,7 @@ const store = useUiStore();
 const isRTL = computed(() => store.isRTL);
 const isNavFixed = computed(() => store.isNavFixed);
 const darkMode = computed(() => store.darkMode);
-
+const navbarMinimize = () => store.navbarMinimize();
 const route = useRoute();
 
 const currentRouteName = computed(() => {
@@ -22,8 +22,7 @@ const currentDirectory = computed(() => {
     return parent?.name || "Trang chủ";
 });
 
-const navbarMinimize = () => store.commit("navbarMinimize");
-const toggleConfigurator = () => store.commit("toggleConfigurator");
+const toggleConfigurator = () => store.toggleConfigurator();
 
 const toggleNavigationOnMobile = () => {
     if (window.innerWidth < 1200) {
@@ -40,12 +39,12 @@ onBeforeUpdate(() => {
 });
 </script>
 <template>
-    <nav id="navbarBlur" class=" text-body w-100 my-3 ms-4" :class="`${!isNavFixed
-        ? 'navbar navbar-main navbar-expand-lg px-0 mx-4 border-radius-xl shadow-none'
-        : `navbar navbar-main navbar-expand-lg px-0 mx-4 border-radius-xl shadow-none position-sticky ${darkMode ? 'bg-default' : 'bg-white'
+    <nav id="navbarBlur" class=" text-body w-100 my-3" :class="`${!isNavFixed
+        ? 'navbar navbar-main navbar-expand-lg px-0 border-radius-xl shadow-none'
+        : `navbar navbar-main navbar-expand-lg px-0 border-radius-xl shadow-none position-sticky ${darkMode ? 'bg-default' : 'bg-white'
         } left-auto top-2 z-index-sticky`
         } ${isRTL ? 'top-0 position-sticky z-index-sticky' : ''}`" v-bind="$attrs" data-scroll="true">
-        <div class="px-3 py-1 container-fluid text-dark">
+        <div class="px-3 py-1  ms-4 container-fluid">
             <breadcrumbs :current-page="currentRouteName" :current-directory="currentDirectory" />
             <div class="sidenav-toggler sidenav-toggler-inner d-xl-block d-none " :class="isRTL ? 'me-3' : ''">
                 <a href="#" class="p-0 nav-link text-body" @click.prevent="navbarMinimize">
@@ -189,8 +188,4 @@ onBeforeUpdate(() => {
         </div>
     </nav>
 </template>
-<style lang="scss" scoped>
-::v-deep #navbarBlur {
-    color: red !important;
-}
-</style>
+<style lang="scss" scoped></style>
