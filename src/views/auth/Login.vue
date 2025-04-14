@@ -143,14 +143,8 @@ const onSubmit = handleSubmit(async (values) => {
     background-image: url('@/assets/img/img-1.jpg');
 }
 
-.card .card-body {
-    font-family: 'Lora' !important;
-    color: #3e3e46 !important;
-}
-
 .card-header,
 h4 {
     background-color: #f8f9fa !important;
-    color: #3e3e46 !important;
 }
 </style>
