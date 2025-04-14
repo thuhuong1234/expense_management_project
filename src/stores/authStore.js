@@ -24,11 +24,20 @@ export const useAuthStore = defineStore("auth", {
       this.isLoggedIn = true;
       this.user = userData;
       this.token = token;
+      localStorage.setItem("access_token", token);
     },
     logout() {
       this.isLoggedIn = false;
       this.user = null;
       this.token = null;
+      localStorage.removeItem("access_token");
+    },
+    checkAuth() {
+      const storedToken = localStorage.getItem("access_token");
+      if (storedToken) {
+        this.isLoggedIn = true;
+        this.token = storedToken;
+      }
     },
   },
 });

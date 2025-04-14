@@ -1,9 +1,13 @@
 <script setup>
 import { useField } from 'vee-validate';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 const emit = defineEmits(['update:modelValue']);
 
 const props = defineProps({
+    modelValue: {
+        type: [String, Number],
+        default: ''
+    },
     size: {
         type: String,
         default: 'default'
@@ -36,11 +40,11 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    oldValue: {
-        type: String,
-        default: ''
-    },
-    apiError: { type: String, default: '' }
+    apiError: { type: String, default: '' },
+    disabled: {
+        type: Boolean,
+        default: false
+    }
 });
 
 // Sử dụng useField để lấy value và errorMessage
@@ -58,6 +62,18 @@ const getFontSize = computed(() => {
             return '16px';
     }
 });
+watch(
+    () => props.modelValue,
+    (newValue) => {
+        if (value.value !== newValue) {
+            value.value = newValue;
+        }
+    }
+)
+const onInput = (event) => {
+    value.value = event.target.value;
+    emit('update:modelValue', value.value);
+}
 </script>
 
 <template>
@@ -68,8 +84,8 @@ const getFontSize = computed(() => {
             </span>
             <input :id="id" :type="type" class="form-control"
                 :class="{ 'is-valid': !errorMessage && value, 'is-invalid': errorMessage }"
-                :style="{ fontSize: getFontSize }" :name="name" v-model="value" :placeholder="placeholder"
-                :required="isRequired" @input="emit('update:modelValue', value)" />
+                :style="{ fontSize: getFontSize }" :name="name" :placeholder="placeholder" :required="isRequired"
+                @input="onInput" :value="value" :disabled="disabled" />
             <span v-if="iconDir === 'right'" class="input-group-text">
                 <i :class="getIcon(icon)"></i>
             </span>

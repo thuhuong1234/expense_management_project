@@ -27,6 +27,10 @@ defineProps({
     type: {
         type: String,
         default: 'button'
+    },
+    eventClick: {
+        type: String,
+        default: ''
     }
 });
 const getClasses = (variant, color, size, fullWidth, active) => {
@@ -52,7 +56,7 @@ const getClasses = (variant, color, size, fullWidth, active) => {
 </script>
 <template>
     <button class="btn mb-0" :type="type" :disabled="disabled"
-        :class="getClasses(variant, color, size, fullWidth, active)">
+        :class="getClasses(variant, color, size, fullWidth, active)" @click="eventClick">
         <slot />
     </button>
 </template>

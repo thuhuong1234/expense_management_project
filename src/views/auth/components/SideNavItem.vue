@@ -1,35 +1,63 @@
 <script setup>
+import { onMounted, ref } from "vue";
 import ArgonButton from "@/components/Icons/ArgonButton.vue";
 import ArgonSwitch from "@/components/Icons/ArgonSwitch.vue";
 import ArgonAvatar from "@/components/Icons/ArgonAvatar.vue";//
 import ArgonInput from "@/components/Icons/ArgonInput.vue";
 import img from "@/assets/img/team-3.jpg";
+import axios from "@/configs/axios.js";
+import { showToast } from '@/helpers/sweetalertHelper';
+const user = ref({});
+const errorMessage = ref('');
+const isEditing = ref(false);
+const fetchProfile = async () => {
+    try {
+        const response = await axios.get('auth/user');
+        user.value = response.data;
+    } catch (error) {
+        errorMessage.value = error.response?.data.message || error.message;
+        showToast(errorMessage.value, 'error');
 
+    }
+};
+const updateProfile = async () => {
+    try {
+        const response = await axios.put(`users/${user.value.id}`, user.value);
+        user.value = response.data;
+        showToast('Đã cập nhật thông tin!', 'success');
+        toggleEdit();
+    } catch (error) {
+        errorMessage.value = error.response?.data.message || error.message;
+        showToast(errorMessage.value, 'error');
+    }
+}
+const toggleEdit = () => {
+    isEditing.value = !isEditing.value;
+}
+onMounted(() => {
+    fetchProfile();
+});
 </script>
 <template>
     <div id="profile" class="card card-body mt-4">
-        <div class="row justify-content-center align-items-center">
+        <div class="row">
             <div class="col-sm-auto col-4">
-                <argon-avatar :image="img" alt="team-3" size="xl" shadow="sm" border-radius="lg" />
+                <argon-avatar :image="user.avatar" alt="Avatar" size="xl" shadow="sm" border-radius="lg" />
             </div>
             <div class="col-sm-auto col-8 my-auto">
                 <div class="h-100">
-                    <h5 class="mb-1 font-weight-bolder">Mark Johnson</h5>
-                    <p class="mb-0 font-weight-bold text-sm">CEO / Co-Founder</p>
+                    <h5 class="mb-1 font-weight-bolder">{{ user.name }}</h5>
+                    <p class="mb-0 font-weight-bold text-sm">{{ user.email }}</p>
+
                 </div>
-            </div>
-            <div class="col-sm-auto ms-sm-auto mt-sm-0 mt-3 d-flex">
-                <label class="form-check-label mb-0 me-2">
-                    <small id="profileVisibility">Switch to invisible</small>
-                </label>
-                <argon-switch id="switch-invisible" name="Switch to Invisible" checked />
             </div>
         </div>
     </div>
     <div id="basic-info" class="card mt-4">
         <div class="card-header d-flex justify-content-between">
             <h5>Thông tin cơ bản</h5>
-            <argon-button class="float-end btn-save" color="" variant="gradient" size="sm"><i
+
+            <argon-button class="float-end btn-save" color="" variant="gradient" size="sm" @click="toggleEdit"><i
                     class="fas fa-pen me-2"></i>
                 Chỉnh sửa</argon-button>
         </div>
@@ -37,13 +65,16 @@ import img from "@/assets/img/team-3.jpg";
             <div class="row">
                 <div class=" col-6">
                     <label class="form-label fs-6">Họ và tên </label>
-                    <argon-input id="name" type="text" placeholder="Mark" />
+                    <argon-input id="name" type="text" placeholder="Mark" name="name" v-model="user.name"
+                        :disabled="!isEditing" />
                 </div>
                 <div class="col-sm-3 col-6">
                     <label class="form-label fs-6">Giới tính</label>
-                    <select id="choices-gender" class="form-control" name="choices-gender">
+                    <select id="choices-gender" class="form-control" name="choices-gender" v-model="user.gender"
+                        :disabled="!isEditing">
                         <option value="Male">Nam</option>
                         <option value="Female">Nữ</option>
+                        <option value="Undefined">Khác</option>
                     </select>
                 </div>
             </div>
@@ -53,15 +84,20 @@ import img from "@/assets/img/team-3.jpg";
             <div class="row">
                 <div class=" col-6">
                     <label class="form-label fs-6 mt-2">Email</label>
-                    <argon-input id="email" type="email" placeholder="example@email.com" />
+                    <argon-input id="email" type="email" name="email" placeholder="example@email.com"
+                        v-model="user.email" disabled />
                 </div>
             </div>
             <div class="row">
                 <div class=" col-6">
                     <label class="form-label fs-6 mt-2">Số điện thoại</label>
-                    <argon-input id="phone" type="text" placeholder="+84 123 456 789" />
+                    <argon-input id="phone" type="text" name="phone" placeholder="+84 123 456 789" v-model="user.phone"
+                        disabled />
                 </div>
             </div>
+            <argon-button class="float-end mb-0 btn-save" color="" variant="gradient" size="sm" v-if="isEditing"
+                @click="updateProfile">Lưu thông tin
+            </argon-button>
         </div>
     </div>
     <div id="password" class="card mt-4">
@@ -70,7 +106,8 @@ import img from "@/assets/img/team-3.jpg";
         </div>
         <div class="card-body pt-0">
             <label class="form-label fs-6">Mật khẩu hiện tại </label>
-            <argon-input id="password" type="password" placeholder="Mật khẩu hiện tại" />
+            <argon-input id="password" type="password" placeholder="Mật khẩu hiện tại" v-model="user.password"
+                disabled />
             <label class="form-label fs-6">Mật khẩu mới</label>
             <argon-input id="new-password" type="password" placeholder="Mật khẩu mới" />
             <label class="form-label fs-6">Xác nhận mật khẩu</label>
