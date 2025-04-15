@@ -24,8 +24,8 @@ defineProps({
 <template>
     <li class="nav-item">
         <router-link class="nav-link border-radius-xl" :to="to" @click="closeSidebarOnRouteChange">
-            <span class="sidenav-mini-icon"> {{ miniIcon }} </span>
-            <span class="sidenav-normal"> {{ text }} </span>
+            <span class="sidenav-mini-icon"> <i :class="miniIcon"></i> </span>
+            <span class="sidenav-normal d-flex gap-2"> <i :class="miniIcon"></i> {{ text }} </span>
         </router-link>
     </li>
 </template>

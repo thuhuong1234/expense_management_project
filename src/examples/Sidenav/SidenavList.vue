@@ -70,25 +70,15 @@ const store = useUiStore();
                 </h6>
             </li>
             <li class="nav-item ">
-                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Hồ sơ">
-                    <template #icon>
-                        <i class="ni ni-single-02 text-primary text-sm opacity-10"></i>
-                    </template>
-                </sidenav-collapse>
+                <sidenav-item :to="{ name: 'Tài khoản' }" mini-icon="ni ni-single-02 text-primary text-sm opacity-10"
+                    text="Hồ sơ" />
             </li>
             <li class="nav-item ">
-                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Đăng ký ">
-                    <template #icon>
-                        <i class="ni ni-collection text-primary text-sm opacity-10"></i>
-                    </template>
-                </sidenav-collapse>
+                <sidenav-item :to="{ name: 'Đăng nhập' }"
+                    mini-icon="ni ni-lock-circle-open text-primary text-sm opacity-10" text="Đăng nhập" />
             </li>
             <li class="nav-item ">
-                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Đăng nhập">
-                    <template #icon>
-                        <i class="ni ni-lock-circle-open text-primary text-sm opacity-10"></i>
-                    </template>
-                </sidenav-collapse>
+                <sidenav-item :to="{ name: 'Đăng ký' }" mini-icon="ni ni-circle-08 text-primary text-sm opacity-10"                    text="Đăng ký" />
             </li>
         </ul>
     </div>

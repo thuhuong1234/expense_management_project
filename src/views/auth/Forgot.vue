@@ -17,13 +17,13 @@
                                     </div>
                                     <div class=" d-flex justify-content-between fs-6">
                                         <div class="d-flex align-items-center">
-                                            <router-link :to="{ name: 'login' }" class="login fs-6"
+                                            <router-link :to="{ name: 'Đăng nhập' }" class="login fs-6"
                                                 style="text-decoration: none;">
-                                                Đăng nhập </router-link :to="{ name: 'login' }">
+                                                Đăng nhập </router-link :to="{ name: 'Đăng nhập' }">
                                             <span class="mx-1">|</span>
-                                            <router-link :to="{ name: 'register' }" class="register fs-6"
+                                            <router-link :to="{ name: 'Đăng ký' }" class="register fs-6"
                                                 style="text-decoration: none;">
-                                                Đăng ký </router-link :to="{ name: 'register' }">
+                                                Đăng ký </router-link :to="{ name: 'Đăng ký' }">
                                         </div>
                                         <div class="text-center">
                                             <argon-button color="" type="submit" variant="gradient" full-width

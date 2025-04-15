@@ -35,7 +35,8 @@
                                     </div>
                                     <p class="text-center mt-3 mb-0 fs-6">
                                         Đã có tài khoản?
-                                        <router-link :to="{ name: 'login' }" class="text-dark font-weight-bolder fs-6"
+                                        <router-link :to="{ name: 'Đăng nhập' }"
+                                            class="text-dark font-weight-bolder fs-6"
                                             style="text-decoration: none;">Đăng nhập</router-link>
                                     </p>
                                 </form>

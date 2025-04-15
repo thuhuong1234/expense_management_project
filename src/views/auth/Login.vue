@@ -22,13 +22,13 @@
                                     <div class=" d-flex justify-content-between fs-6">
                                         <div class="login">
                                             Chưa có tài khoản?
-                                            <router-link :to="{ name: 'register' }" class="register fs-6"
+                                            <router-link :to="{ name: 'Đăng ký' }" class="register fs-6"
                                                 style="text-decoration: none;">
-                                                Đăng ký</router-link :to="{ name: 'register' }">
+                                                Đăng ký</router-link>
                                         </div>
-                                        <router-link :to="{ name: 'forgot-password' }" class="forgot-password fs-6"
+                                        <router-link :to="{ name: 'Quên mật khẩu' }" class="forgot-password fs-6"
                                             style="text-decoration: none;">Quên mật khẩu?
-                                        </router-link :to="{ name: 'forgot-password' }">
+                                        </router-link>
                                     </div>
                                     <div class="text-center">
                                         <argon-button color="" type="submit" variant="gradient" full-width
@@ -93,7 +93,9 @@ const onSubmit = handleSubmit(async (values) => {
         const response = await axios.post('auth/login', values);
         if (response?.data) {
             authStore.login(response?.data?.user, response?.data?.token);
-            return router.push({ name: 'dashboard' });
+            console.log('authStore.token', authStore.token, authStore.user);
+
+            return router.push({ name: 'Trang chủ' });
         }
     } catch (error) {
         errorMessage.value = error.response?.data.message || error.message;
