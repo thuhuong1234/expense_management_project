@@ -1,16 +1,20 @@
 <script setup>
-import { computed, ref, onBeforeUpdate } from "vue";
+import { computed, ref, onBeforeUpdate, onMounted } from "vue";
 import { useUiStore } from "@/stores/uiStore";
 import { useRoute } from "vue-router";
 import Breadcrumbs from "@/examples/Breadcrumbs.vue";
-
+import { useAuthStore } from "@/stores/authStore";
+import Avatar from "primevue/avatar";
 const showMenu = ref(false);
 const store = useUiStore();
+const authStore = useAuthStore();
+
 const isRTL = computed(() => store.isRTL);
 const isNavFixed = computed(() => store.isNavFixed);
 const darkMode = computed(() => store.darkMode);
 const navbarMinimize = () => store.navbarMinimize();
 const route = useRoute();
+const user = ref({});
 
 const currentRouteName = computed(() => {
     return route.name;
@@ -34,8 +38,19 @@ const closeMenu = () => {
         showMenu.value = false;
     }, 100);
 };
+const getAvatarUrl = (avatar) => {
+    if (!avatar) {
+        avatar = 'avatar-default.jpeg';
+    }
+    return `http://localhost:3001/uploads/${avatar}`
+}
+console.log(getAvatarUrl(user.value.avatar));
+
 onBeforeUpdate(() => {
     toggleNavigationOnMobile();
+});
+onMounted(async () => {
+    user.value = await authStore.getUser();
 });
 </script>
 <template>
@@ -71,11 +86,17 @@ onBeforeUpdate(() => {
                 </div>
                 <ul class="navbar-nav justify-content-end">
                     <li class="nav-item d-flex align-items-center">
-                        <router-link :to="{ name: 'login' }" class="px-0 nav-link font-weight-bold" :class="isNavFixed && !darkMode ? ' opacity-8 text-dark' : 'text-dark'
+                        <router-link :to="{ name: 'Tài khoản' }" class="px-0 nav-link font-weight-bold" :class="isNavFixed && !darkMode ? ' opacity-8 text-dark' : 'text-dark'
                             " target="_blank">
-                            <i class="fa fa-user" :class="isRTL ? 'ms-sm-2' : 'me-sm-1'"></i>
-                            <span v-if="isRTL" class="d-sm-inline d-none">يسجل دخول</span>
-                            <span v-else class="d-sm-inline d-none">Đăng nhập</span>
+                            <!-- <i class="fa fa-user" :class="isRTL ? 'ms-sm-2' : 'me-sm-1'"></i>
+                            <div v-if="isRTL" class="d-sm-inline d-none">يسجل دخول</div>
+                            <div v-else class="d-sm-inline d-none">
+                                
+                            </div> -->
+                            <div class="col-sm-auto col-4 ">
+                                <Avatar :image="getAvatarUrl(user.avatar)" shape="circle"
+                                    class="flex items-center justify-center mr-2 img-avatar" size="sm" />
+                            </div>
                         </router-link>
                     </li>
                     <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -188,4 +209,10 @@ onBeforeUpdate(() => {
         </div>
     </nav>
 </template>
-<style lang="scss" scoped></style>
+<style scoped>
+.img-avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+</style>

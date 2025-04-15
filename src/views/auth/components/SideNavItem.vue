@@ -16,8 +16,6 @@ const fetchProfile = async () => {
     try {
         const response = await axios.get('auth/user');
         user.value = response.data;
-        console.log(user.value);
-
     } catch (error) {
         errorMessage.value = error.response?.data.message || error.message;
         showToast(errorMessage.value, 'error');
@@ -60,8 +58,9 @@ const getAvatarUrl = (avatar) => {
     }
     return `http://localhost:3001/uploads/${avatar}`
 }
-const updateAvatar = async () => {
-    if (!newAvatar.value) {
+const updateAvatar = async (event) => {
+    const uploadedFile = event.files?.[0];
+    if (!uploadedFile) {
         return;
     }
     try {
@@ -69,9 +68,15 @@ const updateAvatar = async () => {
         const formData = new FormData();
         formData.append('avatar', newAvatar.value); // Add file or base64 data
 
-        const response = await axios.put(`users/${user.value.id}`, formData);
-        user.value.avatar = response.data.avatar; // Update the user's avatar
-        showImagePreview.value = false; // Close the modal after update
+        const response = await axios.put(`users/${user.value.id}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        user.value.avatar = response.data.avatar;
+        showImagePreview.value = false;
+        showToggle.value = false;
+
         showToast('Đã cập nhật avatar!', 'success');
     } catch (error) {
         console.error('Error updating avatar:', error);
@@ -117,18 +122,8 @@ onBeforeUnmount(() => {
                     <div class="dropdown-item border-radius-md" href="#">
                         <div class="py-1 d-flex">
                             <div class="d-flex flex-column justify-content-center">
-                                <Button class="font-weight-bold border-none" label="uploadAvatar"
-                                    @click="visible = true" />
-
-                                <Dialog v-model:visible="visible" modal header="uploadAvatar"
-                                    class="p-fluid bg-gradient-success shadow-2 border-radius-lg ">
-                                    <FileUpload name="avatar" @upload="updateAvatar" :multiple="true" accept="image/*"
-                                        :maxFileSize="1000000">
-                                        <template #empty>
-                                            <span>Kéo thả ảnh vào vị trí upload </span>
-                                        </template>
-                                    </FileUpload>
-                                </Dialog>
+                                <div class="font-weight-bold"><i class="fas fa-upload"></i> Chỉnh sửa ảnh đại diện
+                                </div>
 
                             </div>
                         </div>
@@ -136,7 +131,6 @@ onBeforeUnmount(() => {
                 </li>
             </ul>
         </div>
-        <!-- </div> -->
     </div>
     <div id="basic-info" class="card mt-4">
         <div class="card-header d-flex justify-content-between">

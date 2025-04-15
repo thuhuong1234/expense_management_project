@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import axios from "@/configs/axios.js";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     isLoggedIn: false,
@@ -38,6 +39,11 @@ export const useAuthStore = defineStore("auth", {
         this.isLoggedIn = true;
         this.token = storedToken;
       }
+    },
+    async getUser() {
+      const response = await axios.get("auth/user");
+      this.user = response.data;
+      return response.data;
     },
   },
 });
