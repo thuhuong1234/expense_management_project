@@ -1,12 +1,14 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, onBeforeUnmount } from "vue";
 import ArgonButton from "@/components/Icons/ArgonButton.vue";
 import ArgonSwitch from "@/components/Icons/ArgonSwitch.vue";
-import ArgonAvatar from "@/components/Icons/ArgonAvatar.vue";//
 import ArgonInput from "@/components/Icons/ArgonInput.vue";
-import img from "@/assets/img/team-3.jpg";
 import axios from "@/configs/axios.js";
 import { showToast } from '@/helpers/sweetalertHelper';
+import Avatar from 'primevue/avatar';
+import FileUpload from 'primevue/fileupload';
+import Dialog from 'primevue/dialog'
+import Button from 'primevue/button'
 const user = ref({});
 const errorMessage = ref('');
 const isEditing = ref(false);
@@ -14,6 +16,8 @@ const fetchProfile = async () => {
     try {
         const response = await axios.get('auth/user');
         user.value = response.data;
+        console.log(user.value);
+
     } catch (error) {
         errorMessage.value = error.response?.data.message || error.message;
         showToast(errorMessage.value, 'error');
@@ -34,15 +38,60 @@ const updateProfile = async () => {
 const toggleEdit = () => {
     isEditing.value = !isEditing.value;
 }
+const showImagePreview = ref(false);
+const showToggle = ref(false);
+const dropdownRef = ref(null);
+const visible = ref(false);
+const toggleDropdown = () => {
+    showToggle.value = !showToggle.value;
+};
+const handleClickOutside = (event) => {
+    if (
+        dropdownRef.value &&
+        !dropdownRef.value.contains(event.target)
+    ) {
+        showToggle.value = false;
+    }
+};
+const newAvatar = ref(null);
+const getAvatarUrl = (avatar) => {
+    if (!avatar) {
+        avatar = 'avatar-default.jpeg';
+    }
+    return `http://localhost:3001/uploads/${avatar}`
+}
+const updateAvatar = async () => {
+    if (!newAvatar.value) {
+        return;
+    }
+    try {
+        // Assuming you have an endpoint for updating the avatar
+        const formData = new FormData();
+        formData.append('avatar', newAvatar.value); // Add file or base64 data
+
+        const response = await axios.put(`users/${user.value.id}`, formData);
+        user.value.avatar = response.data.avatar; // Update the user's avatar
+        showImagePreview.value = false; // Close the modal after update
+        showToast('Đã cập nhật avatar!', 'success');
+    } catch (error) {
+        console.error('Error updating avatar:', error);
+    }
+};
 onMounted(() => {
     fetchProfile();
+    document.addEventListener("mousedown", handleClickOutside);
+});
+onBeforeUnmount(() => {
+    document.removeEventListener("mousedown", handleClickOutside);
 });
 </script>
 <template>
-    <div id="profile" class="card card-body mt-4">
-        <div class="row">
-            <div class="col-sm-auto col-4">
-                <argon-avatar :image="user.avatar" alt="Avatar" size="xl" shadow="sm" border-radius="lg" />
+    <div id="profile" class="card card-body mt-4 ">
+        <!-- <div class="row"> -->
+        <div class="row position-relative">
+            <div class="col-sm-auto col-4 ">
+                <Avatar :image="getAvatarUrl(user.avatar)" shape="circle"
+                    class="flex items-center justify-center mr-2 img-avatar" size="sm" @click="toggleDropdown" />
             </div>
             <div class="col-sm-auto col-8 my-auto">
                 <div class="h-100">
@@ -52,6 +101,42 @@ onMounted(() => {
                 </div>
             </div>
         </div>
+        <div v-if="showToggle" ref="dropdownRef" class="image-preview-modal position-absolute  bottom-0 left-0  ">
+            <ul class="px-2 py-3 dropdown-menu dropdown-menu-end me-sm-n4" :class="showToggle && 'show'"
+                aria-labelledby="dropdownMenuButton">
+                <li class="mb-2">
+                    <a class="dropdown-item border-radius-md" :href="getAvatarUrl(user.avatar)" target="_blank">
+                        <div class="py-1 d-flex">
+                            <div class="d-flex flex-column justify-content-center">
+                                <span class="font-weight-bold"><i class="fas fa-eye"></i> Xem ảnh đại diện </span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <div class="dropdown-item border-radius-md" href="#">
+                        <div class="py-1 d-flex">
+                            <div class="d-flex flex-column justify-content-center">
+                                <Button class="font-weight-bold border-none" label="uploadAvatar"
+                                    @click="visible = true" />
+
+                                <Dialog v-model:visible="visible" modal header="uploadAvatar"
+                                    class="p-fluid bg-gradient-success shadow-2 border-radius-lg ">
+                                    <FileUpload name="avatar" @upload="updateAvatar" :multiple="true" accept="image/*"
+                                        :maxFileSize="1000000">
+                                        <template #empty>
+                                            <span>Kéo thả ảnh vào vị trí upload </span>
+                                        </template>
+                                    </FileUpload>
+                                </Dialog>
+
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!-- </div> -->
     </div>
     <div id="basic-info" class="card mt-4">
         <div class="card-header d-flex justify-content-between">
@@ -106,8 +191,7 @@ onMounted(() => {
         </div>
         <div class="card-body pt-0">
             <label class="form-label fs-6">Mật khẩu hiện tại </label>
-            <argon-input id="password" type="password" placeholder="Mật khẩu hiện tại" v-model="user.password"
-                disabled />
+            <argon-input id="password" type="password" placeholder="Mật khẩu hiện tại" v-model="user.password" />
             <label class="form-label fs-6">Mật khẩu mới</label>
             <argon-input id="new-password" type="password" placeholder="Mật khẩu mới" />
             <label class="form-label fs-6">Xác nhận mật khẩu</label>
@@ -270,9 +354,11 @@ onMounted(() => {
                 </div>
             </div>
             <argon-button color="secondary" variant="outline" class="mb-0 ms-auto" type="button" name="button"
-                size="sm">Vô hiệu hóa</argon-button>
+                size="sm">Vô
+                hiệu hóa</argon-button>
             <argon-button color="" variant="gradient" class="mb-0 ms-2 btn-save" type="button" name="button"
-                size="sm">Xóa tài khoản</argon-button>
+                size="sm">Xóa
+                tài khoản</argon-button>
         </div>
     </div>
 </template>
@@ -280,5 +366,11 @@ onMounted(() => {
 .btn-save {
     color: #ee3672 !important;
     border: 1px #ee3672 solid !important;
+}
+
+.img-avatar {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
 }
 </style>
