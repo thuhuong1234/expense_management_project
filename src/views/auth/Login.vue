@@ -93,8 +93,6 @@ const onSubmit = handleSubmit(async (values) => {
         const response = await axios.post('auth/login', values);
         if (response?.data) {
             authStore.login(response?.data?.user, response?.data?.token);
-            console.log('authStore.token', authStore.token, authStore.user);
-
             return router.push({ name: 'Trang chủ' });
         }
     } catch (error) {

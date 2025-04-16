@@ -96,8 +96,6 @@ const { handleSubmit } = useForm({
 
 const onSubmit = handleSubmit(async (values) => {
     try {
-        console.log(values);
-
         const response = await axios.post('users', values);
         if (response?.data) {
             await showToast("Đăng ký thành công!", "success");

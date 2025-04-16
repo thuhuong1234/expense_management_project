@@ -74,8 +74,6 @@ const { handleSubmit } = useForm({
 const onSubmit = handleSubmit(async (values) => {
     try {
         apiErrors.value = {};
-        console.log(token);
-
         const response = await axios.post(`/auth/reset-password`, {
             token,
             password: values.password,

@@ -3,6 +3,7 @@ import DefaultLayout from "@/layouts/DashboardLayout.vue"
 import { onBeforeMount, onMounted, onBeforeUnmount, ref } from "vue";
 import { useUiStore } from "@/stores/uiStore";
 import { useRoomStore } from "@/stores/roomStore";
+import { useUserStore } from "@/stores/userStore";
 // components
 import ComplexProjectCard from "./components/ComplexProjectCard.vue";
 import PlaceholderCard from "@/examples/Cards/PlaceholderCard.vue";
@@ -12,20 +13,23 @@ import team2 from "@/assets/img/math-svgrepo-com.svg";
 import team3 from "@/assets/img/math-svgrepo-com.svg";
 import team4 from "@/assets/img/math-svgrepo-com.svg";
 import slackLogo from "@/assets/img/math-svgrepo-com.svg";
-
 import setNavPills from "@/assets/js/nav-pills.js";
-const rooms = ref({});
-const store = useUiStore();
 
+const roomsData = ref([]);
+const store = useUiStore();
+const roomList = ref([]);
 
 onMounted(async () => {
     store.isAbsolute = true;
     setNavPills();
-    rooms.value = await useRoomStore().getRooms();
-    console.log(rooms.value);
-
-
-
+    roomsData.value = await useRoomStore().getRooms();
+    roomList.value = await Promise.all(roomsData.value.map(async (room) => {
+        const user = await useUserStore().getUserById(room.userId);
+        return {
+            ...room,
+            leaderName: user.name,
+        }
+    }))
 });
 onBeforeMount(() => {
     store.layout = "custom";
@@ -50,16 +54,16 @@ onBeforeUnmount(() => {
                         <h5>Các phòng của bạn sử dụng</h5>
                         <p>
                             Có tất cả:
-                            {{ rooms.length }} phòng
+                            {{ roomList.length }} phòng
                         </p>
                     </div>
                 </div>
-                <div class="mt-2 row mt-lg-4" v-if="rooms.length > 0">
-                    <div class="mb-4 col-lg-4 col-md-6" v-for="room in rooms">
+                <div class="mt-2 row mt-lg-4" v-if="roomList.length > 0">
+                    <div class="mb-4 col-lg-4 col-md-6" v-for="room in roomList">
 
                         <complex-project-card :logo="slackLogo" :title="room.name" :quality="room.quality" description="If everything I did failed - which it doesn&#39;t, I think that
                 it actually succeeds." :date-time="room.updatedAt" :members="[team3, team4, team2, team3, team4]"
-                            :dropdown="[
+                            :leader="room.leaderName" :dropdown="[
                                 {
                                     label: 'Action',
                                     route: 'javascript:;',

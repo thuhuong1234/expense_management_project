@@ -34,7 +34,7 @@ defineProps({
     route: String,
   },
   leader: {
-    type: String,
+    type: [String, Object],
     default: "",
   },
 });

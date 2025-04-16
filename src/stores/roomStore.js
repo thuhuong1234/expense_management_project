@@ -13,8 +13,6 @@ export const useRoomStore = defineStore("room", {
     async getRooms() {
       const response = await axios.get("/rooms");
       this.rooms = response.data;
-      console.log("response.data", response.data);
-
       return response.data;
     },
   },

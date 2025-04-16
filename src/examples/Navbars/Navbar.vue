@@ -44,7 +44,6 @@ const getAvatarUrl = (avatar) => {
     }
     return `http://localhost:3001/uploads/${avatar}`
 }
-console.log(getAvatarUrl(user.value.avatar));
 
 onBeforeUpdate(() => {
     toggleNavigationOnMobile();
