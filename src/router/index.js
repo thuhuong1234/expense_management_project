@@ -53,23 +53,40 @@ const router = createRouter({
       ],
     },
     {
+      path: "/pages",
+      name: "Trang",
+      children: [
+        {
+          path: "room",
+          name: "Phòng",
+          children: [
+            {
+              path: "ListRooms",
+              name: "Danh sách phòng",
+              component: () => import("@/views/applications/room/Room.vue"),
+            },
+          ],
+        },
+      ],
+    },
+    {
       path: "/login",
-      name: "login",
+      name: "Đăng nhập",
       component: () => import("@/views/auth/Login.vue"),
     },
     {
       path: "/register",
-      name: "register",
+      name: "Đăng ký",
       component: () => import("@/views/auth/Register.vue"),
     },
     {
       path: "/forgot",
-      name: "forgot-password",
+      name: "Quên mật khẩu",
       component: () => import("@/views/auth/Forgot.vue"),
     },
     {
       path: "/reset-password/:token",
-      name: "reset-password",
+      name: "Đổi mật khẩu",
       component: () => import("@/views/auth/ResetPassword.vue"),
     },
   ],

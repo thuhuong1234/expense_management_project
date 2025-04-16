@@ -43,8 +43,9 @@ const store = useUiStore();
                     </template>
                     <template #list>
                         <ul class="nav ms-4">
-                            <sidenav-item :to="{ name: '' }" mini-icon="L" text="Phòng" />
-                            <sidenav-item :to="{ name: '' }" mini-icon="D" text="Danh mục" />
+                            <sidenav-item :to="{ name: 'Danh sách phòng' }" mini-icon="" text="Danh sách phòng" />
+                            <sidenav-item :to="{ name: '' }" mini-icon="" text="Tham gia phòng" />
+                            <sidenav-item :to="{ name: '' }" mini-icon="" text="Tạo phòng" />
                         </ul>
                     </template>
                 </sidenav-collapse>
@@ -78,7 +79,8 @@ const store = useUiStore();
                     mini-icon="ni ni-lock-circle-open text-primary text-sm opacity-10" text="Đăng nhập" />
             </li>
             <li class="nav-item ">
-                <sidenav-item :to="{ name: 'Đăng ký' }" mini-icon="ni ni-circle-08 text-primary text-sm opacity-10"                    text="Đăng ký" />
+                <sidenav-item :to="{ name: 'Đăng ký' }" mini-icon="ni ni-circle-08 text-primary text-sm opacity-10"
+                    text="Đăng ký" />
             </li>
         </ul>
     </div>

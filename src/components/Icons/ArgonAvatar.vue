@@ -23,6 +23,10 @@ defineProps({
   circular: {
     type: Boolean,
     default: false,
+  },
+  eventClick: {
+    type: String,
+    default: null
   }
 })
 const getSize = (size) => (size ? `avatar-${size}` : null)
@@ -44,6 +48,7 @@ const getClasses = (shadow, circular, borderRadius) => {
 </script>
 <template>
   <div class="avatar" :class="getSize(size)">
-    <img :src="image" :alt="alt" :class="[getClasses(shadow, circular, borderRadius)]" />
+    <img :src="image" :alt="alt" :class="[getClasses(shadow, circular, borderRadius)]" @click="eventClick"
+      :style="{ width: size, height: size, objectFit: 'cover' }" />
   </div>
 </template>
