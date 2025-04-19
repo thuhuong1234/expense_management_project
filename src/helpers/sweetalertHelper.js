@@ -10,8 +10,8 @@ const showAlert = (title, text, icon = "info", confirmButtonText = "OK") => {
   });
 };
 
-const showConfirmDialog = (title, text) => {
-  return Swal.fire({
+const showConfirmDialog = async (title, text) => {
+  const result = await Swal.fire({
     title,
     text,
     icon: "warning",
@@ -19,6 +19,7 @@ const showConfirmDialog = (title, text) => {
     confirmButtonText: "Yes",
     cancelButtonText: "No",
   });
+  return result.isConfirmed;
 };
 
 const showToast = (title, icon = "success", text = "", timer = 3000) => {
@@ -37,5 +38,20 @@ const showToast = (title, icon = "success", text = "", timer = 3000) => {
     },
   });
 };
+const result = (name) => {
+  return Swal.fire({
+    title: `Xác nhận xóa ${name}`,
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Đã xóa",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire("Deleted!", "Your file has been deleted.", "success");
+    }
+  });
+};
 
-export { showAlert, showConfirmDialog, showToast };
+export { showAlert, showConfirmDialog, showToast, result };

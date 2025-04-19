@@ -38,6 +38,7 @@ defineProps({
     default: "",
   },
 });
+defineEmits(['dropdown-action'])
 </script>
 <template>
   <div class="card">
@@ -62,12 +63,14 @@ defineProps({
               @click="showMenu = !showMenu">
               <i class="text-lg fa fa-ellipsis-v"></i>
             </button>
-            <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" :class="{ show: showMenu }"
+            <ul class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" :class="{ show: showMenu }"
               aria-labelledby="navbarDropdownMenuLink">
-              <a v-for="(drop, index) in dropdown" :key="index" class="dropdown-item border-radius-md"
-                :href="drop.route">{{ drop.label }}
-              </a>
-            </div>
+              <li v-for="(drop, index) in dropdown" :key="index">
+                <a class="dropdown-item" href="#" @click.prevent="$emit('dropdown-action', drop.label)">
+                  {{ drop.label }}
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

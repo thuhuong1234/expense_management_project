@@ -9,7 +9,7 @@ import * as yup from "yup";
 import ComplexProjectCard from "./components/ComplexProjectCard.vue";
 import NavbarRoom from './components/NavbarRoom.vue';
 import DialogFormRoom from "./components/DialogFormRoom.vue";
-import { showToast } from "@/helpers/sweetalertHelper";
+import { showToast, showConfirmDialog } from "@/helpers/sweetalertHelper";
 // images
 import team2 from "@/assets/img/math-svgrepo-com.svg";
 import team3 from "@/assets/img/math-svgrepo-com.svg";
@@ -22,7 +22,7 @@ const roomsData = ref([]);
 const store = useUiStore();
 const roomList = ref([]);
 const errorMessage = ref('');
-const { getAll, getById, create } = useCRUD();
+const { getAll, getById, create, deleteById } = useCRUD();
 const schema = yup.object({
     name: yup.string().required('Vui lòng nhập tên phòng'),
 })
@@ -32,20 +32,12 @@ const { handleSubmit, resetForm } = useForm({
         name: '',
     },
 })
-
 const createRoom = handleSubmit(async (values) => {
     try {
         const response = await create('rooms', values);
         if (response?.data) {
             showToast('Tạo phòng thành công', 'success');
-            roomsData.value = await getAll('rooms');
-            roomList.value = await Promise.all(roomsData.value.data.map(async (room) => {
-                const user = await getById('users', room.userId);
-                return {
-                    ...room,
-                    leaderName: user.name,
-                }
-            }))
+            await getList();
             resetForm();
         }
     } catch (error) {
@@ -54,9 +46,23 @@ const createRoom = handleSubmit(async (values) => {
     }
 
 });
-onMounted(async () => {
-    store.isAbsolute = true;
-    setNavPills();
+const handleDropdownAction = async (action, room) => {
+    if (action === 'Xóa phòng') {
+        const confirm = await showConfirmDialog("Bạn có chắn chắn muốn xóa?", `${room.name}`);
+        if (confirm) {
+            try {
+                const response = await deleteById('rooms', room.id);
+                if (response?.data) {
+                    showToast('Xoá phòng thành công', 'success');
+                    await getList();
+                }
+            } catch (error) {
+                showToast('Xoá thất bại', 'error');
+            }
+        }
+    }
+}
+const getList = async () => {
     roomsData.value = await getAll('rooms');
     roomList.value = await Promise.all(roomsData.value.data.map(async (room) => {
         const user = await getById('users', room.userId);
@@ -65,6 +71,11 @@ onMounted(async () => {
             leaderName: user.name,
         }
     }))
+}
+onMounted(async () => {
+    store.isAbsolute = true;
+    setNavPills();
+    await getList();
 });
 onBeforeMount(() => {
     store.layout = "custom";
@@ -79,7 +90,6 @@ onBeforeUnmount(() => {
     store.showFooter = true;
     store.hideConfigButton = false;
 });
-
 </script>
 <template>
     <DefaultLayout>
@@ -120,11 +130,8 @@ onBeforeUnmount(() => {
                                 {
                                     label: 'Sao chép lời mời',
                                     route: 'javascript:;',
-                                }, {
-                                    label: 'Lưu trữ',
-                                    route: 'javascript:;',
-                                }
-                            ]" />
+                                },
+                            ]" @dropdown-action="(action) => handleDropdownAction(action, room)" />
                     </div>
                 </div>
             </section>
