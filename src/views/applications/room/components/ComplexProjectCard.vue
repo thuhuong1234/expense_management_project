@@ -43,7 +43,7 @@ defineProps({
   <div class="card">
     <div class="p-3 card-body">
       <div class="d-flex">
-        <div class="p-2 avatar avatar-xl bg-gradient-dark border-radius-md">
+        <div class="p-2 avatar avatar-xl bg-gradient-dark border-radius-md ">
           <img :src="logo" :alt="title" />
         </div>
         <div class="my-auto ms-3">
@@ -79,18 +79,31 @@ defineProps({
       </p>
 
       <hr class="horizontal dark" />
-      <div class="row">
-        <div class="col-6">
-          <h6 class="mb-0 text-sm">{{ members.length }}</h6>
-          <p class="mb-0 text-sm text-secondary font-weight-bold">
-            Participants
-          </p>
+      <div class=" d-flex align-items-center">
+        <div class="input-group">
+          <button type="button" class="btn btn-outline-primary p-1 m-0 text-xs btn-add">Thêm thành
+            viên
+          </button>
         </div>
-        <div class="col-6 text-end">
-          <h6 class="mb-0 text-sm">{{ dateTime }}</h6>
-          <p class="mb-0 text-sm text-secondary font-weight-bold">Due date</p>
+        <div class="text-end ">
+          <h6 class="mb-0 text-xs">{{ dateTime }}</h6>
         </div>
       </div>
     </div>
   </div>
 </template>
+<style scoped>
+.card:hover {
+  cursor: pointer;
+  border: 2px solid #ee3672;
+}
+
+.avatar {
+  position: static !important;
+}
+
+.btn-add {
+  border: 2px solid #ee3672 !important;
+  color: #ee3672 !important;
+}
+</style>

@@ -61,7 +61,7 @@ const router = createRouter({
           name: "Phòng",
           children: [
             {
-              path: "ListRooms",
+              path: "RoomList",
               name: "Danh sách phòng",
               component: () => import("@/views/applications/room/Room.vue"),
             },
