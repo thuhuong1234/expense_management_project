@@ -20,6 +20,12 @@ export const useUiStore = defineStore("ui", {
     showMain: true,
     layout: "default",
     bootstrap,
+    loading: false,
+    error: null,
+    success: false,
+    messages: null,
+    data: null,
+    pagination: null,
   }),
 
   actions: {
@@ -63,6 +69,24 @@ export const useUiStore = defineStore("ui", {
 
     toggleSidebarColor(payload) {
       this.setSidebarType(payload);
+    },
+    setLoading(val) {
+      this.loading = val;
+    },
+    setError(val) {
+      this.error = val;
+    },
+    setSuccess(val) {
+      this.success = val;
+    },
+    setMessages(val) {
+      this.messages = val;
+    },
+    setData(val) {
+      this.data = val;
+    },
+    setPagination(val) {
+      this.pagination = val;
     },
   },
 });

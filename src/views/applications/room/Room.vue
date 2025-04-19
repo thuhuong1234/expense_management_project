@@ -2,8 +2,7 @@
 import DefaultLayout from "@/layouts/DashboardLayout.vue"
 import { onBeforeMount, onMounted, onBeforeUnmount, ref } from "vue";
 import { useUiStore } from "@/stores/uiStore";
-import { useRoomStore } from "@/stores/roomStore";
-import { useUserStore } from "@/stores/userStore";
+import useCRUD from "@/composables/useCRUD";
 // components
 import ComplexProjectCard from "./components/ComplexProjectCard.vue";
 import NavbarRoom from './components/NavbarRoom.vue';
@@ -19,13 +18,13 @@ import ArgonInput from "@/components/Icons/ArgonInput.vue";
 const roomsData = ref([]);
 const store = useUiStore();
 const roomList = ref([]);
-
+const { getAll, getById } = useCRUD();
 onMounted(async () => {
     store.isAbsolute = true;
     setNavPills();
-    roomsData.value = await useRoomStore().getRooms();
-    roomList.value = await Promise.all(roomsData.value.map(async (room) => {
-        const user = await useUserStore().getUserById(room.userId);
+    roomsData.value = await getAll('rooms');
+    roomList.value = await Promise.all(roomsData.value.data.map(async (room) => {
+        const user = await getById('users', room.userId);
         return {
             ...room,
             leaderName: user.name,
@@ -45,16 +44,6 @@ onBeforeUnmount(() => {
     store.showFooter = true;
     store.hideConfigButton = false;
 });
-
-const refreshRooms = async () => {
-    roomsData.value = await useRoomStore().getRooms()
-    roomList.value = await Promise.all(
-        roomsData.value.map(async (room) => {
-            const user = await useUserStore().getUserById(room.userId)
-            return { ...room, leaderName: user.name }
-        })
-    )
-}
 
 </script>
 <template>
