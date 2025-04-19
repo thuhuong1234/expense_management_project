@@ -38,11 +38,7 @@ class BaseService {
   }
   async create(endpoint, payload) {
     try {
-      const response = await axios.post(`${endpoint}`, payload, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(`${endpoint}`, payload);
 
       return {
         data: response.data ?? [],

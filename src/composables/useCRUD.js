@@ -6,8 +6,6 @@ export default function useCRUD() {
     useUiStore().setError(null);
     try {
       const response = await BaseService.getAll(endpoint);
-      console.log("response", response.data);
-
       if (response.success) {
         useUiStore().setMessages(response.messages);
         useUiStore().setData(response.data);

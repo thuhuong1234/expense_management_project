@@ -3,10 +3,13 @@ import DefaultLayout from "@/layouts/DashboardLayout.vue"
 import { onBeforeMount, onMounted, onBeforeUnmount, ref } from "vue";
 import { useUiStore } from "@/stores/uiStore";
 import useCRUD from "@/composables/useCRUD";
+import { useForm } from "vee-validate";
+import * as yup from "yup";
 // components
 import ComplexProjectCard from "./components/ComplexProjectCard.vue";
 import NavbarRoom from './components/NavbarRoom.vue';
 import DialogFormRoom from "./components/DialogFormRoom.vue";
+import { showToast } from "@/helpers/sweetalertHelper";
 // images
 import team2 from "@/assets/img/math-svgrepo-com.svg";
 import team3 from "@/assets/img/math-svgrepo-com.svg";
@@ -18,7 +21,39 @@ import ArgonInput from "@/components/Icons/ArgonInput.vue";
 const roomsData = ref([]);
 const store = useUiStore();
 const roomList = ref([]);
-const { getAll, getById } = useCRUD();
+const errorMessage = ref('');
+const { getAll, getById, create } = useCRUD();
+const schema = yup.object({
+    name: yup.string().required('Vui lòng nhập tên phòng'),
+})
+const { handleSubmit, resetForm } = useForm({
+    validationSchema: schema,
+    initialValues: {
+        name: '',
+    },
+})
+
+const createRoom = handleSubmit(async (values) => {
+    try {
+        const response = await create('rooms', values);
+        if (response?.data) {
+            showToast('Tạo phòng thành công', 'success');
+            roomsData.value = await getAll('rooms');
+            roomList.value = await Promise.all(roomsData.value.data.map(async (room) => {
+                const user = await getById('users', room.userId);
+                return {
+                    ...room,
+                    leaderName: user.name,
+                }
+            }))
+            resetForm();
+        }
+    } catch (error) {
+        errorMessage.value = error.response?.data.message || error.message;
+        showToast('Đã xảy ra lỗi', 'error');
+    }
+
+});
 onMounted(async () => {
     store.isAbsolute = true;
     setNavPills();
@@ -57,8 +92,8 @@ onBeforeUnmount(() => {
                                 data-bs-target="#exampleModal">
                                 Thêm phòng
                             </button>
-                            <DialogFormRoom modalTitle="Tạo phòng">
-                                <template #modal-body :onSubmit="refreshRooms">
+                            <DialogFormRoom modalTitle="Tạo phòng" :onSubmit="createRoom">
+                                <template #modal-body>
                                     <div class="row ">
                                         <div class="col-12">
                                             <ArgonInput name="name" type="text" id="name" placeholder="Tên phòng" />
@@ -67,7 +102,6 @@ onBeforeUnmount(() => {
                                 </template>
                             </DialogFormRoom>
                         </template>
-
                     </NavbarRoom>
                 </div>
                 <div class="mt-2 row mt-lg-4" v-if="roomList.length > 0">
