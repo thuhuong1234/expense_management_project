@@ -1,24 +1,46 @@
 <script setup>
 import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 import ProgressLineChart from "@/examples/Charts/ProgressLineChart.vue";
 import ProgressDoughnutChart from "./components/ProgressDoughnutChart.vue";
 import TodoList from "./components/TodoList.vue";
 import useCRUD from "@/composables/useCRUD";
-import { useRoute } from "vue-router";
 import DashboardLayout from "@/layouts/DashboardLayout.vue";
 import NavbarRoom from "./components/NavbarRoom.vue";
+
 const route = useRoute();
 const roomId = route.params?.id || null;
-
-const { getById } = useCRUD();
 const room = ref({});
+const users = ref([]);
+const transactions = ref([]);
+const userTransactions = ref([]);
+const fund = ref(0);
+const { getById } = useCRUD();
+
 const getRoom = async () => {
     const response = await getById('rooms', roomId);
     room.value = response.data;
+    users.value = room.value.userRooms?.map((userRoom) => ({
+        userId: userRoom.userId,
+        role: userRoom.role,
+        isLeader: userRoom.isLeader,
+        joinedAt: userRoom.joinedAt
+    })) || [];
+    transactions.value = room.value.transactions?.map((transaction) => ({
+        description: transaction.description,
+        createdAt: new Date(transaction.createdAt).toLocaleDateString("vi-VN"),
+        id: transaction.id,
+        amount: Number(transaction.amount).toLocaleString("vi-VN") + " VND",
+        category: transaction.categoryId,
+        userTransactions: transaction.userTransactions?.length,
+    })) || [];
+
+    fund.value = room.value.fund || 0;
+    console.log(transactions.value);
+
 }
 onMounted(async () => {
     getRoom();
-
 })
 </script>
 <template>
@@ -36,59 +58,8 @@ onMounted(async () => {
             </div>
             <div class="mt-4 row">
                 <div class="col-lg-8 col-12">
-                    <todo-list :header="{ title: 'Ghi chú', dateTime: '23 -30 March 2020' }" :transactions="[
-                        {
-                            description: 'Check status',
-                            createdAt: '24 March 2019',
-                            id: '#2414_VR4sf3',
-                            room: 'Creative Tim',
-                            amount: '$2,500',
-                            category: 'Design',
-                            action: [
-                                { route: 'javascript:;', label: 'Action' },
-                                { route: 'javascript:;', label: 'Some other action' },
-                            ],
-                        },
-                        {
-                            description: 'Management discussion',
-                            createdAt: '24 March 2019',
-                            id: '#4411_8sIsdd23',
-                            room: 'Apple',
-                            isComplete: true,
-                            amount: '$2,500',
-                            category: 'Design',
-                            action: [
-                                { route: 'javascript:;', label: 'Action' },
-                                { route: 'javascript:;', label: 'Some other action' },
-                            ],
-                        },
-                        {
-                            description: 'New channel distribution',
-                            createdAt: '25 March 2019',
-                            id: '#827d_kdl33D1s',
-                            room: 'Slack',
-                            amount: '$2,500',
-                            category: 'Design',
-                            isComplete: true,
-                            action: [
-                                { route: 'javascript:;', label: 'Action' },
-                                { route: 'javascript:;', label: 'Some other action' },
-                            ],
-                        },
-                        {
-                            description: 'IOS App development',
-                            createdAt: '26 March 2019',
-                            id: '#88s1_349DA2sa',
-                            room: 'Facebook',
-                            amount: '$2,500',
-                            category: 'Design',
-                            isComplete: false,
-                            action: [
-                                { route: 'javascript:;', label: 'Action' },
-                                { route: 'javascript:;', label: 'Some other action' },
-                            ],
-                        },
-                    ]" />
+                    <todo-list :header="{ title: room.name, dateTime: '23 -30 March 2020' }"
+                        :transactions="transactions" />
                 </div>
                 <div class="mt-4 col-lg-4 col-12 mt-lg-0">
                     <progress-line-chart title="Tasks" :count="480" :progress="60" :chart="{

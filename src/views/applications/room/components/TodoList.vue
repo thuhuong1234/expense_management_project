@@ -78,7 +78,7 @@ defineProps({
                                         <td class="text-xs">
                                             <span class="my-2 text-xs">{{ amount }}</span>
                                         </td>
-                                        <td class="font-weight-bold">
+                                        <td class="text-xs">
                                             <span class="my-2 text-xs"> {{ createdAt }}</span>
                                         </td>
                                         <td class="text-xs">
@@ -98,9 +98,16 @@ defineProps({
                                         <td class="text-xs">
                                             <div class="d-flex align-items-center">
                                                 <div class="d-flex align-items-center">
-                                                    <argon-avatar :image="img5" size="xs" circular class="me-2"
-                                                        alt="user image" />
-                                                    <span>{{ userTransactions }}</span>
+                                                    <div class="avatar-group">
+                                                        <a v-for="user in userTransactions" :key="user" href="#"
+                                                            class="avatar avatar-xs rounded-circle"
+                                                            data-bs-toggle="tooltip" data-original-title="">
+                                                            <argon-avatar :image="img5" size="xs" circular class="me-2"
+                                                                alt="user image" />
+                                                        </a>
+                                                    </div>
+
+                                                    <!-- <span>{{ userTransactions }}</span> -->
                                                 </div>
                                             </div>
                                         </td>
