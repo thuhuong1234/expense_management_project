@@ -5,6 +5,8 @@ import { useUiStore } from "@/stores/uiStore";
 import useCRUD from "@/composables/useCRUD";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
+import { useRouter } from "vue-router";
+const router = useRouter();
 // components
 import ComplexProjectCard from "./components/ComplexProjectCard.vue";
 import NavbarRoom from './components/NavbarRoom.vue';
@@ -72,6 +74,9 @@ const getList = async () => {
         }
     }))
 }
+const goToDetail = async (roomId) => {
+    router.push({ path: `/pages/room/detail/${roomId}` });
+}
 onMounted(async () => {
     store.isAbsolute = true;
     setNavPills();
@@ -115,7 +120,8 @@ onBeforeUnmount(() => {
                     </NavbarRoom>
                 </div>
                 <div class="mt-2 row mt-lg-4" v-if="roomList.length > 0">
-                    <div class="mb-4 col-lg-4 col-md-6" v-for="room in roomList">
+                    <div class="mb-4 col-lg-4 col-md-6" v-for="room in roomList" :key="room.id"
+                        @click="goToDetail(room.id)">
                         <complex-project-card :logo="slackLogo" :title="room.name" :quality="room.quality" description="If everything I did failed - which it doesn&#39;t, I think that
                 it actually succeeds." :date-time="room.updatedAt" :members="[team3, team4, team2, team3, team4]"
                             :leader="room.leaderName" :dropdown="[
