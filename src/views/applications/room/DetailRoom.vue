@@ -7,6 +7,8 @@ import TodoList from "./components/TodoList.vue";
 import useCRUD from "@/composables/useCRUD";
 import DashboardLayout from "@/layouts/DashboardLayout.vue";
 import NavbarRoom from "./components/NavbarRoom.vue";
+import Category from "@/views/applications/category/Category.vue";
+import { categories } from '@/views/applications/category/components/categoryList';
 
 const route = useRoute();
 const roomId = route.params?.id || null;
@@ -36,7 +38,9 @@ const getRoom = async () => {
     })) || [];
 
     fund.value = room.value.fund || 0;
-    console.log(transactions.value);
+}
+const addTransaction = () => {
+    console.log("add transaction");
 
 }
 onMounted(async () => {
@@ -61,37 +65,9 @@ onMounted(async () => {
                     <todo-list :header="{ title: room.name, dateTime: '23 -30 March 2020' }"
                         :transactions="transactions" />
                 </div>
-                <div class="mt-4 col-lg-4 col-12 mt-lg-0">
-                    <progress-line-chart title="Tasks" :count="480" :progress="60" :chart="{
-                        labels: [
-                            'Apr',
-                            'May',
-                            'Jun',
-                            'Jul',
-                            'Aug',
-                            'Sep',
-                            'Oct',
-                            'Nov',
-                            'Dec',
-                        ],
-                        data: [40, 45, 42, 41, 40, 43, 40, 42, 39],
-                    }" />
-                    <progress-doughnut-chart title="Projects" :count="115" :chart="{
-                        labels: [
-                            {
-                                label: 'Done',
-                                isCompleted: true,
-                            },
-                            {
-                                label: 'In progress',
-                                isCompleted: false,
-                            },
-                        ],
-                        datasets: {
-                            label: 'Projects',
-                            data: [75, 25],
-                        },
-                    }" />
+                <div class="col-lg-4 col-12 d-flex flex-column gap-4">
+                    <category :is-expense="true" :is-income="false" :categories="categories" title="Chi tiêu" />
+                    <category :is-expense="false" :is-income="true" :categories="categories" title="Thu nhập" />
                 </div>
             </div>
         </div>
