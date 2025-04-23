@@ -62,8 +62,7 @@ onMounted(async () => {
             </div>
             <div class="mt-4 row">
                 <div class="col-lg-8 col-12">
-                    <todo-list :header="{ title: room.name, dateTime: '23 -30 March 2020' }"
-                        :transactions="transactions" />
+                    <todo-list :header="{ title: room.name, dateTime: room.updatedAt }" :transactions="transactions" />
                 </div>
                 <div class="col-lg-4 col-12 d-flex flex-column gap-4">
                     <category :is-expense="true" :is-income="false" :categories="categories" title="Chi tiêu" />

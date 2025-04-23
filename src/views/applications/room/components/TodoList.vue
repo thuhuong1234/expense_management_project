@@ -46,7 +46,7 @@ defineProps({
                     <h6 class="mb-0">{{ header.title }}</h6>
                 </div>
                 <div class="col-md-6 d-flex justify-content-end align-items-center">
-                    <small>{{ header.dateTime }}</small>
+                    <small>{{ new Date(header.dateTime).toLocaleDateString("vi-VN") }}</small>
                 </div>
             </div>
             <hr class="mb-0 horizontal dark" />

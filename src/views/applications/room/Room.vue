@@ -120,10 +120,9 @@ onBeforeUnmount(() => {
                     </NavbarRoom>
                 </div>
                 <div class="mt-2 row mt-lg-4" v-if="roomList.length > 0">
-                    <div class="mb-4 col-lg-4 col-md-6" v-for="room in roomList" :key="room.id"
-                        @click="goToDetail(room.id)">
-                        <complex-project-card :logo="slackLogo" :title="room.name" :quality="room.quality" description="If everything I did failed - which it doesn&#39;t, I think that
-                it actually succeeds." :date-time="room.updatedAt" :members="[team3, team4, team2, team3, team4]"
+                    <div class="mb-4 col-lg-4 col-md-6" v-for="room in roomList" :key="room.id">
+                        <complex-project-card :logo="slackLogo" :title="room.name" :quality="room.quality"
+                            :date-time="room.createdAt" :members="[team3, team4, team2, team3, team4]" :roomId="room.id"
                             :leader="room.leaderName" :dropdown="[
                                 {
                                     label: 'Chỉnh sửa',

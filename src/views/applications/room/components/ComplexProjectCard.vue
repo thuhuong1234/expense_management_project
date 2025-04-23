@@ -11,10 +11,6 @@ defineProps({
     type: String,
     default: "",
   },
-  description: {
-    type: String,
-    default: "",
-  },
   dateTime: {
     type: String,
     default: "",
@@ -37,6 +33,10 @@ defineProps({
     type: [String, Object],
     default: "",
   },
+  roomId: {
+    type: Number,
+    default: 0,
+  }
 });
 defineEmits(['dropdown-action'])
 </script>
@@ -48,7 +48,7 @@ defineEmits(['dropdown-action'])
           <img :src="logo" :alt="title" />
         </div>
         <div class="my-auto ms-3">
-          <h6>{{ title }}</h6>
+          <router-link :to="{ path: `/pages/room/detail/${roomId}` }">{{ title }}</router-link>
           <div class="avatar-group">
             <a v-for="(member, index) of members" :key="index" href="#" class="avatar avatar-xs rounded-circle"
               data-bs-toggle="tooltip" data-original-title="">
