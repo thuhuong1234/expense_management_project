@@ -5,6 +5,7 @@ import { useRoute } from "vue-router";
 import Breadcrumbs from "@/examples/Breadcrumbs.vue";
 import { useAuthStore } from "@/stores/authStore";
 import Avatar from "primevue/avatar";
+const url = import.meta.env.VITE_URL_UPLOAD;
 const showMenu = ref(false);
 const store = useUiStore();
 const authStore = useAuthStore();
@@ -42,7 +43,7 @@ const getAvatarUrl = (avatar) => {
     if (!avatar) {
         avatar = 'avatar-default.jpeg';
     }
-    return `http://localhost:3000/uploads/${avatar}`
+    return `${url}${avatar}`
 }
 
 onBeforeUpdate(() => {
