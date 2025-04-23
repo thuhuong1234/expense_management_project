@@ -9,6 +9,7 @@ import Avatar from 'primevue/avatar';
 import FileUpload from 'primevue/fileupload';
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
+
 const user = ref({});
 const errorMessage = ref('');
 const isEditing = ref(false);
@@ -56,7 +57,7 @@ const getAvatarUrl = (avatar) => {
     if (!avatar) {
         avatar = 'avatar-default.jpeg';
     }
-    return `http://localhost:3001/uploads/${avatar}`
+    return `http://localhost:3000/uploads/${avatar}`
 }
 const updateAvatar = async (event) => {
     const uploadedFile = event.files?.[0];

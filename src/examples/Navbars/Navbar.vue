@@ -42,7 +42,7 @@ const getAvatarUrl = (avatar) => {
     if (!avatar) {
         avatar = 'avatar-default.jpeg';
     }
-    return `http://localhost:3001/uploads/${avatar}`
+    return `http://localhost:3000/uploads/${avatar}`
 }
 
 onBeforeUpdate(() => {
@@ -87,11 +87,6 @@ onMounted(async () => {
                     <li class="nav-item d-flex align-items-center">
                         <router-link :to="{ name: 'Tài khoản' }" class="px-0 nav-link font-weight-bold" :class="isNavFixed && !darkMode ? ' opacity-8 text-dark' : 'text-dark'
                             " target="_blank">
-                            <!-- <i class="fa fa-user" :class="isRTL ? 'ms-sm-2' : 'me-sm-1'"></i>
-                            <div v-if="isRTL" class="d-sm-inline d-none">يسجل دخول</div>
-                            <div v-else class="d-sm-inline d-none">
-                                
-                            </div> -->
                             <div class="col-sm-auto col-4 ">
                                 <Avatar :image="getAvatarUrl(user.avatar)" shape="circle"
                                     class="flex items-center justify-center mr-2 img-avatar" size="sm" />

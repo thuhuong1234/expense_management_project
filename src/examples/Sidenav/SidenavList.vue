@@ -16,8 +16,8 @@ const store = useUiStore();
                     </template>
                     <template #list>
                         <ul class="nav ms-4">
-                            <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="L" text="Landing" />
-                            <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="D" text="Default" />
+                            <sidenav-item :to="{ name: 'Landing' }" mini-icon="L" text="Landing" />
+                            <sidenav-item :to="{ name: 'Mặc định' }" mini-icon="D" text="Default" />
                         </ul>
                     </template>
                 </sidenav-collapse>

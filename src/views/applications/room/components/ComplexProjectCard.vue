@@ -84,7 +84,7 @@ defineEmits(['dropdown-action'])
       <hr class="horizontal dark" />
       <div class=" d-flex align-items-center">
         <div class="input-group">
-          <button type="button" class="btn btn-outline-primary p-1 m-0 text-xs btn-add">Thêm thành
+          <button type="button" class="z-index-2 btn btn-outline-primary p-1 m-0 text-xs btn-add">Thêm thành
             viên
           </button>
         </div>

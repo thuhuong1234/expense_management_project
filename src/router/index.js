@@ -9,7 +9,7 @@ const router = createRouter({
       name: "Bảng điều khiển",
       children: [
         {
-          path: "",
+          path: "home",
           name: "Trang chủ",
           component: HomeView,
         },
@@ -19,13 +19,13 @@ const router = createRouter({
           component: () => import("../views/AboutView.vue"),
         },
         {
-          path: "landing",
-          name: "landing",
+          path: "",
+          name: "Landing",
           component: () => import("@/views/dashboards/Landing.vue"),
         },
         {
           path: "default",
-          name: "default",
+          name: "Mặc định",
           component: () => import("@/views/dashboards/Default.vue"),
         },
         {
