@@ -125,10 +125,6 @@ onBeforeUnmount(() => {
                             :date-time="room.createdAt" :members="[team3, team4, team2, team3, team4]" :roomId="room.id"
                             :leader="room.leaderName" :dropdown="[
                                 {
-                                    label: 'Chỉnh sửa',
-                                    route: 'javascript:;',
-                                },
-                                {
                                     label: 'Xóa phòng',
                                     route: 'javascript:;',
                                 },

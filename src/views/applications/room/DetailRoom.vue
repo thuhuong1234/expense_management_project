@@ -1,8 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import ProgressLineChart from "@/examples/Charts/ProgressLineChart.vue";
-import ProgressDoughnutChart from "./components/ProgressDoughnutChart.vue";
 import TodoList from "./components/TodoList.vue";
 import useCRUD from "@/composables/useCRUD";
 import DashboardLayout from "@/layouts/DashboardLayout.vue";
@@ -17,7 +15,7 @@ const users = ref([]);
 const transactions = ref([]);
 const userTransactions = ref([]);
 const fund = ref(0);
-const { getById } = useCRUD();
+const { getById, update } = useCRUD();
 
 const getRoom = async () => {
     const response = await getById('rooms', roomId);
@@ -39,9 +37,12 @@ const getRoom = async () => {
 
     fund.value = room.value.fund || 0;
 }
-const addTransaction = () => {
-    console.log("add transaction");
-
+const saveRoomName = async (roomId, value) => {
+    try {
+        await update(`rooms/${roomId}`, value);
+    } catch (error) {
+        console.log(error);
+    }
 }
 onMounted(async () => {
     getRoom();
@@ -62,7 +63,8 @@ onMounted(async () => {
             </div>
             <div class="mt-4 row">
                 <div class="col-lg-8 col-12">
-                    <todo-list :header="{ title: room.name, dateTime: room.updatedAt }" :transactions="transactions" />
+                    <todo-list :header="{ title: room.name, dateTime: room.updatedAt }" :transactions="transactions"
+                        @save="saveRoomName(room.id, $event)" />
                 </div>
                 <div class="col-lg-4 col-12 d-flex flex-column gap-4">
                     <category :is-expense="true" :is-income="false" :categories="categories" title="Chi tiêu" />

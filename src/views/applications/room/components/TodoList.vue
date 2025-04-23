@@ -1,15 +1,8 @@
 <script setup>
-import { ref } from "vue";
-import ArgonCheckbox from "@/components/Icons/ArgonCheckbox.vue";
 import ArgonButton from "@/components/Icons/ArgonButton.vue";
 import ArgonAvatar from "@/components/Icons/ArgonAvatar.vue";
-import img2 from "@/assets/img/team-3.jpg";
-import img3 from "@/assets/img/team-3.jpg";
-import img4 from "@/assets/img/team-3.jpg";
 import img5 from "@/assets/img/team-3.jpg";
-import img6 from "@/assets/img/team-3.jpg";
-const showMenu = ref(false);
-defineProps({
+const props = defineProps({
     header: {
         type: Object,
         title: String,
@@ -37,13 +30,19 @@ defineProps({
         },
     },
 });
+const emit = defineEmits(['save']);
+const emitSave = () => {
+    emit('save', { name: props.header.title });
+}
 </script>
 <template>
     <div class="card">
         <div class="p-3 card-header">
             <div class="row">
                 <div class="col-md-6">
-                    <h6 class="mb-0">{{ header.title }}</h6>
+                    <!-- <h6 class="mb-0">{{ header.title }}</h6> -->
+                    <input type="text" @blur="emitSave" placeholder="Nhập tên phòng...."
+                        class="form-control mb-0 border-0 text-lg font-weight-bold" v-model="header.title" />
                 </div>
                 <div class="col-md-6 d-flex justify-content-end align-items-center">
                     <small>{{ new Date(header.dateTime).toLocaleDateString("vi-VN") }}</small>

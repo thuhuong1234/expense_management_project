@@ -89,7 +89,7 @@ defineEmits(['dropdown-action'])
           </button>
         </div>
         <div class="text-end ">
-          <h6 class="mb-0 text-xs">{{ dateTime }}</h6>
+          <h6 class="mb-0 text-xs">{{ new Date(dateTime).toLocaleDateString("vi-VN") }}</h6>
         </div>
       </div>
     </div>
