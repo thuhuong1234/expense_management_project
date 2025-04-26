@@ -52,7 +52,7 @@ const emit = defineEmits(['dropdown-action']);
             </div>
             <div class=" col ml-2">
               <h6 class="mb-0 text-sm">
-                <a :href="link">{{ name }}</a>
+                <a href="#">{{ name }}</a>
               </h6>
               <p class="mb-0 text-sm text-muted text-xs">
                 {{ email }}

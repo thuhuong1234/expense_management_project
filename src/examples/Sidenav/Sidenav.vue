@@ -14,24 +14,11 @@ const sidebarType = computed(() => store.sidebarType);
     <div class="sidenav-header">
       <router-link class="m-0 navbar-brand d-flex align-items-center gap-2 m-0" to="/">
         <img src="@/assets/img/smile-svgrepo-com.svg" class="navbar-brand-img h-100" alt="main_logo" /> <span
-          class="font-weight-bold fs-5 mb-0 brand-text"> RoomPay </span>
+          class=" fw-bolder fs-5 mb-0 brand-text "> RoomPay </span>
       </router-link>
     </div>
     <hr class="mt-0 horizontal dark" />
     <sidenav-list />
   </aside>
 </template>
-<style lang="scss" scoped>
-#sidenav-main {
-  background-color: #344767 !important;
-  color: #fdfdfd !important;
-
-  a,
-  span,
-  li,
-  i {
-    color: #fdfdfd !important;
-  }
-
-}
-</style>
+<style lang="scss" scoped></style>

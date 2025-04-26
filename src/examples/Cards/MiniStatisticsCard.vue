@@ -1,5 +1,6 @@
 <script setup>
-defineProps({
+import { computed } from "vue";
+const props = defineProps({
   rowReverse: {
     type: Boolean,
     default: false,
@@ -61,54 +62,44 @@ defineProps({
     default: "",
   },
 });
+const valueColor = computed(() => {
+  console.log(typeof props.value);
+  if (typeof props.value === 'object' && props.value.color) return props.value.color;
+  if (typeof props.value === 'number' && props.value > 0) return 'text-success';
+  if (typeof props.value === 'number' && props.value < 0) return 'text-danger';
+})
+
 </script>
 <template>
   <div class="mb-3 card">
     <div class="p-3 card-body">
-      <div
-        class="d-flex"
-        :class="rowReverse ? '' : 'flex-row-reverse justify-content-between'"
-      >
-        <div
-          class="text-center shadow icon icon-shape"
-          :class="[
-            typeof icon === 'object'
-              ? `${icon.background} ${icon.shape}`
-              : 'border-radius-md',
-            rowReverse ? 'me-2' : '',
-          ]"
-        >
-          <i
-            class="text-lg opacity-10"
-            :class="typeof icon === 'string' ? icon : icon.component"
-            aria-hidden="true"
-          ></i>
+      <div class="d-flex" :class="rowReverse ? '' : 'flex-row-reverse justify-content-between'">
+        <div class="text-center shadow icon icon-shape" :class="[
+          typeof icon === 'object'
+            ? `${icon.background} ${icon.shape}`
+            : 'border-radius-md',
+          rowReverse ? 'me-2' : '',
+        ]">
+          <i class="text-lg opacity-10" :class="typeof icon === 'string' ? icon : icon.component"
+            aria-hidden="true"></i>
         </div>
         <div :class="classContent">
           <div class="numbers">
-            <p
-              class="mb-0 text-sm text-uppercase font-weight-bold"
-              :class="title.color"
-            >
+            <p class="mb-0 text-sm text-uppercase font-weight-bold" :class="title.color">
               {{ typeof title === "string" ? title : title.text }}
             </p>
-            <h5 :class="`mb-0 font-weight-bolder ${value.color}`">
+            <h5 :class="`mb-0 font-weight-bolder ${valueColor}`">
               {{
                 (value && typeof value === "string") ||
-                (value && typeof value === "number")
+                  (value && typeof value === "number")
                   ? value
                   : value.text
               }}
-              <span
-                v-if="percentage && typeof percentage === 'string'"
-                class="text-sm font-weight-bolder"
-              >
+              <span v-if="percentage && typeof percentage === 'string'" class="text-sm font-weight-bolder">
                 {{ percentage }}
               </span>
-              <span
-                v-if="percentage && typeof percentage === 'object'"
-                :class="`text-sm font-weight-bolder text-${percentage.color}`"
-              >
+              <span v-if="percentage && typeof percentage === 'object'"
+                :class="`text-sm font-weight-bolder text-${percentage.color}`">
                 {{ percentage.value }}
               </span>
             </h5>

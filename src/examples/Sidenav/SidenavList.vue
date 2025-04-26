@@ -12,7 +12,7 @@ const store = useUiStore();
             <li class="nav-item ">
                 <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Tổng quan">
                     <template #icon>
-                        <i class="ni ni-shop text-primary text-sm opacity-10"></i>
+                        <i class="ni ni-shop text-dark text-sm opacity-10"></i>
                     </template>
                     <template #list>
                         <ul class="nav ms-4">
@@ -26,7 +26,7 @@ const store = useUiStore();
             <li class="nav-item ">
                 <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Danh mục ">
                     <template #icon>
-                        <i class="ni ni-folder-17 text-primary text-sm opacity-10"></i>
+                        <i class="ni ni-folder-17 text-dark text-sm opacity-10"></i>
                     </template>
                     <template #list>
                         <ul class="nav ms-4">
@@ -39,7 +39,7 @@ const store = useUiStore();
             <li class="nav-item ">
                 <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Phòng ">
                     <template #icon>
-                        <i class="ni ni-building text-primary text-sm opacity-10"></i>
+                        <i class="ni ni-building text-dark text-sm opacity-10"></i>
                     </template>
                     <template #list>
                         <ul class="nav ms-4">
@@ -53,7 +53,7 @@ const store = useUiStore();
             <li class="nav-item ">
                 <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Thông báo">
                     <template #icon>
-                        <i class="ni ni-bell-55 text-primary text-sm opacity-10"></i>
+                        <i class="ni ni-bell-55 text-dark text-sm opacity-10"></i>
                     </template>
                     <template #list>
                         <ul class="nav ms-4">
@@ -71,15 +71,15 @@ const store = useUiStore();
                 </h6>
             </li>
             <li class="nav-item ">
-                <sidenav-item :to="{ name: 'Tài khoản' }" mini-icon="ni ni-single-02 text-primary text-sm opacity-10"
+                <sidenav-item :to="{ name: 'Tài khoản' }" mini-icon="ni ni-single-02 text-dark text-sm opacity-10"
                     text="Hồ sơ" />
             </li>
             <li class="nav-item ">
                 <sidenav-item :to="{ name: 'Đăng nhập' }"
-                    mini-icon="ni ni-lock-circle-open text-primary text-sm opacity-10" text="Đăng nhập" />
+                    mini-icon="ni ni-lock-circle-open text-dark text-sm opacity-10" text="Đăng nhập" />
             </li>
             <li class="nav-item ">
-                <sidenav-item :to="{ name: 'Đăng ký' }" mini-icon="ni ni-circle-08 text-primary text-sm opacity-10"
+                <sidenav-item :to="{ name: 'Đăng ký' }" mini-icon="ni ni-circle-08 text-dark text-sm opacity-10"
                     text="Đăng ký" />
             </li>
         </ul>
@@ -88,17 +88,11 @@ const store = useUiStore();
 </template>
 <style lang="scss" scoped>
 ::v-deep(.nav-item .nav-link:hover) {
-    background-color: #ee3672 !important;
-}
+    color: #ee3672 !important;
+    font-weight: 1000;
 
-::v-deep(.nav-item) {
-    color: #ffffff !important;
-
-    .nav-link,
-    span,
-    h6,
     i {
-        color: #ffffff !important;
+        color: #ee3672 !important;
     }
 }
 </style>

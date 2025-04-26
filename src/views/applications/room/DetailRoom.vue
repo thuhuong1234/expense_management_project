@@ -7,14 +7,17 @@ import DashboardLayout from "@/layouts/DashboardLayout.vue";
 import Category from "@/views/applications/category/Category.vue";
 import ProgressLineChart from "@/examples/Charts/ProgressLineChart.vue";
 import MemberCard from "@/views/dashboards/components/MemberCard.vue";
+import MiniStatisticsCard from "@/examples/Cards/MiniStatisticsCard.vue";
 const route = useRoute();
 const roomId = route.params?.id || null;
 const room = ref({});
 const users = ref([]);
 const transactions = ref([]);
 const userTransactions = ref([]);
-const fund = ref(0);
+const fund = ref([]);
 const categories = ref([]);
+const userInfos = ref([]);
+const balance = ref(0);
 const { getById, update, getAll } = useCRUD();
 const getRoom = async () => {
     const response = await getById('rooms', roomId);
@@ -25,17 +28,26 @@ const getRoom = async () => {
         isLeader: userRoom.isLeader,
         joinedAt: userRoom.joinedAt
     })) || [];
-    console.log(users.value);
-
-    transactions.value = room.value.transactions?.map((transaction) => ({
-        description: transaction.description,
-        createdAt: new Date(transaction.createdAt).toLocaleDateString("vi-VN"),
-        id: transaction.id,
-        amount: Number(transaction.amount).toLocaleString("vi-VN") + " VND",
-        category: transaction.categoryId,
-        userTransactions: transaction.userTransactions?.length,
-    })) || [];
-    fund.value = room.value.fund || 0;
+    transactions.value = await Promise.all(
+        room.value.transactions?.map(async (transaction) => {
+            const response = await getById('categories', transaction.categoryId);
+            return {
+                description: transaction.description,
+                createdAt: new Date(transaction.createdAt).toLocaleDateString("vi-VN"),
+                id: transaction.id,
+                amount: Number(transaction.amount).toLocaleString("vi-VN") + " VND",
+                category: response?.data.name || transaction.categoryId,
+                userTransactions: transaction.userTransactions?.length,
+            }
+        })
+    );
+    fund.value = await Promise.all(room.value.fund?.map(async (item) => {
+        const response = await getById('funds', item.id);
+        return {
+            name: response.data.name,
+            balance: response.data.balance,
+        }
+    }));
 }
 const saveRoomName = async (roomId, value) => {
     try {
@@ -48,7 +60,6 @@ const getAllCategories = async () => {
     const response = await getAll('categories');
     categories.value = response.data;
 }
-const userInfos = ref([]);
 const getUserInfos = async () => {
     await Promise.all(users.value.map(async (user) => {
         const response = await getById('users', user.userId);
@@ -60,15 +71,55 @@ const getUserInfos = async () => {
         });
     }))
 }
+
 onMounted(async () => {
     await getRoom();
     await getAllCategories();
     await getUserInfos();
-})
+    balance.value = +fund.value?.[0]?.balance;
+})  
 </script>
 <template>
     <DashboardLayout>
         <div class="w-100">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-12">
+                    <mini-statistics-card title="Quỹ phòng" :value="balance" description="<span
+                class='text-sm font-weight-bolder text-success'
+                >+55%</span> since yesterday" :icon="{
+                    component: 'ni ni-money-coins',
+                    background: 'bg-gradient-primary',
+                    shape: 'rounded-circle',
+                }" />
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <mini-statistics-card title="Người dùng" :value="users.length" description="<span
+                class='text-sm font-weight-bolder text-success'
+                >+3%</span> since last week" :icon="{
+                    component: 'ni ni-world',
+                    background: 'bg-gradient-danger',
+                    shape: 'rounded-circle',
+                }" />
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <mini-statistics-card title="Chi tiêu" value="+3,462" description="<span
+                class='text-sm font-weight-bolder text-danger'
+                >-2%</span> since last quarter" :icon="{
+                    component: 'ni ni-cart',
+                    background: 'bg-gradient-success',
+                    shape: 'rounded-circle',
+                }" />
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <mini-statistics-card title="Thu nhập" value="$103,430" description="<span
+                class='text-sm font-weight-bolder text-success'
+                >+5%</span> than last month" :icon="{
+                    component: 'ni ni-paper-diploma',
+                    background: 'bg-gradient-warning',
+                    shape: 'rounded-circle',
+                }" />
+                </div>
+            </div>
             <div class="row">
                 <div class="col-lg-8 col-12">
                     <div class="overflow-hidden card">
