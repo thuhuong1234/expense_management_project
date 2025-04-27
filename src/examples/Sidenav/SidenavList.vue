@@ -51,6 +51,18 @@ const store = useUiStore();
                 </sidenav-collapse>
             </li>
             <li class="nav-item ">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Ghi chú ">
+                    <template #icon>
+                        <i class="ni ni-building text-dark text-sm opacity-10"></i>
+                    </template>
+                    <template #list>
+                        <ul class="nav ms-4">
+                            <sidenav-item :to="{ name: 'Tạo ghi chú' }" mini-icon="" text="Ghi chú mới" />
+                        </ul>
+                    </template>
+                </sidenav-collapse>
+            </li>
+            <li class="nav-item ">
                 <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Thông báo">
                     <template #icon>
                         <i class="ni ni-bell-55 text-dark text-sm opacity-10"></i>

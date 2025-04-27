@@ -63,7 +63,6 @@ const props = defineProps({
   },
 });
 const valueColor = computed(() => {
-  console.log(typeof props.value);
   if (typeof props.value === 'object' && props.value.color) return props.value.color;
   if (typeof props.value === 'number' && props.value > 0) return 'text-success';
   if (typeof props.value === 'number' && props.value < 0) return 'text-danger';

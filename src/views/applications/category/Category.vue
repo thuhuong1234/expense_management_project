@@ -6,8 +6,8 @@
                     role="button" @click="onSubmit">
                     <div class="text-center bg-outline-primary rounded-circle img-avatar position-relative ">
                         <img :src="getAvatarUrl(avatarUrl)" alt="avatar" />
-                        <div
-                            class="btn-add z-index-2 position-absolute end-0 bottom-0 text-dark d-flex align-items-center justify-content-center text-white font-bold ">
+                        <div class="btn-add z-index-2 position-absolute end-0 bottom-0 text-dark d-flex align-items-center justify-content-center text-white font-bold "
+                            @click="onSubmit">
                             +
                         </div>
                     </div>
@@ -38,6 +38,7 @@ const props = defineProps({
         categoryType: String
     }
 });
+const emit = defineEmits(['onSubmit']);
 const getAvatarUrl = (avatar) => {
     if (!avatar) {
         avatar = 'avatar-default.jpeg';

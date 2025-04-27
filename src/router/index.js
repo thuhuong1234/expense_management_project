@@ -73,6 +73,18 @@ const router = createRouter({
             },
           ],
         },
+        {
+          path: "transaction",
+          name: "Ghi chú",
+          children: [
+            {
+              path: "create",
+              name: "Tạo ghi chú",
+              component: () =>
+                import("@/views/applications/transaction/NewTransaction.vue"),
+            },
+          ],
+        },
       ],
     },
     {

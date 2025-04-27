@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import TodoList from "./components/TodoList.vue";
 import useCRUD from "@/composables/useCRUD";
 import DashboardLayout from "@/layouts/DashboardLayout.vue";
@@ -9,6 +9,7 @@ import ProgressLineChart from "@/examples/Charts/ProgressLineChart.vue";
 import MemberCard from "@/views/dashboards/components/MemberCard.vue";
 import MiniStatisticsCard from "@/examples/Cards/MiniStatisticsCard.vue";
 const route = useRoute();
+const router = useRouter();
 const roomId = route.params?.id || null;
 const room = ref({});
 const users = ref([]);
@@ -71,7 +72,9 @@ const getUserInfos = async () => {
         });
     }))
 }
-
+const createTransaction = async () => {
+    router.push({ path: `/pages/transaction/create` });
+}
 onMounted(async () => {
     await getRoom();
     await getAllCategories();
@@ -139,11 +142,11 @@ onMounted(async () => {
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="expense-tab-pane" role="tabpanel"
                                     aria-labelledby="expense-tab" tabindex="0">
-                                    <category :categories="categories" type="Expense" />
+                                    <category :categories="categories" type="Expense" :onSubmit="createTransaction" />
                                 </div>
                                 <div class="tab-pane fade" id="income-tab-pane" role="tabpanel"
                                     aria-labelledby="income-tab" tabindex="0">
-                                    <category :categories="categories" type="Income" />
+                                    <category :categories="categories" type="Income" :onSubmit="createTransaction" />
                                 </div>
                             </div>
                         </div>
