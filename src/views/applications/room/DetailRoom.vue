@@ -8,27 +8,23 @@ import Category from "@/views/applications/category/Category.vue";
 import ProgressLineChart from "@/examples/Charts/ProgressLineChart.vue";
 import MemberCard from "@/views/dashboards/components/MemberCard.vue";
 import MiniStatisticsCard from "@/examples/Cards/MiniStatisticsCard.vue";
+import { useCategoryStore, useRoomStore } from "@/stores";
 const route = useRoute();
 const router = useRouter();
+const roomStore = useRoomStore();
+const categoryStore = useCategoryStore();
 const roomId = route.params?.id || null;
 const room = ref({});
 const users = ref([]);
 const transactions = ref([]);
-const userTransactions = ref([]);
 const fund = ref([]);
 const categories = ref([]);
-const userInfos = ref([]);
 const balance = ref(0);
-const { getById, update, getAll } = useCRUD();
+const { getById, update } = useCRUD();
 const getRoom = async () => {
     const response = await getById('rooms', roomId);
     room.value = response.data;
-    users.value = room.value.userRooms?.map((userRoom) => ({
-        userId: userRoom.userId,
-        role: userRoom.role,
-        isLeader: userRoom.isLeader,
-        joinedAt: userRoom.joinedAt
-    })) || [];
+    users.value = await roomStore.getUserInfos(roomId);
     transactions.value = await Promise.all(
         room.value.transactions?.map(async (transaction) => {
             const response = await getById('categories', transaction.categoryId);
@@ -49,7 +45,10 @@ const getRoom = async () => {
             balance: response.data.balance,
         }
     }));
+    roomStore.transactions = transactions.value
+    roomStore.fund = fund.value
 }
+
 const saveRoomName = async (roomId, value) => {
     try {
         await update(`rooms/${roomId}`, value);
@@ -57,28 +56,19 @@ const saveRoomName = async (roomId, value) => {
         console.log(error);
     }
 }
-const getAllCategories = async () => {
-    const response = await getAll('categories');
-    categories.value = response.data;
-}
-const getUserInfos = async () => {
-    await Promise.all(users.value.map(async (user) => {
-        const response = await getById('users', user.userId);
-        userInfos.value.push({
-            ...response.data,
-            role: user.role,
-            isLeader: user.isLeader,
-            joinedAt: user.joinedAt
-        });
-    }))
-}
-const createTransaction = async () => {
-    router.push({ path: `/pages/transaction/create` });
+const createTransaction = async (categoryId) => {
+    router.push({
+        path: `/pages/transaction/create`,
+        query: {
+            roomId,
+            categoryId: categoryId
+        }
+    },
+    );
 }
 onMounted(async () => {
     await getRoom();
-    await getAllCategories();
-    await getUserInfos();
+    categories.value = await categoryStore.getCategories();
     balance.value = +fund.value?.[0]?.balance;
 })  
 </script>
@@ -165,7 +155,7 @@ onMounted(async () => {
                         @save="saveRoomName(room.id, $event)" />
                 </div>
                 <div class="col-lg-4 col-12 mb-4 mb-lg-0">
-                    <member-card :members="userInfos" :title="room.name" :dropdown="[
+                    <member-card :members="users" :title="room.name" :selectable="false" :dropdown="[
                         {
                             label: 'Xóa phòng',
                             route: 'javascript:;',
@@ -174,7 +164,6 @@ onMounted(async () => {
                 </div>
             </div>
         </div>
-
     </DashboardLayout>
 </template>
 <style scoped>

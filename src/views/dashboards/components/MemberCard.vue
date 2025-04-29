@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, defineProps, defineEmits } from "vue";
 const showMenu = ref(false);
 const toggleShowMenu = (index) => {
   showMenu.value = { [index]: !showMenu.value[index] };
@@ -7,11 +7,12 @@ const toggleShowMenu = (index) => {
 const props = defineProps({
   title: {
     type: String,
-    default: "Team members",
+    default: "Danh sách thành viên",
   },
   members: {
     type: Array,
     required: true,
+    id: Number,
     avatar: String,
     name: String,
     email: String,
@@ -23,6 +24,14 @@ const props = defineProps({
     label: String,
     route: String,
   },
+  selectable: {
+    type: Boolean,
+    default: false,
+  },
+  selectedUsers: {
+    type: Array,
+    default: () => [],
+  }
 });
 const getAvatarUrl = (avatar) => {
   if (!avatar) {
@@ -30,17 +39,25 @@ const getAvatarUrl = (avatar) => {
   }
   return `${import.meta.env.VITE_URL_UPLOAD}${avatar}`
 }
-const emit = defineEmits(['dropdown-action']);
 
+
+const toggleSelectUser = (id) => {
+  const userIndex = props.selectedUsers.indexOf(id);
+  if (userIndex === -1) props.selectedUsers.push(id);
+
+  else props.selectedUsers.splice(userIndex, 1);
+
+}
+const emit = defineEmits(['dropdown-action']);
 </script>
 <template>
   <div class="card h-100">
     <div class="card-header">
-      <h5 class="mb-0 text-capitalize">{{ title }}</h5>
+      <h5 class="mb-0 text-capitalize text-sm">{{ title }}</h5>
     </div>
     <div class="card-body pt-0">
       <ul class="list-group list-group-flush">
-        <li v-for="({ avatar, name, email, isLeader }, index) of members" :key="index"
+        <li v-for="({ avatar, name, email, isLeader, id }, index) of members" :key="index"
           class="d-flex align-items-center list-group-item px-0">
           <div class="d-flex align-items-center gap-1">
             <div class="col-auto d-flex align-items-center">
@@ -60,7 +77,11 @@ const emit = defineEmits(['dropdown-action']);
             </div>
           </div>
           <div class="ms-auto">
-            <div class="dropdown">
+            <div class="form-check" v-if="selectable">
+              <input class="form-check-input" type="checkbox" :value="id" :id="'checkbox-' + id"
+                @change="toggleSelectUser(id)">
+            </div>
+            <div class="dropdown" v-if="!selectable">
               <button id="navbarDropdownMenuLink" class="btn btn-link text-secondary ps-0 pe-2"
                 :class="{ show: showMenu }" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                 @click="toggleShowMenu(index)">

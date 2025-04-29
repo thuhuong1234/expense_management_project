@@ -1,13 +1,13 @@
 <template>
     <div class="p-3">
         <div class="category-scroll-container d-flex justify-content-between flex-nowrap w-100 gap-3">
-            <div v-for="({ name, avatarUrl }, index) of filteredCategories" :key="index" class="pb-2">
+            <div v-for="({ name, avatarUrl, id }, index) of filteredCategories" :key="index" class="pb-2">
                 <div class="d-flex flex-column align-items-center justify-content-center text-center category-item"
-                    role="button" @click="onSubmit">
+                    role="button">
                     <div class="text-center bg-outline-primary rounded-circle img-avatar position-relative ">
                         <img :src="getAvatarUrl(avatarUrl)" alt="avatar" />
                         <div class="btn-add z-index-2 position-absolute end-0 bottom-0 text-dark d-flex align-items-center justify-content-center text-white font-bold "
-                            @click="onSubmit">
+                            @click.stop="onSubmit(id)">
                             +
                         </div>
                     </div>
@@ -33,6 +33,7 @@ const props = defineProps({
     categories: {
         type: Array,
         required: true,
+        id: Number,
         name: String,
         avatarUrl: String,
         categoryType: String

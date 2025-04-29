@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import axios from "@/configs/axios.js";
-
+import useCRUD from "@/composables/useCRUD";
+const { getAll, getById } = useCRUD();
 export const useRoomStore = defineStore("room", {
   state: () => ({
     rooms: [],
@@ -8,12 +8,30 @@ export const useRoomStore = defineStore("room", {
     userRooms: [],
     userTransactions: [],
     fund: [],
+    userInfos: [],
   }),
   actions: {
     async getRooms() {
-      const response = await axios.get("/rooms");
+      const response = await getAll("/rooms");
       this.rooms = response.data;
       return response.data;
+    },
+    async getUserInfos(roomId) {
+      const response = await getById("/rooms", roomId);
+      this.userRooms = response.data.userRooms;
+      await Promise.all(
+        this.userRooms.map(async (user) => {
+          const response = await getById("users", user.userId);
+          this.userInfos.push({
+            ...response.data,
+            role: user.role,
+            isLeader: user.isLeader,
+            joinedAt: user.joinedAt,
+          });
+        })
+      );
+      console.log(this.userInfos);
+      return this.userInfos;
     },
   },
   getters: {},
