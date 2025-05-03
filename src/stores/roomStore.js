@@ -30,7 +30,6 @@ export const useRoomStore = defineStore("room", {
           });
         })
       );
-      console.log(this.userInfos);
       return this.userInfos;
     },
   },

@@ -4,10 +4,11 @@
             <div v-for="({ name, avatarUrl, id }, index) of filteredCategories" :key="index" class="pb-2">
                 <div class="d-flex flex-column align-items-center justify-content-center text-center category-item"
                     role="button">
-                    <div class="text-center bg-outline-primary rounded-circle img-avatar position-relative ">
+                    <div class="text-center bg-outline-primary rounded-circle img-avatar position-relative "
+                        :class="{ 'selected': id === props.selectedId }">
                         <img :src="getAvatarUrl(avatarUrl)" alt="avatar" />
                         <div class="btn-add z-index-2 position-absolute end-0 bottom-0 text-dark d-flex align-items-center justify-content-center text-white font-bold "
-                            @click.stop="onSubmit(id)">
+                            @click.stop="$emit('select', id)">
                             +
                         </div>
                     </div>
@@ -36,10 +37,14 @@ const props = defineProps({
         id: Number,
         name: String,
         avatarUrl: String,
-        categoryType: String
+        categoryType: String,
+    },
+    selectedId: {
+        type: Number,
+        default: null
     }
 });
-const emit = defineEmits(['onSubmit']);
+const emit = defineEmits(['select']);
 const getAvatarUrl = (avatar) => {
     if (!avatar) {
         avatar = 'avatar-default.jpeg';
@@ -51,20 +56,20 @@ const filteredCategories = computed(() => {
 })
 </script>
 
-<style scoped>
+<style scss scoped>
 .category-scroll-container {
     max-width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
-}
 
-.category-scroll-container::-webkit-scrollbar {
-    height: 6px;
-}
+    &::-webkit-scrollbar {
+        height: 6px;
+    }
 
-.category-scroll-container::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+    }
 }
 
 .img-avatar {
@@ -73,11 +78,15 @@ const filteredCategories = computed(() => {
     object-fit: cover;
     border-radius: 50%;
     border: 2px solid #EE3672;
-}
 
-.img-avatar img {
-    width: 70%;
-    height: 100%;
+    img {
+        width: 70%;
+        height: 100%;
+    }
+
+    &.selected {
+        background-color: #CCCCCC;
+    }
 }
 
 .text-truncate {
@@ -91,10 +100,10 @@ const filteredCategories = computed(() => {
     border: none;
     background-color: #EE3672 !important;
     font-weight: bold;
-}
 
-.btn-add:hover {
-    cursor: pointer;
-    background-color: #6d7992 !important;
+    &:hover {
+        cursor: pointer;
+        background-color: #6d7992 !important;
+    }
 }
 </style>

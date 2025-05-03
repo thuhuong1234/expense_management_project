@@ -132,11 +132,11 @@ onMounted(async () => {
                             <div class="tab-content" id="myTabContent">
                                 <div class="tab-pane fade show active" id="expense-tab-pane" role="tabpanel"
                                     aria-labelledby="expense-tab" tabindex="0">
-                                    <category :categories="categories" type="Expense" :onSubmit="createTransaction" />
+                                    <category :categories="categories" type="Expense" @select="createTransaction" />
                                 </div>
                                 <div class="tab-pane fade" id="income-tab-pane" role="tabpanel"
                                     aria-labelledby="income-tab" tabindex="0">
-                                    <category :categories="categories" type="Income" :onSubmit="createTransaction" />
+                                    <category :categories="categories" type="Income" :select="createTransaction" />
                                 </div>
                             </div>
                         </div>

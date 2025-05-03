@@ -2,43 +2,43 @@
 import { onMounted, ref } from "vue";
 import { useForm } from "vee-validate";
 import { useRoute, useRouter } from "vue-router";
-import { useRoomStore, useCategoryStore, useAuthStore } from "@/stores";
+import { useRoomStore, useCategoryStore, useAuthStore, useUserStore } from "@/stores";
 import * as yup from "yup";
-import Choices from "choices.js";
 import useCRUD from "@/composables/useCRUD";
 import flatPickr from "vue-flatpickr-component";
 import ArgonInput from "@/components/Icons/ArgonInput.vue";
 import DashboardLayout from "@/layouts/DashboardLayout.vue";
 import MemberCard from "@/views/dashboards/components/MemberCard.vue";
 import Category from "@/views/applications/category/Category.vue";
+import { showToast } from "@/helpers/sweetalertHelper";
 const { create } = useCRUD();
 const createAt = "";
 const config = {
     allowInput: true,
 };
 const route = useRoute();
+const router = useRouter();
 const roomStore = useRoomStore();
 const authStore = useAuthStore();
 const categoryStore = useCategoryStore();
+const userStore = useUserStore();
+const userId = ref();
 const users = ref([]);
+const user = ref([]);
 const fund = ref([]);
 const selectedUsers = ref([]);
-// const userId = authStore.user.id || null;
+const roomsOfUser = ref([]);
+const categories = ref([]);
 const roomId = Number(route.query?.roomId) || null;
 const categoryId = Number(route.query?.categoryId) || null;
-const categories = ref([]);
 const schema = yup.object({
-    // createAt: yup.string().required('Vui lòng nhập ngày'),
-    amount: yup.string().required('Vui lòng nhập số tiền'),
+    amount: yup.number().typeError('Vui lòng nhập số tiền').required('Vui lòng nhập số tiền').positive('Số tiền cần lớn hơn 0'),
     description: yup.string().required('Vui lòng nhập ghi chú'),
 })
 const { handleSubmit } = useForm({
     validationSchema: schema
 })
 const onSubmit = handleSubmit(async (values) => {
-    console.log('selected:', selectedUsers.value);
-
-    console.log(values);
     const data = {
         amount: Number(amount),
         ...values,
@@ -46,52 +46,28 @@ const onSubmit = handleSubmit(async (values) => {
         categoryId,
         userTransactions: selectedUsers.value,
     }
-    console.log('data', data);
-
-    const response = await create('transactions', data);
-    console.log('res', response?.data);
-    // if(response?.data){
-
-    // }
+    await create('transactions', data);
+    showToast('Tạo giao dịch thành công', 'success');
+    router.push('/pages/transaction');
 })
-const createTransaction = async (categoryId) => {
-    console.log('categoryId', categoryId);
-
-}
+const selectedCategoryId = ref(categoryId);
+const handleCategorySelect = (id) => {
+    console.log('categoryId', selectedCategoryId.value);
+    selectedCategoryId.value = id;
+    router.replace({
+        query: {
+            ...route.query,
+            categoryId: id,
+        },
+    });
+};
 onMounted(async () => {
+    userId.value = await authStore.getUser();
     categories.value = await categoryStore.getCategories();
     users.value = await roomStore.getUserInfos(roomId);
-    console.log(users.value);
-
     fund.value = roomStore.fund;
-    if (document.getElementById("choices-multiple-remove-button")) {
-        var element = document.getElementById("choices-multiple-remove-button");
-        const example = new Choices(element, {
-            removeItemButton: true,
-            allowHTML: true,
-        });
-        example.setChoices(
-            [
-                {
-                    value: "One",
-                    label: "Label One",
-                    disabled: true,
-                },
-                {
-                    value: "Two",
-                    label: "Label Two",
-                    selected: true,
-                },
-                {
-                    value: "Three",
-                    label: "Label Three",
-                },
-            ],
-            "value",
-            "label",
-            false
-        );
-    }
+    user.value = await userStore.getUserById(userId.value.id);
+    roomsOfUser.value = user.value.rooms;
 });
 </script>
 <template>
@@ -115,20 +91,20 @@ onMounted(async () => {
                         </div>
                         <hr class="my-0 dark" />
                         <div class="d-flex align-items-center">
-                            <label for="roomId" class="w-20 form-label text-sm">Phòng</label>
-                            <select class="w-80 form-select text-sm" aria-label="Default select example">
-                                <option selected>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                        <hr class="my-0 dark" />
-                        <div class="d-flex align-items-center">
                             <label for="createAt" class="w-20 form-label text-sm"> Ngày chi</label>
                             <flat-pickr id="createAt" v-model="createAt"
                                 class="mb-3 w-80 form-control datetimepicker text-sm" placeholder="Ngày chi"
                                 :config="config"></flat-pickr>
+                        </div>
+                        <hr class="my-0 dark" />
+                        <div class="d-flex align-items-center" v-if="!roomId">
+                            <label for="roomId" class="w-20 form-label text-sm">Phòng</label>
+                            <select v-model="roomId" class="w-80 form-select text-sm"
+                                aria-label="Default select example">
+                                <option v-for="room in roomsOfUser" :key="room.id" :value="room.id">{{
+                                    room.name }}
+                                </option>
+                            </select>
                         </div>
                         <div class="p-2">
                             <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
@@ -164,20 +140,19 @@ onMounted(async () => {
                                                 <button class="nav-link text-sm" id="category-income-tab"
                                                     data-bs-toggle="tab" data-bs-target="#category-income-tab-pane"
                                                     type="button" role="tab" aria-controls="category-income-tab-pane"
-                                                    aria-selected="false">Thu
-                                                    nhập</button>
+                                                    aria-selected="false">Thu nhập</button>
                                             </li>
                                         </ul>
                                         <div class="tab-content" id="myTabContent">
                                             <div class="tab-pane fade show active" id="category-expense-tab-pane"
                                                 role="tabpanel" aria-labelledby="category-expense-tab" tabindex="0">
                                                 <category :categories="categories" type="Expense"
-                                                    :onSubmit="createTransaction" />
+                                                    :selected-id="selectedCategoryId" @select="handleCategorySelect" />
                                             </div>
                                             <div class="tab-pane fade" id="category-income-tab-pane" role="tabpanel"
                                                 aria-labelledby="category-income-tab" tabindex="0">
                                                 <category :categories="categories" type="Income"
-                                                    :onSubmit="createTransaction" />
+                                                    :selected-id="selectedCategoryId" @select="handleCategorySelect" />
                                             </div>
                                         </div>
                                     </div>
