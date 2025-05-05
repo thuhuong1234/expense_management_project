@@ -106,49 +106,49 @@ onMounted(() => {
 
 <template>
   <DashboardLayout>
-    <div class="users-page">
-      <div class="user-form" @submit.prevent="handleSubmit">
-        <form>
-          <input class="input" type="text" placeholder="Name" v-model="userForm.name" />
-          <input class="input" type="email" placeholder="Email" v-model="userForm.email" />
-          <input class="input" type="password" placeholder="Password" v-model="userForm.password" />
-          <button class="button" type="submit">Save</button>
-        </form>
-      </div>
-
-      <div class="user-list">
-        <table class="table">
-          <tr>
-            <th>#</th>
-            <th>Avatar</th>
-            <th>Email</th>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Actions</th>
-          </tr>
-          <tr v-for="user in users" :key="user.id">
-            <td>{{ user.id }}</td>
-            <td>
-              <img :src="user.avatar" width="50" height="50" />
-            </td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.name }}</td>
-
-            <td>
-              <span>{{ user.isAdmin ? "Admin" : "User" }}</span>
-            </td>
-            <td>
-              <button class="button" type="submit" style="margin-right: 8px" @click="handleEditUser(user)">
-                Edit
-              </button>
-              <button class="button" type="submit" @click="handleDeleteUser(user.id)">
-                Delete
-              </button>
-            </td>
-          </tr>
-        </table>
-      </div>
+  <div class="users-page">
+    <div class="user-form" @submit.prevent="handleSubmit">
+      <form>
+        <input class="input" type="text" placeholder="Name" v-model="userForm.name" />
+        <input class="input" type="email" placeholder="Email" v-model="userForm.email" />
+        <input class="input" type="password" placeholder="Password" v-model="userForm.password" />
+        <button class="button" type="submit">Save</button>
+      </form>
     </div>
+
+    <div class="user-list">
+      <table class="table">
+        <tr>
+          <th>#</th>
+          <th>Avatar</th>
+          <th>Email</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+        <tr v-for="user in users" :key="user.id">
+          <td>{{ user.id }}</td>
+          <td>
+            <img :src="user.avatar" width="50" height="50" />
+          </td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.name }}</td>
+
+          <td>
+            <span>{{ user.isAdmin ? "Admin" : "User" }}</span>
+          </td>
+          <td>
+            <button class="button" type="submit" style="margin-right: 8px" @click="handleEditUser(user)">
+              Edit
+            </button>
+            <button class="button" type="submit" @click="handleDeleteUser(user.id)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
   </DashboardLayout>
 </template>
 

@@ -6,6 +6,12 @@ const store = useUiStore();
 const isRTL = computed(() => store.isRTL);
 const layout = computed(() => store.layout);
 const sidebarType = computed(() => store.sidebarType);
+defineProps({
+  list: {
+    type: Array,
+    required: true
+  }
+})
 </script>
 <template>
   <aside id="sidenav-main" class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 ms-4 "
@@ -18,7 +24,7 @@ const sidebarType = computed(() => store.sidebarType);
       </router-link>
     </div>
     <hr class="mt-0 horizontal dark" />
-    <sidenav-list />
+    <sidenav-list :list="list" />
   </aside>
 </template>
 <style lang="scss" scoped></style>

@@ -14,11 +14,6 @@ const router = createRouter({
           component: HomeView,
         },
         {
-          path: "/about",
-          name: "about",
-          component: () => import("../views/AboutView.vue"),
-        },
-        {
           path: "",
           name: "Landing",
           component: () => import("@/views/dashboards/Landing.vue"),
@@ -27,23 +22,6 @@ const router = createRouter({
           path: "default",
           name: "Mặc định",
           component: () => import("@/views/dashboards/Default.vue"),
-        },
-        {
-          path: "/todos",
-          name: "todos",
-          component: () => import("../views/TodosView.vue"),
-        },
-
-        {
-          path: "/categories",
-          name: "categories",
-          component: () => import("../views/CategoriesView.vue"),
-        },
-
-        {
-          path: "/users",
-          name: "users",
-          component: () => import("@/views/UsersView.vue"),
         },
         {
           path: "profile",
@@ -84,6 +62,28 @@ const router = createRouter({
                 import("@/views/applications/transaction/NewTransaction.vue"),
             },
           ],
+        },
+      ],
+    },
+    {
+      path: "/super-admin-panel",
+      name: "Quản lý chung",
+      component: () => import("@/layouts/AdminLayout.vue"),
+      children: [
+        {
+          path: "",
+          name: "Landing",
+          component: () => import("@/views/dashboards/Landing.vue"),
+        },
+        {
+          path: "default",
+          name: "Mặc định",
+          component: () => import("@/views/dashboards/Default.vue"),
+        },
+        {
+          path: "users",
+          name: "users",
+          component: () => import("@/views/UsersView.vue"),
         },
       ],
     },
