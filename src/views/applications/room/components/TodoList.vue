@@ -60,7 +60,7 @@ const emitSave = () => {
                                     <tr>
                                         <th class="p-1">Ghi chú </th>
                                         <th class="p-1">Thanh toán</th>
-                                        <th class="p-1">Ngày</th>
+                                        <th class="p-1">Ngày tạo</th>
                                         <th class="p-1">Trạng thái</th>
                                         <th class="p-1">Người dùng</th>
                                         <th class="p-1">Danh mục</th>
@@ -75,10 +75,12 @@ const emitSave = () => {
                                             <span class="my-2 text-xs">{{ description }}</span>
                                         </td>
                                         <td class="text-xs">
-                                            <span class="my-2 text-xs">{{ amount }}</span>
+                                            <span class="my-2 text-xs">{{ amount.toLocaleString("vi-VN") + " VND"
+                                                }}</span>
                                         </td>
                                         <td class="text-xs">
-                                            <span class="my-2 text-xs"> {{ createdAt }}</span>
+                                            <span class="my-2 text-xs"> {{ createdAt.toLocaleDateString("vi-VN")
+                                            }}</span>
                                         </td>
                                         <td class="text-xs">
                                             <div class="d-flex align-items-center justify-content-center">

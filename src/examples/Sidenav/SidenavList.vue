@@ -22,20 +22,6 @@ const store = useUiStore();
                     </template>
                 </sidenav-collapse>
             </li>
-
-            <li class="nav-item ">
-                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Danh mục ">
-                    <template #icon>
-                        <i class="ni ni-folder-17 text-dark text-sm opacity-10"></i>
-                    </template>
-                    <template #list>
-                        <ul class="nav ms-4">
-                            <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="L" text="Chi tiêu" />
-                            <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="D" text="Thu nhập " />
-                        </ul>
-                    </template>
-                </sidenav-collapse>
-            </li>
             <li class="nav-item ">
                 <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Phòng ">
                     <template #icon>
@@ -71,6 +57,20 @@ const store = useUiStore();
                         <ul class="nav ms-4">
                             <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="L" text="Chi tiêu" />
                             <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="D" text="Thu nhập " />
+                        </ul>
+                    </template>
+                </sidenav-collapse>
+            </li>
+            <li class="nav-item ">
+                <sidenav-collapse collapse-ref="dashboardsExamples" nav-text="Quản lý chung">
+                    <template #icon>
+                        <i class="ni ni-folder-17 text-dark text-sm opacity-10"></i>
+                    </template>
+                    <template #list>
+                        <ul class="nav ms-4">
+                            <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="P" text="Phòng" />
+                            <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="G" text="Ghi chú " />
+                            <sidenav-item :to="{ name: 'Trang chủ' }" mini-icon="N" text="Người dùng " />
                         </ul>
                     </template>
                 </sidenav-collapse>

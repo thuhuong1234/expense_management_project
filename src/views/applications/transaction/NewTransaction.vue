@@ -48,11 +48,12 @@ const onSubmit = handleSubmit(async (values) => {
     }
     await create('transactions', data);
     showToast('Tạo giao dịch thành công', 'success');
-    router.push('/pages/transaction');
 })
+const onClose = () => {
+    router.push('/pages/room/detail/' + roomId);
+}
 const selectedCategoryId = ref(categoryId);
 const handleCategorySelect = (id) => {
-    console.log('categoryId', selectedCategoryId.value);
     selectedCategoryId.value = id;
     router.replace({
         query: {
@@ -161,7 +162,7 @@ onMounted(async () => {
                         </div>
 
                         <div class="mt-4 d-flex justify-content-end">
-                            <button type="button" name="button" class="m-0 btn btn-light">
+                            <button type="button" name="button" class="m-0 btn btn-light" @click="onClose">
                                 Hủy
                             </button>
                             <button type="button" name="button" class="m-0 btn bg-gradient-success ms-2"

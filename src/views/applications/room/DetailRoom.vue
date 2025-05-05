@@ -20,6 +20,8 @@ const transactions = ref([]);
 const fund = ref([]);
 const categories = ref([]);
 const balance = ref(0);
+const totalExpense = ref(0);
+const totalIncome = ref(0);
 const { getById, update } = useCRUD();
 const getRoom = async () => {
     const response = await getById('rooms', roomId);
@@ -30,11 +32,12 @@ const getRoom = async () => {
             const response = await getById('categories', transaction.categoryId);
             return {
                 description: transaction.description,
-                createdAt: new Date(transaction.createdAt).toLocaleDateString("vi-VN"),
+                createdAt: new Date(transaction.createdAt),
                 id: transaction.id,
-                amount: Number(transaction.amount).toLocaleString("vi-VN") + " VND",
+                amount: Number(transaction.amount),
                 category: response?.data.name || transaction.categoryId,
                 userTransactions: transaction.userTransactions?.length,
+                categoryType: response?.data.categoryType,
             }
         })
     );
@@ -48,7 +51,14 @@ const getRoom = async () => {
     roomStore.transactions = transactions.value
     roomStore.fund = fund.value
 }
+console.log(roomStore.transactions);
 
+const getTotal = (type) => {
+    return (roomStore.transactions
+        .filter((transaction) => transaction.categoryType === type)
+        .reduce((total, transaction) => total + transaction.amount, 0));
+
+}
 const saveRoomName = async (roomId, value) => {
     try {
         await update(`rooms/${roomId}`, value);
@@ -70,6 +80,8 @@ onMounted(async () => {
     await getRoom();
     categories.value = await categoryStore.getCategories();
     balance.value = +fund.value?.[0]?.balance;
+    totalExpense.value = getTotal('Expense');
+    totalIncome.value = getTotal('Income');
 })  
 </script>
 <template>
@@ -95,7 +107,7 @@ onMounted(async () => {
                 }" />
                 </div>
                 <div class="col-lg-3 col-md-6 col-12">
-                    <mini-statistics-card title="Chi tiêu" value="+3,462" description="<span
+                    <mini-statistics-card title="Chi tiêu" :value="totalExpense" description="<span
                 class='text-sm font-weight-bolder text-danger'
                 >-2%</span> since last quarter" :icon="{
                     component: 'ni ni-cart',
@@ -104,7 +116,7 @@ onMounted(async () => {
                 }" />
                 </div>
                 <div class="col-lg-3 col-md-6 col-12">
-                    <mini-statistics-card title="Thu nhập" value="$103,430" description="<span
+                    <mini-statistics-card title="Thu nhập" :value="totalIncome" description="<span
                 class='text-sm font-weight-bolder text-success'
                 >+5%</span> than last month" :icon="{
                     component: 'ni ni-paper-diploma',

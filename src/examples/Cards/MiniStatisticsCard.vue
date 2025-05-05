@@ -67,7 +67,11 @@ const valueColor = computed(() => {
   if (typeof props.value === 'number' && props.value > 0) return 'text-success';
   if (typeof props.value === 'number' && props.value < 0) return 'text-danger';
 })
-
+const formatCurrency = (val) => {
+  if (typeof val === 'number') return val.toLocaleString('vi-VN') + ' VND';
+  if (typeof val === 'string' && !isNaN(val)) return Number(val).toLocaleString('vi-VN') + ' VND';
+  return val;
+};
 </script>
 <template>
   <div class="mb-3 card">
@@ -87,13 +91,8 @@ const valueColor = computed(() => {
             <p class="mb-0 text-sm text-uppercase font-weight-bold" :class="title.color">
               {{ typeof title === "string" ? title : title.text }}
             </p>
-            <h5 :class="`mb-0 font-weight-bolder ${valueColor}`">
-              {{
-                (value && typeof value === "string") ||
-                  (value && typeof value === "number")
-                  ? value
-                  : value.text
-              }}
+            <h6 :class="`mb-0 font-weight-bolder ${valueColor}`">
+              {{ formatCurrency(value && typeof value === 'object' ? value.text : value) }}
               <span v-if="percentage && typeof percentage === 'string'" class="text-sm font-weight-bolder">
                 {{ percentage }}
               </span>
@@ -101,7 +100,7 @@ const valueColor = computed(() => {
                 :class="`text-sm font-weight-bolder text-${percentage.color}`">
                 {{ percentage.value }}
               </span>
-            </h5>
+            </h6>
             <!--  eslint-disable-next-line vue/no-v-html -->
             <p v-if="description" class="mt-2 mb-0" v-html="description"></p>
           </div>
