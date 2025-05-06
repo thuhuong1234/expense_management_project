@@ -6,7 +6,7 @@ import ReportsTable from "./components/ReportsTable.vue";
 import NavbarUser from "./components/NavbarUser.vue";
 import DialogNewUserForm from "./components/DialogNewUserForm.vue";
 import ArgonInput from "@/components/Icons/ArgonInput.vue";
-import { showToast } from "@/helpers/sweetalertHelper";
+import { showToast, showConfirmDialog } from "@/helpers/sweetalertHelper";
 import img1 from "@/assets/img/reports1.jpg";
 import img2 from "@/assets/img/reports2.jpg";
 import img3 from "@/assets/img/reports3.jpg";
@@ -15,7 +15,7 @@ import { ref, onMounted } from "vue";
 import useCRUD from "@/composables/useCRUD";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
-const { getAll, create } = useCRUD();
+const { getAll, create, deleteById, getById } = useCRUD();
 const apiErrors = ref({});
 const users = ref([]);
 const errorMessage = ref('');
@@ -53,6 +53,22 @@ const createUser = handleSubmit(async (values) => {
         await showToast(errorMessage.value, 'error');
     }
 })
+const handleDeleteUser = async (userId) => {
+    const user = await getById("users", userId);
+    const confirm = await showConfirmDialog("Bạn có chắc chắn muốn xóa?", `${user?.data.name}`);
+    if (confirm) {
+        try {
+            const response = await deleteById("users", userId);
+            if (response?.success) {
+                showToast("Xóa người dùng thành công", "success");
+                await getUsers();
+            }
+        } catch (error) {
+            errorMessage.value = error.response?.data.message || 'Xóa thất bại';
+            await showToast(errorMessage.value, 'error');
+        }
+    }
+}
 const getUsers = async () => {
     const response = await getAll("users");
     users.value = response.data;
@@ -139,7 +155,7 @@ onMounted(() => {
                 </template>
             </navbar-user>
             <div class="col-12">
-                <reports-table :users="users" />
+                <reports-table :users="users" @delete-user="handleDeleteUser" />
             </div>
         </div>
     </AdminLayout>

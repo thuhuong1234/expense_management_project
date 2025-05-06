@@ -6,6 +6,7 @@ const props = defineProps({
   users: {
     type: Array,
     required: true,
+    id: Number,
     name: String,
     email: String,
     phone: String,
@@ -17,6 +18,7 @@ const props = defineProps({
 const role = computed(() => {
   return (isAdmin) => isAdmin ? 'Quản trị viên' : 'Thành viên'
 })
+const emit = defineEmits(['delete-user'])
 </script>
 <template>
   <div class="card">
@@ -48,7 +50,7 @@ const role = computed(() => {
 
           </tr>
         </thead>
-        <tbody v-for="({ name, email, phone, updatedAt, avatar, isAdmin }, index) of users" :key="index">
+        <tbody v-for="({ id, name, email, phone, updatedAt, avatar, isAdmin }, index) of users" :key="index">
           <tr>
             <th class="text-center text-sm">
               <input type="checkbox" />
@@ -81,7 +83,7 @@ const role = computed(() => {
                 <button class="btn btn-link border border-2 p-2 mb-0">
                   <i class="ni ni-ruler-pencil text-sm  btn-color"></i>
                 </button>
-                <button class="btn btn-link border border-2 p-2  mb-0">
+                <button class="btn btn-link border border-2 p-2  mb-0" @click="$emit('delete-user', id)">
                   <i class="ni ni-fat-remove text-sm  btn-color"></i>
                 </button>
               </div>
