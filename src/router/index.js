@@ -68,22 +68,11 @@ const router = createRouter({
     {
       path: "/super-admin-panel",
       name: "Quản lý chung",
-      component: () => import("@/layouts/AdminLayout.vue"),
       children: [
         {
-          path: "",
-          name: "Landing",
-          component: () => import("@/views/dashboards/Landing.vue"),
-        },
-        {
-          path: "default",
-          name: "Mặc định",
-          component: () => import("@/views/dashboards/Default.vue"),
-        },
-        {
           path: "users",
-          name: "users",
-          component: () => import("@/views/UsersView.vue"),
+          name: "Người dùng",
+          component: () => import("@/views/admins/users/UsersManagement.vue"),
         },
       ],
     },

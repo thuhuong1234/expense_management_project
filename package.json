@@ -16,6 +16,7 @@
     "bootstrap": "^5.3.5",
     "chart.js": "^4.4.9",
     "choices.js": "^11.1.0",
+    "dayjs": "^1.11.13",
     "pinia": "^3.0.1",
     "primevue": "^4.3.3",
     "simple-datatables": "^10.0.0",

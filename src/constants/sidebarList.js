@@ -59,7 +59,7 @@ export const sidebarAdminList = [
     collapseRef: "adminExamples",
     icon: "ni ni-folder-17",
     items: [
-      { to: { name: "" }, text: "Người dùng", miniIcon: "" },
+      { to: { name: "Người dùng" }, text: "Người dùng", miniIcon: "" },
       { to: { name: "" }, text: "Phòng", miniIcon: "" },
       { to: { name: "" }, text: "Ghi chú", miniIcon: "" },
       { to: { name: "" }, text: "Thông báo", miniIcon: "" },
