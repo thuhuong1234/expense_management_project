@@ -2,50 +2,43 @@
 import AdminLayout from "@/layouts/AdminLayout.vue";
 import ComplexStatisticsCard from "@/examples/Cards/ComplexStatisticsCard.vue";
 import ReviewCard from "./components/ReviewCard.vue";
-import ReportsTable from "./components/ReportsTable.vue";
-import NavbarUser from "./components/NavbarUser.vue";
-import DialogNewUserForm from "./components/DialogNewUserForm.vue";
+import CategoriesTable from "@/views/admins/components/CategoriesTable.vue";
+import Navbar from "./components/Navbar.vue";
+import DialogForm from "./components/DialogForm.vue";
 import ArgonInput from "@/components/Icons/ArgonInput.vue";
 import { showToast, showConfirmDialog } from "@/helpers/sweetalertHelper";
 import img1 from "@/assets/img/reports1.jpg";
 import img2 from "@/assets/img/reports2.jpg";
 import img3 from "@/assets/img/reports3.jpg";
 import img4 from "@/assets/img/reports4.jpg";
+
 import { ref, onMounted } from "vue";
 import useCRUD from "@/composables/useCRUD";
-import { useForm } from "vee-validate";
+import { useForm, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 const { getAll, create, deleteById, getById } = useCRUD();
 const apiErrors = ref({});
-const users = ref([]);
+const categories = ref([]);
 const errorMessage = ref('');
 const schema = yup.object({
-    name: yup.string().default('').required('Họ và tên là bắt buộc'),
-    email: yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
-    phone: yup.string().required('Số điện thoại là bắt buộc').matches(/^\+?\d{10,15}$/, 'Số điện thoại không hợp lệ'),
-    password: yup.string()
-        .min(8, 'Mật khẩu ít nhất 8 ký tự')
-        .max(10, 'Mật khẩu không quá 10 ký tự')
-        .matches(/[A-Z]/, ' Mật khẩu chứa ít nhất 1 chữ cái hoa [A-Z]')
-        .matches(/[\W_]/, 'Mật khẩu chứa ít nhất 1 ký tự đặc biệt [@, $, !, %, *, ?, &...]')
-        .matches(/[0-9]/, 'Mật khẩu chứa ít nhất 1 số [0-9]')
-        .required('Mật khẩu là bắt buộc'),
+    name: yup.string().default('').required('Vui lòng nhập tên danh mục.'),
+    categoryType: yup.string().default('')
+        .required('Vui lòng chọn loại danh mục.')
+        .oneOf(['Expense', 'Income'], 'Loại danh mục không hợp lệ.'),
 })
-const { handleSubmit, resetForm } = useForm({
+const { handleSubmit, resetForm, values } = useForm({
     validationSchema: schema,
     initialValues: {
         name: '',
-        email: '',
-        phone: '',
-        password: '',
+        categoryType: '',
     }
 })
-const createUser = handleSubmit(async (values) => {
+const createCategory = handleSubmit(async (values) => {
     try {
-        const response = await create("users", values);
+        const response = await create("categories", values);
         if (response?.success) {
-            showToast("Tạo người dùng thành công", "success");
-            await getUsers();
+            showToast("Đã tạo danh mục mới thành công.", "success");
+            await getCategories();
             resetForm();
         }
     } catch (error) {
@@ -53,15 +46,15 @@ const createUser = handleSubmit(async (values) => {
         await showToast(errorMessage.value, 'error');
     }
 })
-const handleDeleteUser = async (userId) => {
-    const user = await getById("users", userId);
-    const confirm = await showConfirmDialog("Bạn có chắc chắn muốn xóa?", `${user?.data.name}`);
+const deleteCategory = async (categoryId) => {
+    const category = await getById("categories", categoryId);
+    const confirm = await showConfirmDialog("Bạn có chắc chắn muốn xóa?", `${category?.data.name}`);
     if (confirm) {
         try {
-            const response = await deleteById("users", userId);
+            const response = await deleteById("categories", categoryId);
             if (response?.success) {
-                showToast("Xóa người dùng thành công", "success");
-                await getUsers();
+                showToast("Xóa danh mục thành công", "success");
+                await getCategories();
             }
         } catch (error) {
             errorMessage.value = error.response?.data.message || 'Xóa thất bại';
@@ -69,12 +62,12 @@ const handleDeleteUser = async (userId) => {
         }
     }
 }
-const getUsers = async () => {
-    const response = await getAll("users");
-    users.value = response.data;
+const getCategories = async () => {
+    const response = await getAll("categories");
+    categories.value = response.data;
 }
 onMounted(() => {
-    getUsers();
+    getCategories();
 });
 </script>
 <template>
@@ -105,17 +98,17 @@ onMounted(() => {
             <div class="col-lg-6 col-12">
                 <review-card title="Tổng quan" description="" :reviews="[
                     {
-                        title: 'Tổng số người dùng',
+                        title: 'Tổng số danh mục',
                         value: 80,
                         color: 'info',
                     },
                     {
-                        title: 'Người dùng đang hoạt động',
+                        title: 'Danh mục chi tiêu',
                         value: 17,
                         color: 'success',
                     },
                     {
-                        title: 'Người dùng chờ xác minh',
+                        title: 'Danh mục thu nhập',
                         value: 3,
                         color: 'danger',
                     },
@@ -124,38 +117,34 @@ onMounted(() => {
         </div>
 
         <div class="row mt-4">
-            <navbar-user>
+            <navbar>
                 <template #nav-child-item>
                     <button type="button" class="btn btn-outline-primary m-0 btn-add" data-bs-toggle="modal"
-                        data-bs-target="#userModal">
-                        Thêm người dùng
+                        data-bs-target="#categoryModal" @click="resetForm">
+                        Thêm danh mục
                     </button>
-                    <dialog-new-user-form modalTitle="Tạo người dùng" :onSubmit="createUser">
+                    <dialog-form modalTitle="Tạo danh mục" :onSubmit="createCategory" id-modal="categoryModal">
                         <template #modal-body>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <argon-input name="name" id="name" type="text" placeholder="Họ và tên"
-                                        aria-label="name" :api-error="apiErrors.name" />
+                                    <argon-input name="name" id="name" type="text" placeholder="Tên danh mục"
+                                        aria-label="name" />
                                 </div>
                                 <div class="mb-3">
-                                    <argon-input name="email" id="email" type="email" placeholder="Email"
-                                        aria-label="Email" :api-error="apiErrors.email" />
-                                </div>
-                                <div class="mb-3">
-                                    <argon-input name="password" id="password" type="password" placeholder="Mật khẩu"
-                                        aria-label="Password" :api-error="apiErrors.password" />
-                                </div>
-                                <div class="mb-3">
-                                    <argon-input name="phone" id="phone" type="text" placeholder="Phone"
-                                        aria-label="Phone" :api-error="apiErrors.phone" />
+                                    <Field name="categoryType" as="select" class="form-select">
+                                        <option value="">-- Chọn loại danh mục --</option>
+                                        <option value="Expense">Chi tiêu</option>
+                                        <option value="Income">Thu nhập</option>
+                                    </Field>
+                                    <ErrorMessage name="categoryType" class="text-danger" />
                                 </div>
                             </div>
                         </template>
-                    </dialog-new-user-form>
+                    </dialog-form>
                 </template>
-            </navbar-user>
+            </navbar>
             <div class="col-12">
-                <reports-table :users="users" @delete-user="handleDeleteUser" />
+                <categories-table :categories="categories" @delete-category="deleteCategory" />
             </div>
         </div>
     </AdminLayout>

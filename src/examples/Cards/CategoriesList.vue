@@ -29,9 +29,8 @@ defineProps({
     </div>
     <div class="p-3 card-body">
       <ul :class="`list-group ${isRTL ? 'pe-0' : ''}`">
-        <li v-for="(
-{ icon: { component, background }, label, description }, index
-          ) of categories" :key="index" :class="`mb-2 border-0 list-group-item d-flex justify-content-between border-radius-lg
+        <li v-for="({ icon: { component, background }, label, description }, index
+        ) of categories" :key="index" :class="`mb-2 border-0 list-group-item d-flex justify-content-between border-radius-lg
           ${isRTL ? 'pe-0' : 'ps-0'}`">
           <div class="d-flex align-items-center">
             <div :class="`text-center shadow icon icon-shape icon-sm bg-gradient-${background} ${isRTL ? 'ms-3' : 'me-3'

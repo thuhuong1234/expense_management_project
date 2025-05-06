@@ -72,7 +72,12 @@ const router = createRouter({
         {
           path: "users",
           name: "Người dùng",
-          component: () => import("@/views/admins/users/UsersManagement.vue"),
+          component: () => import("@/views/admins/UsersManagement.vue"),
+        },
+        {
+          path: "categories",
+          name: "Danh mục",
+          component: () => import("@/views/admins/CategoriesManagement.vue"),
         },
       ],
     },

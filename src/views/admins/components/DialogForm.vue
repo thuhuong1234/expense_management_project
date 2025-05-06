@@ -8,17 +8,21 @@ const props = defineProps({
     onSubmit: {
         type: Function,
         default: () => { }
+    },
+    idModal: {
+        type: String,
+        default: ""
     }
 })
 </script>
 
 <template>
-    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal fade" :id="idModal" tabindex="-1" :aria-labelledby="idModal + 'Label'" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <form role="form" class="text-start" @submit.prevent="onSubmit">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="userModalLabel">{{ modalTitle }}</h1>
+                        <h1 class="modal-title fs-5" :id="idModal + 'Label'">{{ modalTitle }}</h1>
                         <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
