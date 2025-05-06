@@ -98,50 +98,54 @@ onBeforeUnmount(() => {
 </script>
 <template>
     <DefaultLayout>
-    <div class="py-4 container-fluid">
-        <section class="py-3">
-            <div class="row">
-                <NavbarRoom>
-                    <template #nav-child-item>
-                        <button type="button" class="btn btn-outline-primary m-0 btn-add" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Thêm phòng
-                        </button>
-                        <DialogFormRoom modalTitle="Tạo phòng" :onSubmit="createRoom">
-                            <template #modal-body>
-                                <div class="row ">
-                                    <div class="col-12">
-                                        <ArgonInput name="name" type="text" id="name" placeholder="Tên phòng" />
+        <div class="py-4 container-fluid">
+            <section class="py-3">
+                <div class="row">
+                    <NavbarRoom>
+                        <template #nav-child-item>
+                            <button type="button" class="btn btn-outline-primary m-0 btn-add" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                                Thêm phòng
+                            </button>
+                            <DialogFormRoom modalTitle="Tạo phòng" :onSubmit="createRoom">
+                                <template #modal-body>
+                                    <div class="row ">
+                                        <div class="col-12">
+                                            <ArgonInput name="name" type="text" id="name" placeholder="Tên phòng" />
+                                        </div>
                                     </div>
-                                </div>
-                            </template>
-                        </DialogFormRoom>
-                    </template>
-                </NavbarRoom>
-            </div>
-            <div class="mt-2 row mt-lg-4" v-if="roomList.length > 0">
-                <div class="mb-4 col-lg-4 col-md-6" v-for="room in roomList" :key="room.id">
-                    <complex-project-card :logo="slackLogo" :title="room.name" :quality="room.quality"
-                        :date-time="room.createdAt" :members="[team3, team4, team2, team3, team4]" :roomId="room.id"
-                        :leader="room.leaderName" :dropdown="[
-                            {
-                                label: 'Xóa phòng',
-                                route: 'javascript:;',
-                            },
-                            {
-                                label: 'Sao chép lời mời',
-                                route: 'javascript:;',
-                            },
-                        ]" @dropdown-action="(action) => handleDropdownAction(action, room)" />
+                                </template>
+                            </DialogFormRoom>
+                        </template>
+                    </NavbarRoom>
                 </div>
-            </div>
-        </section>
-    </div>
+                <div class="mt-2 row mt-lg-4" v-if="roomList.length > 0">
+                    <div class="mb-4 col-lg-4 col-md-6" v-for="room in roomList" :key="room.id">
+                        <complex-project-card :logo="slackLogo" :title="room.name" :quality="room.quality"
+                            :date-time="room.createdAt" :members="[team3, team4, team2, team3, team4]" :roomId="room.id"
+                            :leader="room.leaderName" :dropdown="[
+                                {
+                                    label: 'Xóa phòng',
+                                    route: 'javascript:;',
+                                },
+                                {
+                                    label: 'Sao chép lời mời',
+                                    route: 'javascript:;',
+                                },
+                            ]" @dropdown-action="(action) => handleDropdownAction(action, room)" />
+                    </div>
+                </div>
+            </section>
+        </div>
     </DefaultLayout>
 </template>
-<style scoped>
+<style scss scoped>
 .btn-add {
-    border: 2px solid #ee3672 !important;
-    color: #ee3672 !important;
+    border: #ee3672 solid 2px;
+    color: #ee3672;
+
+    &:hover {
+        color: #ee3672 !important;
+    }
 }
 </style>

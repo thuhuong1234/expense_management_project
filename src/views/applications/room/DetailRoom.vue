@@ -51,8 +51,6 @@ const getRoom = async () => {
     roomStore.transactions = transactions.value
     roomStore.fund = fund.value
 }
-console.log(roomStore.transactions);
-
 const getTotal = (type) => {
     return (roomStore.transactions
         .filter((transaction) => transaction.categoryType === type)

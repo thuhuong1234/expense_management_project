@@ -4,14 +4,55 @@ import ComplexStatisticsCard from "@/examples/Cards/ComplexStatisticsCard.vue";
 import ReviewCard from "./components/ReviewCard.vue";
 import ReportsTable from "./components/ReportsTable.vue";
 import NavbarUser from "./components/NavbarUser.vue";
+import DialogNewUserForm from "./components/DialogNewUserForm.vue";
+import ArgonInput from "@/components/Icons/ArgonInput.vue";
+import { showToast } from "@/helpers/sweetalertHelper";
 import img1 from "@/assets/img/reports1.jpg";
 import img2 from "@/assets/img/reports2.jpg";
 import img3 from "@/assets/img/reports3.jpg";
 import img4 from "@/assets/img/reports4.jpg";
 import { ref, onMounted } from "vue";
 import useCRUD from "@/composables/useCRUD";
-const { getAll } = useCRUD();
+import { useForm } from "vee-validate";
+import * as yup from "yup";
+const { getAll, create } = useCRUD();
+const apiErrors = ref({});
 const users = ref([]);
+const errorMessage = ref('');
+const schema = yup.object({
+    name: yup.string().default('').required('Họ và tên là bắt buộc'),
+    email: yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
+    phone: yup.string().required('Số điện thoại là bắt buộc').matches(/^\+?\d{10,15}$/, 'Số điện thoại không hợp lệ'),
+    password: yup.string()
+        .min(8, 'Mật khẩu ít nhất 8 ký tự')
+        .max(10, 'Mật khẩu không quá 10 ký tự')
+        .matches(/[A-Z]/, ' Mật khẩu chứa ít nhất 1 chữ cái hoa [A-Z]')
+        .matches(/[\W_]/, 'Mật khẩu chứa ít nhất 1 ký tự đặc biệt [@, $, !, %, *, ?, &...]')
+        .matches(/[0-9]/, 'Mật khẩu chứa ít nhất 1 số [0-9]')
+        .required('Mật khẩu là bắt buộc'),
+})
+const { handleSubmit, resetForm } = useForm({
+    validationSchema: schema,
+    initialValues: {
+        name: '',
+        email: '',
+        phone: '',
+        password: '',
+    }
+})
+const createUser = handleSubmit(async (values) => {
+    try {
+        const response = await create("users", values);
+        if (response?.success) {
+            showToast("Tạo người dùng thành công", "success");
+            await getUsers();
+            resetForm();
+        }
+    } catch (error) {
+        errorMessage.value = error.response?.data.message || error.message;
+        await showToast(errorMessage.value, 'error');
+    }
+})
 const getUsers = async () => {
     const response = await getAll("users");
     users.value = response.data;
@@ -69,9 +110,32 @@ onMounted(() => {
         <div class="row mt-4">
             <navbar-user>
                 <template #nav-child-item>
-                    <button type="button" class="btn btn-outline-primary m-0 btn-add">
+                    <button type="button" class="btn btn-outline-primary m-0 btn-add" data-bs-toggle="modal"
+                        data-bs-target="#userModal">
                         Thêm người dùng
                     </button>
+                    <dialog-new-user-form modalTitle="Tạo người dùng" :onSubmit="createUser">
+                        <template #modal-body>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <argon-input name="name" id="name" type="text" placeholder="Họ và tên"
+                                        aria-label="name" :api-error="apiErrors.name" />
+                                </div>
+                                <div class="mb-3">
+                                    <argon-input name="email" id="email" type="email" placeholder="Email"
+                                        aria-label="Email" :api-error="apiErrors.email" />
+                                </div>
+                                <div class="mb-3">
+                                    <argon-input name="password" id="password" type="password" placeholder="Mật khẩu"
+                                        aria-label="Password" :api-error="apiErrors.password" />
+                                </div>
+                                <div class="mb-3">
+                                    <argon-input name="phone" id="phone" type="text" placeholder="Phone"
+                                        aria-label="Phone" :api-error="apiErrors.phone" />
+                                </div>
+                            </div>
+                        </template>
+                    </dialog-new-user-form>
                 </template>
             </navbar-user>
             <div class="col-12">
@@ -80,3 +144,13 @@ onMounted(() => {
         </div>
     </AdminLayout>
 </template>
+<style scss scoped>
+.btn-add {
+    border: #ee3672 solid 2px;
+    color: #ee3672;
+
+    &:hover {
+        color: #ee3672 !important;
+    }
+}
+</style>

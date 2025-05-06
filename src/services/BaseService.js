@@ -9,13 +9,7 @@ class BaseService {
         data: response.data,
       };
     } catch (error) {
-      let messages = error.response
-        ? error.response.data.messages
-        : "Lỗi không mong muốn xảy ra";
-      return {
-        success: false,
-        messages: messages,
-      };
+      throw error.response?.data || error.message;
     }
   }
   async getById(endpoint, id) {
@@ -27,32 +21,19 @@ class BaseService {
         messages: response.messages,
       };
     } catch (error) {
-      let messages = error.response
-        ? error.response.data.messages
-        : "Lỗi không mong muốn xảy ra";
-      return {
-        success: false,
-        messages: messages,
-      };
+      throw error.response?.data || error.message;
     }
   }
   async create(endpoint, payload) {
     try {
       const response = await axios.post(`${endpoint}`, payload);
-
       return {
         data: response.data ?? [],
         success: true,
         messages: response.messages,
       };
     } catch (error) {
-      let messages = error.response
-        ? error.response.data.messages
-        : "Lỗi không mong muốn xảy ra";
-      return {
-        success: false,
-        messages: messages,
-      };
+      throw error.response?.data || error.message;
     }
   }
   async update(endpoint, payload) {
@@ -64,13 +45,7 @@ class BaseService {
         messages: response.messages,
       };
     } catch (error) {
-      let messages = error.response
-        ? error.response.data.messages
-        : "Lỗi không mong muốn xảy ra";
-      return {
-        success: false,
-        messages: messages,
-      };
+      throw error.response?.data || error.message;
     }
   }
   async delete(endpoint, id) {
@@ -82,13 +57,7 @@ class BaseService {
         messages: response.messages,
       };
     } catch (error) {
-      let messages = error.response
-        ? error.response.data.messages
-        : "Lỗi không mong muốn xảy ra";
-      return {
-        success: false,
-        messages: messages,
-      };
+      throw error.response?.data || error.message;
     }
   }
   async deleteMultiple(endpoint, ids) {
@@ -102,13 +71,7 @@ class BaseService {
         messages: response.messages,
       };
     } catch (error) {
-      let messages = error.response
-        ? error.response.data.messages
-        : "Lỗi không mong muốn xảy ra";
-      return {
-        success: false,
-        messages: messages,
-      };
+      throw error.response?.data || error.message;
     }
   }
 }

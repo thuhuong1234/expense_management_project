@@ -13,6 +13,7 @@ export default function useCRUD() {
       }
     } catch (error) {
       useUiStore().setError(error);
+      throw error;
     } finally {
       useUiStore().setLoading(false);
     }
@@ -29,6 +30,7 @@ export default function useCRUD() {
       }
     } catch (error) {
       useUiStore().setError(error);
+      throw error;
     } finally {
       useUiStore().setLoading(false);
     }
@@ -45,6 +47,7 @@ export default function useCRUD() {
       }
     } catch (error) {
       useUiStore().setError(error);
+      throw error;
     } finally {
       useUiStore().setLoading(false);
     }
@@ -62,6 +65,7 @@ export default function useCRUD() {
       }
     } catch (error) {
       useUiStore().setError(error);
+      throw error;
     } finally {
       useUiStore().setLoading(false);
     }
@@ -79,6 +83,7 @@ export default function useCRUD() {
       }
     } catch (error) {
       useUiStore().setError(error);
+      throw error;
     } finally {
       useUiStore().setLoading(false);
     }
@@ -96,6 +101,7 @@ export default function useCRUD() {
       }
     } catch (error) {
       useUiStore().setError(error);
+      throw error;
     } finally {
       useUiStore().setLoading(false);
     }
