@@ -93,7 +93,7 @@ const onSubmit = handleSubmit(async (values) => {
         const response = await axios.post('auth/login', values);
         if (response?.data) {
             authStore.login(response?.data?.user, response?.data?.token);
-            return router.push({ name: 'Trang chủ' });
+            return router.push({ name: 'Mặc định' });
         }
     } catch (error) {
         errorMessage.value = error.response?.data.message || error.message;

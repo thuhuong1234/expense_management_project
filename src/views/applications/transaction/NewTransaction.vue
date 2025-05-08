@@ -73,7 +73,7 @@ onMounted(async () => {
 </script>
 <template>
     <DashboardLayout>
-    <div class="py-4 container-fluid">
+    <div class="container-fluid">
         <div class="row">
             <div class="mx-auto col-lg-10 col-12">
                 <div class="mt-4 card card-body">

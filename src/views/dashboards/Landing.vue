@@ -23,7 +23,6 @@ onBeforeUnmount(() => {
 });
 </script>
 <template>
-    <DashboardLayout>
         <main class="main-content position-relative border-radius-lg">
             <div class="container-fluid py-4">
                 <div class="row min-vh-80">
@@ -31,19 +30,19 @@ onBeforeUnmount(() => {
                         <div class="col-lg-10">
                             <div
                                 class="position-absolute p-3 border-radius-xl blur shadow-xl perspective-right z-index-3 mt-7">
-                                <router-link class="w-100" :to="{ name: 'Mặc định' }">
-                                    <img class="w-100 border-radius-lg" src="../../assets/img/default.png"
+                                <router-link class="w-100" :to="{ name: 'Đăng nhập' }">
+                                    <img class="w-100 border-radius-lg" src="../../assets/img/default.jpg"
                                         alt="default page" />
                                 </router-link>
                             </div>
                             <div
                                 class="position-absolute p-3 border-radius-xl blur shadow-xl perspective-right-sm z-index-2 mt-3">
-                                <img class="w-100 border-radius-lg" src="../../assets/img/default.png"
+                                <img class="w-100 border-radius-lg" src="../../assets/img/default.jpg"
                                     alt="default page" />
                             </div>
                             <div
                                 class="position-absolute p-3 border-radius-xl blur shadow-xl perspective-right-xs z-index-1">
-                                <img class="w-100 border-radius-lg" src="../../assets/img/default.png"
+                                <img class="w-100 border-radius-lg" src="../../assets/img/default.jpg"
                                     alt="default page" />
                             </div>
                         </div>
@@ -51,11 +50,11 @@ onBeforeUnmount(() => {
                     <div class="d-lg-none d-none d-md-block">
                         <div class="col-lg-10">
                             <div class="p-3 border-radius-xl blur shadow-xl z-index-3 mt-5">
-                                <img class="w-100 border-radius-lg" src="../../assets/img/default.png"
+                                <img class="w-100 border-radius-lg" src="../../assets/img/default.jpg"
                                     alt="default page" />
                             </div>
                             <div class="p-3 border-radius-xl blur shadow-xl z-index-2 mt-4">
-                                <img class="w-100 border-radius-lg" src="../../assets/img/default.png"
+                                <img class="w-100 border-radius-lg" src="../../assets/img/default.jpg"
                                     alt="default page" />
                             </div>
                         </div>
@@ -79,6 +78,5 @@ onBeforeUnmount(() => {
                 </div>
             </div>
         </main>
-    </DashboardLayout>
 
 </template>

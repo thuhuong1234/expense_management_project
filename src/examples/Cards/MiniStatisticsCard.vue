@@ -61,6 +61,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  unit: {
+    type: String,
+    default: "",
+  },
 });
 const valueColor = computed(() => {
   if (typeof props.value === 'object' && props.value.color) return props.value.color;
@@ -68,8 +72,8 @@ const valueColor = computed(() => {
   if (typeof props.value === 'number' && props.value < 0) return 'text-danger';
 })
 const formatCurrency = (val) => {
-  if (typeof val === 'number') return val.toLocaleString('vi-VN') + ' VND';
-  if (typeof val === 'string' && !isNaN(val)) return Number(val).toLocaleString('vi-VN') + ' VND';
+  if (typeof val === 'number') return val.toLocaleString('vi-VN')+' '+ props.unit;
+  if (typeof val === 'string' && !isNaN(val)) return Number(val).toLocaleString('vi-VN') +' '+props.unit;
   return val;
 };
 </script>

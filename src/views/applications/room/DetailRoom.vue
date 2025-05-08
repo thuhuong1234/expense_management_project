@@ -87,7 +87,7 @@ onMounted(async () => {
         <div class="w-100">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-12">
-                    <mini-statistics-card title="Quỹ phòng" :value="balance" description="<span
+                    <mini-statistics-card title="Quỹ phòng" :value="balance" unit='VND' description="<span
                 class='text-sm font-weight-bolder text-success'
                 >+55%</span> since yesterday" :icon="{
                     component: 'ni ni-money-coins',
@@ -96,7 +96,7 @@ onMounted(async () => {
                 }" />
                 </div>
                 <div class="col-lg-3 col-md-6 col-12">
-                    <mini-statistics-card title="Người dùng" :value="users.length" description="<span
+                    <mini-statistics-card title="Người dùng" :value="users.length" unit='Người' description="<span
                 class='text-sm font-weight-bolder text-success'
                 >+3%</span> since last week" :icon="{
                     component: 'ni ni-world',
@@ -105,7 +105,7 @@ onMounted(async () => {
                 }" />
                 </div>
                 <div class="col-lg-3 col-md-6 col-12">
-                    <mini-statistics-card title="Chi tiêu" :value="totalExpense" description="<span
+                    <mini-statistics-card title="Chi tiêu" :value="totalExpense" unit='VND' description="<span
                 class='text-sm font-weight-bolder text-danger'
                 >-2%</span> since last quarter" :icon="{
                     component: 'ni ni-cart',
@@ -114,7 +114,7 @@ onMounted(async () => {
                 }" />
                 </div>
                 <div class="col-lg-3 col-md-6 col-12">
-                    <mini-statistics-card title="Thu nhập" :value="totalIncome" description="<span
+                    <mini-statistics-card title="Thu nhập" :value="totalIncome" unit='VND' description="<span
                 class='text-sm font-weight-bolder text-success'
                 >+5%</span> than last month" :icon="{
                     component: 'ni ni-paper-diploma',
@@ -167,7 +167,7 @@ onMounted(async () => {
                 <div class="col-lg-4 col-12 mb-4 mb-lg-0">
                     <member-card :members="users" :title="room.name" :selectable="false" :dropdown="[
                         {
-                            label: 'Xóa phòng',
+                            label: 'Xóa',
                             route: 'javascript:;',
                         },
                     ]" />

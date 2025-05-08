@@ -114,7 +114,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
     <DefaultLayout>
-        <div class="py-4 container-fluid">
+        <div class="container-fluid">
             <section class="py-3">
                 <div class="row">
                     <NavbarRoom>
