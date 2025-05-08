@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import dayjs from "dayjs";
 
 const showMenu = ref(false);
 defineProps({
@@ -89,7 +90,7 @@ defineEmits(['dropdown-action'])
           </button>
         </div>
         <div class="text-end ">
-          <h6 class="mb-0 text-xs">{{ new Date(dateTime).toLocaleDateString("vi-VN") }}</h6>
+          <h6 class="mb-0 text-xs">{{ dayjs(dateTime).format('DD/MM/YYYY HH:mm')  }}</h6>
         </div>
       </div>
     </div>

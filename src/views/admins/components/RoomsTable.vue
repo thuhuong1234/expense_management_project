@@ -1,20 +1,17 @@
 <script setup>
-import { getAvatarUrl } from '@/helpers/avatar'
+import dayjs from 'dayjs'
 const props = defineProps({
-    categories: {
+    rooms: {
         type: Array,
         required: true,
         id: Number,
         name: String,
-        categoryType: String,
-        avatarUrl: {
-            type: String,
-            default: '',
-        }
+        quality: String,
+        updatedAt: String,
     }
 })
 
-const emit = defineEmits(['delete-category'])
+const emit = defineEmits(['delete-room'])
 </script>
 <template>
     <div class="card">
@@ -25,35 +22,33 @@ const emit = defineEmits(['delete-category'])
                         <th class="text-center text-uppercase text-xs font-weight-bolder">
                             <input type="checkbox" />
                         </th>
-                        <th class="text-uppercase text-xs font-weight-bolder px-0">
-                            Hình ảnh
-                        </th>
                         <th class="ps-2 text-uppercase text-xs font-weight-bolder">
-                            Tên danh mục
+                            Phòng
                         </th>
                         <th class="text-center text-uppercase text-xs font-weight-bolder">
-                            Loại danh mục
+                            Số người
+                        </th>
+                        <th class="text-center text-uppercase text-xs font-weight-bolder">
+                            Truy cập gần đây
                         </th>
                         <th class="text-center text-uppercase text-xs font-weight-bolder">
                             Sự kiện
                         </th>
                     </tr>
                 </thead>
-                <tbody v-for="({ id, name, categoryType, avatarUrl }, index) of categories" :key="index">
+                <tbody v-for="({ id, name, quality, updatedAt }, index) of rooms" :key="index">
                     <tr>
-                        <th class="text-center text-sm">
+                        <th class="text-center text-uppercase text-sm font-weight-bolder">
                             <input type="checkbox" />
                         </th>
-                        <th class="text-sm  px-0">
-                            <div class="text-center bg-outline-primary rounded-circle img-avatar ">
-                                <img :src="getAvatarUrl(avatarUrl)" alt="avatar" />
-                            </div>
-                        </th>
-                        <th class="text-secondary text-sm ps-2">
+                        <th class="ps-2 text-secondary text-sm font-weight-bolder">
                             {{ name }}
                         </th>
-                        <th class=" text-center text-secondary text-sm">
-                            {{ categoryType }}
+                        <th class="text-center text-secondary text-sm font-weight-bolder">
+                            {{ quality }}
+                        </th>
+                        <th class="text-center text-secondary text-sm font-weight-bolder">
+                            {{ dayjs(updatedAt).format('DD/MM/YYYY HH:mm') }}
                         </th>
                         <th class="text-center text-secondary text-sm">
                             <div class="d-flex gap-1 justify-content-center align-items-center">
@@ -61,7 +56,7 @@ const emit = defineEmits(['delete-category'])
                                     <i class="ni ni-ruler-pencil text-sm btn-color"></i>
                                 </button>
                                 <button class="btn btn-link border border-2 p-2  mb-0"
-                                    @click="$emit('delete-category', id)">
+                                    @click="$emit('delete-room', id)">
                                     <i class="ni ni-fat-remove text-sm  btn-color"></i>
                                 </button>
                             </div>

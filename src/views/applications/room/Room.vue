@@ -65,15 +65,34 @@ const handleDropdownAction = async (action, room) => {
     }
 }
 const getList = async () => {
-    roomsData.value = await getAll('rooms');
-    roomList.value = await Promise.all(roomsData.value.data.map(async (room) => {
-        const user = await getById('users', room.userId);
-        return {
-            ...room,
-            leaderName: user.name,
-        }
-    }))
+    const response = await getAll('rooms');
+    roomsData.value = {
+        data: response.data.rooms,
+        total: response.data.total,
+        page: response.data.page,
+        limit: response.data.limit,
+        totalPage: response.data.totalPage,
+    }
+
+    if (!Array.isArray(roomsData.value.data)) {
+        console.error('Dữ liệu rooms không phải là một mảng:', roomsData.value)
+        return
+    }
+    roomList.value = await Promise.all(
+        roomsData.value.data.map(async (room) => {
+            const user = await getById('users', room.userId)
+            return {
+                ...room,
+                leaderName: user?.data.name|| 'Không rõ',
+            }
+        })
+    )
+    console.log(roomList.value);
+    
+
 }
+
+
 const goToDetail = async (roomId) => {
     router.push({ path: `/pages/room/detail/${roomId}` });
 }

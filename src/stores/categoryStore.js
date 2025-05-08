@@ -8,8 +8,8 @@ export const useCategoryStore = defineStore("category", {
   actions: {
     async getCategories() {
       const response = await getAll("/categories");
-      this.categories = response.data;
-      return response.data;
+      this.categories = response.data.categories;
+      return response.data.categories;
     },
   },
   getters: {},

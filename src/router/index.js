@@ -31,39 +31,20 @@ const router = createRouter({
       ],
     },
     {
-      path: "/pages",
-      name: "Trang",
-      children: [
-        {
-          path: "room",
-          name: "Phòng",
-          children: [
-            {
-              path: "room-list",
-              name: "Danh sách phòng",
-              component: () => import("@/views/applications/room/Room.vue"),
-            },
-            {
-              path: "detail/:id",
-              name: "Chi tiết phòng",
-              component: () =>
-                import("@/views/applications/room/DetailRoom.vue"),
-            },
-          ],
-        },
-        {
-          path: "transaction",
-          name: "Ghi chú",
-          children: [
-            {
-              path: "create",
-              name: "Tạo ghi chú",
-              component: () =>
-                import("@/views/applications/transaction/NewTransaction.vue"),
-            },
-          ],
-        },
-      ],
+      path: "/pages/room/room-list",
+      name: "Danh sách phòng",
+      component: () => import("@/views/applications/room/Room.vue"),
+    },
+    {
+      path: "/pages/room/detail/:id",
+      name: "Chi tiết phòng",
+      component: () => import("@/views/applications/room/DetailRoom.vue"),
+    },
+    {
+      path: "/pages/transaction/create",
+      name: "Ghi chú mới",
+      component: () =>
+        import("@/views/applications/transaction/NewTransaction.vue"),
     },
     {
       path: "/super-admin-panel",
@@ -78,6 +59,11 @@ const router = createRouter({
           path: "categories",
           name: "Danh mục",
           component: () => import("@/views/admins/CategoriesManagement.vue"),
+        },
+        {
+          path: "rooms",
+          name: "Phòng",
+          component: () => import("@/views/admins/RoomsManagement.vue"),
         },
       ],
     },

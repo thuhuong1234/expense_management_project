@@ -28,7 +28,7 @@ export const sidebarDashboardList = [
     icon: "ni ni-building",
     items: [
       {
-        to: { name: "Tạo ghi chú" },
+        to: { name: "Ghi chú mới" },
         text: "Ghi chú mới",
         miniIcon: "",
       },
@@ -61,7 +61,7 @@ export const sidebarAdminList = [
     items: [
       { to: { name: "Người dùng" }, text: "Người dùng", miniIcon: "" },
       { to: { name: "Danh mục" }, text: "Danh mục", miniIcon: "" },
-      { to: { name: "" }, text: "Phòng", miniIcon: "" },
+      { to: { name: "Phòng" }, text: "Phòng", miniIcon: "" },
       { to: { name: "" }, text: "Ghi chú", miniIcon: "" },
       { to: { name: "" }, text: "Thông báo", miniIcon: "" },
     ],
