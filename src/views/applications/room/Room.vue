@@ -87,9 +87,6 @@ const getList = async () => {
             }
         })
     )
-    console.log(roomList.value);
-    
-
 }
 
 

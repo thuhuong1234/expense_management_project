@@ -7,7 +7,7 @@ export const useCategoryStore = defineStore("category", {
   }),
   actions: {
     async getCategories() {
-      const response = await getAll("/categories");
+      const response = await getAll("/categories?limit=30");
       this.categories = response.data.categories;
       return response.data.categories;
     },

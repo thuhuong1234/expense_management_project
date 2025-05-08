@@ -18,9 +18,8 @@ export const useRoomStore = defineStore("room", {
     },
     async getUserInfos(roomId) {
       const response = await getById("/rooms", roomId);
-      console.log(response);
-
       this.userRooms = response.data.userRooms;
+      this.userInfos = [];
       await Promise.all(
         this.userRooms.map(async (user) => {
           const response = await getById("users", user.userId);

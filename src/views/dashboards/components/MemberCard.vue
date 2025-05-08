@@ -78,8 +78,7 @@ const emit = defineEmits(['dropdown-action']);
           </div>
           <div class="ms-auto">
             <div class="form-check" v-if="selectable">
-              <input class="form-check-input" type="checkbox" :value="id" :id="'checkbox-' + id"
-                @change="toggleSelectUser(id)">
+              <input type="checkbox"  :value="id" :id="'checkbox-' + id" @change="toggleSelectUser(id)"/>
             </div>
             <div class="dropdown" v-if="!selectable">
               <button id="navbarDropdownMenuLink" class="btn btn-link text-secondary ps-0 pe-2"
