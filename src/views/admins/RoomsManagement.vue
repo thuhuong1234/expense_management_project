@@ -59,7 +59,7 @@ const deleteRoom = async (roomId) => {
 }
 const getRooms = async () => {
     const response = await getAll("rooms");
-    rooms.value = response.data;
+    rooms.value = response.data.rooms;
 }
 onMounted(() => {
     getRooms();

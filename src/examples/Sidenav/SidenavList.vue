@@ -39,14 +39,6 @@ defineProps({
                 <sidenav-item :to="{ name: 'Tài khoản' }" mini-icon="ni ni-single-02 text-dark text-sm opacity-10"
                     text="Hồ sơ" />
             </li>
-            <li class="nav-item ">
-                <sidenav-item :to="{ name: 'Đăng nhập' }"
-                    mini-icon="ni ni-lock-circle-open text-dark text-sm opacity-10" text="Đăng nhập" />
-            </li>
-            <li class="nav-item ">
-                <sidenav-item :to="{ name: 'Đăng ký' }" mini-icon="ni ni-circle-08 text-dark text-sm opacity-10"
-                    text="Đăng ký" />
-            </li>
         </ul>
     </div>
 </template>
@@ -54,7 +46,6 @@ defineProps({
 ::v-deep(.nav-item .nav-link:hover) {
     color: #ee3672 !important;
     font-weight: 1000;
-
     i {
         color: #ee3672 !important;
     }

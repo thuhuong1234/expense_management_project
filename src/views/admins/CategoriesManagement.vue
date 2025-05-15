@@ -64,7 +64,7 @@ const deleteCategory = async (categoryId) => {
 }
 const getCategories = async () => {
     const response = await getAll("categories");
-    categories.value = response.data;
+    categories.value = response.data.categories;
 }
 onMounted(() => {
     getCategories();

@@ -71,7 +71,7 @@ const handleDeleteUser = async (userId) => {
 }
 const getUsers = async () => {
     const response = await getAll("users");
-    users.value = response.data;
+    users.value = response.data.users;
 }
 onMounted(() => {
     getUsers();

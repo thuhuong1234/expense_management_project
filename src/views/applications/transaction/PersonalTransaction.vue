@@ -11,7 +11,7 @@ import DashboardLayout from "@/layouts/DashboardLayout.vue";
 import MemberCard from "@/views/dashboards/components/MemberCard.vue";
 import Category from "@/views/applications/category/Category.vue";
 import { showToast } from "@/helpers/sweetalertHelper";
-const { create } = useCRUD();
+const { create, getById } = useCRUD();
 const createAt = "";
 const config = {
     allowInput: true,
@@ -22,9 +22,8 @@ const roomStore = useRoomStore();
 const authStore = useAuthStore();
 const categoryStore = useCategoryStore();
 const userStore = useUserStore();
-const userId = ref();
 const users = ref([]);
-const user = ref([]);
+const user = ref();
 const fund = ref([]);
 const selectedUsers = ref([]);
 const roomsOfUser = ref([]);
@@ -39,10 +38,14 @@ const { handleSubmit } = useForm({
     validationSchema: schema
 })
 const onSubmit = handleSubmit(async (values) => {
+    if (!roomId && !user.value?.id) {
+        showToast('Vui lòng chọn phòng hoặc đăng nhập lại', 'error');
+        return;
+    }
     const data = {
         amount: Number(amount),
         ...values,
-        roomId,
+       roomId: +(roomId ? { roomId } : { userId: user.value?.id }),
         categoryId,
         userTransactions: selectedUsers.value,
     }
@@ -58,17 +61,23 @@ const handleCategorySelect = (id) => {
     router.replace({
         query: {
             ...route.query,
-            categoryId: id,
+            categoryId: +id,
         },
     });
 };
+const getRooms = async (userId) => {
+    if (!userId) return;
+    const response = await getById("users", userId);
+    roomsOfUser.value = response.data.rooms;
+    
+}
 onMounted(async () => {
-    userId.value = await authStore.getUser();
+    user.value = await authStore.getUser();
     categories.value = await categoryStore.getCategories();
-    users.value = await roomStore.getUserInfos(roomId);
+    users.value = await roomStore.getUserInfos(roomId|| 10);
     fund.value = roomStore.fund;
-    user.value = await userStore.getUserById(userId.value.id);
-    roomsOfUser.value = user.value.rooms;
+    await getRooms(user.value.id);
+    
 });
 </script>
 <template>
