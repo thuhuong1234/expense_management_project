@@ -1,8 +1,7 @@
 <script setup>
-import { onMounted, computed } from "vue";
+import { onMounted, computed, toRaw } from "vue";
 import { useUiStore } from "@/stores/uiStore";
 import Chart from "chart.js/auto";
-
 const store = useUiStore();
 const isRTL = computed(() => store.isRTL);
 
@@ -34,8 +33,22 @@ const props = defineProps({
     chart: {
         type: Object,
         required: true,
-        labels: Array,
-        data: Array,
+        labels: {
+            type: Array,
+            default: [],
+        },
+        data: {
+            type: Array,
+            default: [],
+        },
+        data2: {
+            type: Array,
+            default: [],
+        },
+        data3: {
+            type: Array,
+            default: [],
+        },
     },
 });
 
@@ -51,22 +64,47 @@ onMounted(() => {
         chartStatus.destroy();
     }
     new Chart(ctx, {
-        type: "line",
         data: {
             labels: props.chart.labels,
             datasets: [
                 {
-                    label: "Tasks",
+                    type: "line",
+                    label: "Tổng",
                     tension: 0.3,
                     pointRadius: 2,
-                    pointBackgroundColor: "#2dce89 ",
-                    borderColor: "#2dce89 ",
+                    pointBackgroundColor: "#ee3672",
+                    borderColor: "#ee3672",
                     borderWidth: 2,
                     backgroundColor: gradientStroke1,
                     data: props.chart.data,
                     maxBarThickness: 6,
                     fill: true,
                 },
+                {
+                    type: "bar",
+                    label: "Chi tiêu",
+                    tension: 0.3,
+                    pointRadius: 2,
+                    pointBackgroundColor: "#2dce89 ",
+                    borderColor: "#2dce89 ",
+                    backgroundColor: 'rgb(45, 206, 137)',
+                    data: props.chart.data2,
+                    maxBarThickness: 25,
+                    fill: false,
+                },
+                {
+                    type: "bar",
+                    label: "Thu nhập",
+                    tension: 0.3,
+                    pointRadius: 2,
+                    pointBackgroundColor: "#FB8240",
+                    borderColor: "#FB8240",
+                    backgroundColor: 'rgb(251, 130, 64)',
+                    data: props.chart.data3,
+                    maxBarThickness: 25,
+                    fill: false,
+                },
+
             ],
         },
         options: {
@@ -148,22 +186,22 @@ onMounted(() => {
                     <i class="text-lg ni opacity-10" :class="`ni-${props.icon}`" aria-hidden="true"></i>
                 </div>
                 <div :class="isRTL ? 'me-3' : 'ms-3'">
-                    <p class="mb-0 text-sm text-capitalize font-weight-bold">
+                    <p class="mb-0 text-xs text-capitalize font-weight-bold">
                         {{ props.title }}
                     </p>
-                    <h5 class="mb-0 font-weight-bolder">{{ props.count }}</h5>
-                </div>
-                <div class="progress-wrapper w-25" :class="isRTL ? 'me-auto' : 'ms-auto'">
-                    <div class="progress-info">
-                        <div class="progress-j">
-                            <span class="text-xs font-weight-bold">{{ props.progress }}%</span>
+                    <div class="progress-wrapper " :class="isRTL ? 'me-auto' : 'ms-auto'">
+                        <div type="button" data-toggle="tooltip" data-placement="top"
+                            :title="`${100 - props.progress}%`" class="progress" role="progressbar"
+                            :aria-valuenow="props.progress" aria-valuemin="0" aria-valuemax="100" style="height: 14px;">
+                            <div type="button" class="progress-bar bg-success text-xxs" data-toggle="tooltip"
+                                data-placement="top" :title="`${props.progress}%`" :style="{
+                                    width: props.progress + '%'
+                                }">
+                            </div>
                         </div>
                     </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" :class="`w-${props.progress}`" role="progressbar"
-                            :aria-valuenow="props.progress" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
                 </div>
+
             </div>
         </div>
         <div class="p-0 mt-3 card-body">
@@ -173,3 +211,8 @@ onMounted(() => {
         </div>
     </div>
 </template>
+<style scoped>
+.progress {
+    background-color: #fb8240;
+}
+</style>

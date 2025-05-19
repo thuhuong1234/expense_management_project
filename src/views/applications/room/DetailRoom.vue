@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import TodoList from "./components/TodoList.vue";
 import useCRUD from "@/composables/useCRUD";
@@ -9,6 +9,8 @@ import ProgressLineChart from "@/examples/Charts/ProgressLineChart.vue";
 import MemberCard from "@/views/dashboards/components/MemberCard.vue";
 import MiniStatisticsCard from "@/examples/Cards/MiniStatisticsCard.vue";
 import { useCategoryStore, useRoomStore } from "@/stores";
+import axios from "@/configs/axios.js";
+
 const route = useRoute();
 const router = useRouter();
 const roomStore = useRoomStore();
@@ -74,12 +76,72 @@ const createTransaction = async (categoryId) => {
     },
     );
 }
+const resultStatistics = ref([]);
+const getStatistic = async () => {
+    const response = await axios.get(`transactions/statistics?type=week`);
+    return response.data;
+}
+const generateDateRange = async (from, to) => {
+    const start = new Date(from);
+    const end = new Date(to);
+    const dates = [];
+
+    while (start <= end) {
+        dates.push(start.toISOString().slice(0, 10));
+        start.setDate(start.getDate() + 1);
+    }
+    return dates;
+}
+const labels = ref([]);
+const expenseData = ref([]);
+const incomeData = ref([]);
+const totalData = ref([]);
+const processStatisticData = async (data) => {
+    if (!data) return;
+
+    labels.value = await generateDateRange(data.from, data.to);
+
+    const byDay = data.byDay || {};
+
+    expenseData.value = [];
+    incomeData.value = [];
+    totalData.value = [];
+
+    labels.value.forEach(date => {
+        if (byDay[date]) {
+            expenseData.value.push(byDay[date].expense || 0);
+            incomeData.value.push(byDay[date].income || 0);
+            totalData.value.push(byDay[date].total || 0);
+        } else {
+            expenseData.value.push(0);
+            incomeData.value.push(0);
+            totalData.value.push(0);
+        }
+    });
+}
+const chartData = ref(null);
+const progress = ref(0);
+const loadChartData = async () => {
+    const data = await getStatistic();
+    resultStatistics.value = data;
+    await processStatisticData(data);
+    chartData.value = {
+        labels: [...labels.value],
+        data: [...expenseData.value],
+        data2: [...incomeData.value],
+        data3: [...totalData.value],
+    }
+    progress.value = Number(data.totalExpense) / (Number(data.totalExpense) + Number(data.totalIncome)) * 100;
+}
+
 onMounted(async () => {
     await getRoom();
     categories.value = await categoryStore.getCategories();
     balance.value = +fund.value?.[0]?.balance;
     totalExpense.value = getTotal('Expense');
     totalIncome.value = getTotal('Income');
+    await loadChartData();
+
 })  
 </script>
 <template>
@@ -126,7 +188,7 @@ onMounted(async () => {
             <div class="row">
                 <div class="col-lg-8 col-12">
                     <div class="overflow-hidden card">
-                        <div class="p-2">
+                        <div class="p-2" style="height: 200px">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link active font-weight-bold" id="expense-tab"
@@ -139,24 +201,22 @@ onMounted(async () => {
                                         aria-controls="income-tab-pane" aria-selected="false">Thu nhập</button>
                                 </li>
                             </ul>
-                            <div class="tab-content" id="myTabContent">
+                            <div class="tab-content pt-3" id="myTabContent">
                                 <div class="tab-pane fade show active" id="expense-tab-pane" role="tabpanel"
                                     aria-labelledby="expense-tab" tabindex="0">
                                     <category :categories="categories" type="Expense" @select="createTransaction" />
                                 </div>
                                 <div class="tab-pane fade" id="income-tab-pane" role="tabpanel"
                                     aria-labelledby="income-tab" tabindex="0">
-                                    <category :categories="categories" type="Income" :select="createTransaction" />
+                                    <category :categories="categories" type="Income" @select="createTransaction" />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-12">
-                    <progress-line-chart title="Tổng quan" :count="480" :progress="60" :chart="{
-                        labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                        data: [40, 45, 42, 41, 40, 43, 40, 42, 39],
-                    }" />
+                    <progress-line-chart v-if="chartData" id="my-chart" title="Thống kê theo tuần" count=""
+                        :progress="progress.toFixed(2)" :chart="chartData" />
                 </div>
             </div>
             <div class="py-4 row">
