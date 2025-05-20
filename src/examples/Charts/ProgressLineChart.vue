@@ -50,14 +50,16 @@ const props = defineProps({
             default: [],
         },
     },
+    onSubmit: {
+        type: Function,
+        default: () => { },
+    },
 });
 
 onMounted(() => {
     var ctx = document.getElementById(props.id).getContext("2d");
 
     var gradientStroke1 = ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke1.addColorStop(1, "rgba(33,82,255,0.1)");
 
     let chartStatus = Chart.getChart(props.id);
     if (chartStatus != undefined) {
@@ -76,7 +78,7 @@ onMounted(() => {
                     borderColor: "#ee3672",
                     borderWidth: 2,
                     backgroundColor: gradientStroke1,
-                    data: props.chart.data,
+                    data: props.chart.data3,
                     maxBarThickness: 6,
                     fill: true,
                 },
@@ -88,7 +90,7 @@ onMounted(() => {
                     pointBackgroundColor: "#2dce89 ",
                     borderColor: "#2dce89 ",
                     backgroundColor: 'rgb(45, 206, 137)',
-                    data: props.chart.data2,
+                    data: props.chart.data,
                     maxBarThickness: 25,
                     fill: false,
                 },
@@ -100,7 +102,7 @@ onMounted(() => {
                     pointBackgroundColor: "#FB8240",
                     borderColor: "#FB8240",
                     backgroundColor: 'rgb(251, 130, 64)',
-                    data: props.chart.data3,
+                    data: props.chart.data2,
                     maxBarThickness: 25,
                     fill: false,
                 },
@@ -180,7 +182,7 @@ onMounted(() => {
 </script>
 <template>
     <div class="overflow-hidden card">
-        <div class="p-3 pb-0 card-header">
+        <div class="p-3 pb-0 card-header d-flex justify-content-between">
             <div class="d-flex align-items-center">
                 <div class="text-center shadow icon icon-shape border-radius-md bg-gradient-success">
                     <i class="text-lg ni opacity-10" :class="`ni-${props.icon}`" aria-hidden="true"></i>
@@ -189,11 +191,11 @@ onMounted(() => {
                     <p class="mb-0 text-xs text-capitalize font-weight-bold">
                         {{ props.title }}
                     </p>
-                    <div class="progress-wrapper " :class="isRTL ? 'me-auto' : 'ms-auto'">
+                    <div class="progress-wrapper" :class="isRTL ? 'me-auto' : 'ms-auto'">
                         <div type="button" data-toggle="tooltip" data-placement="top"
                             :title="`${100 - props.progress}%`" class="progress" role="progressbar"
-                            :aria-valuenow="props.progress" aria-valuemin="0" aria-valuemax="100" style="height: 14px;">
-                            <div type="button" class="progress-bar bg-success text-xxs" data-toggle="tooltip"
+                            :aria-valuenow="props.progress" aria-valuemin="0" aria-valuemax="100">
+                            <div type=" button" class="progress-bar bg-success text-xxs" data-toggle="tooltip"
                                 data-placement="top" :title="`${props.progress}%`" :style="{
                                     width: props.progress + '%'
                                 }">
@@ -202,6 +204,9 @@ onMounted(() => {
                     </div>
                 </div>
 
+            </div>
+            <div class="d-flex align-items-center ">
+                <img class="img-avatar" src="@/assets/img/24-right-arrow.svg" alt="..." @click.stop="props.onSubmit" />
             </div>
         </div>
         <div class="p-0 mt-3 card-body">
