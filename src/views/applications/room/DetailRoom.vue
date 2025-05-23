@@ -96,10 +96,7 @@ onMounted(async () => {
     balance.value = +fund.value?.[0]?.balance;
     totalExpense.value = getTotal('Expense');
     totalIncome.value = getTotal('Income');
-
     await loadChartData();
-    console.log(resultStatistics.value);
-
 })  
 </script>
 <template>
