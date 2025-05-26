@@ -11,8 +11,9 @@ import DashboardLayout from "@/layouts/DashboardLayout.vue";
 import MemberCard from "@/views/dashboards/components/MemberCard.vue";
 import Category from "@/views/applications/category/Category.vue";
 import { showToast } from "@/helpers/sweetalertHelper";
+import dayjs from 'dayjs'
 const { create } = useCRUD();
-const createAt = "";
+const date = ref();
 const config = {
     allowInput: true,
 };
@@ -41,6 +42,7 @@ const { handleSubmit } = useForm({
 const onSubmit = handleSubmit(async (values) => {
     const data = {
         amount: Number(amount),
+        date: new Date(dayjs(date.value).format('YYYY-MM-DD')),
         ...values,
         roomId,
         categoryId: categoryId.value,
@@ -93,10 +95,9 @@ onMounted(async () => {
                         </div>
                         <hr class="my-0 dark" />
                         <div class="d-flex align-items-center">
-                            <label for="createAt" class="w-20 form-label text-sm"> Ngày chi</label>
-                            <flat-pickr id="createAt" v-model="createAt"
-                                class="mb-3 w-80 form-control datetimepicker text-sm" placeholder="Ngày chi"
-                                :config="config"></flat-pickr>
+                            <label for="date" class="w-20 form-label text-sm"> Ngày chi</label>
+                            <flat-pickr id="date" v-model="date" class="mb-3 w-80 form-control datetimepicker text-sm"
+                                placeholder="Ngày chi" :config="config"></flat-pickr>
                         </div>
                         <hr class="my-0 dark" />
                         <div class="d-flex align-items-center" v-if="!roomId">
