@@ -91,11 +91,16 @@ const onSubmit = () => {
     console.log("submit");
 
 }
-const selectedTransaction = ref(null);
-
-const handleEditTransaction = (transaction) => {
-    console.log(transaction);
-    selectedTransaction.value = { ...transaction };
+const handleEditTransaction = async (transaction) => {
+    const response = await getById('transactions', transaction.id);
+     router.push({
+        path: `/pages/transaction/update`,
+        query: {
+            roomId: response.data.roomId,
+            transactionId: response.data.id,
+            categoryId:  response.data.categoryId,
+        }
+    });
 };
 
 onMounted(async () => {

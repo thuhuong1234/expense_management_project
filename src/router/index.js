@@ -47,6 +47,12 @@ const router = createRouter({
         import("@/views/applications/transaction/NewTransaction.vue"),
     },
     {
+      path: "/pages/transaction/update",
+      name: "Chỉnh sửa ghi chú",
+      component: () =>
+        import("@/views/applications/transaction/UpdatedTransaction.vue"),
+    },
+    {
       path: "/super-admin-panel",
       name: "Quản lý chung",
       children: [

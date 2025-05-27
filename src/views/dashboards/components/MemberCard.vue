@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps, defineEmits, onMounted } from "vue";
+import { ref, defineProps, defineEmits, computed } from "vue";
 const showMenu = ref(false);
 const toggleShowMenu = (index) => {
   showMenu.value = { [index]: !showMenu.value[index] };
@@ -19,7 +19,9 @@ const props = defineProps({
     label: String, route: String,
   },
   selectable: { type: Boolean, default: false, },
-  selectedUsers: { type: Array, default: () => [], }
+  selectedUsers: { type: Array, default: () => [], },
+  isEdit: { type: Boolean, default: false, },
+  userTransactions: { type: Array, default: () => [] },
 });
 const getAvatarUrl = (avatar) => {
   if (!avatar) {
@@ -27,11 +29,39 @@ const getAvatarUrl = (avatar) => {
   }
   return `${import.meta.env.VITE_URL_UPLOAD}${avatar}`
 }
-const emit = defineEmits(['dropdown-action', 'update:selectedUsers']);
+const emit = defineEmits(['dropdown-action', 'update:selectedUsers', 'update:userTransactions']);
 const toggleSelectUser = (id) => {
-  const updated = props.selectedUsers.includes(id) ? props.selectedUsers.filter(item => item !== id) : [...props.selectedUsers, id]
-  emit('update:selectedUsers', updated);
+  const updatedUsers = props.selectedUsers.includes(id) ? props.selectedUsers.filter(item => item !== id) : [...props.selectedUsers, id];
+  emit('update:selectedUsers', updatedUsers);
+
+  if (!props.isEdit) return;
+  else {
+    const updatedUserTransactions = updatedUsers.map(userId => {
+      const userTrans = props.userTransactions.find(item => item.userId === userId);
+      return { userId, amount: userTrans ? userTrans.amount : 0 };
+    });
+    emit('update:userTransactions', updatedUserTransactions);
+  }
+
 }
+const getAmountByUserId = (id) => {
+  const result = props.userTransactions.find(item => item.userId === id);
+  return result ? result.amount : 0;
+}
+
+const updateUserTransactions = (userId, event) => {
+  const inputAmount = Number(event.target.value);
+
+  let users = [...props.userTransactions];
+  const user = users.findIndex(item => item.userId === userId);
+  if (user !== -1) {
+    users[user].amount = inputAmount;
+  } else {
+    users.push({ userId, amount: inputAmount });
+  }
+  emit('update:userTransactions', users);
+}
+
 </script>
 <template>
   <div class="card h-100">
@@ -60,7 +90,9 @@ const toggleSelectUser = (id) => {
             </div>
           </div>
           <div class="ms-auto">
-            <div class="form-check" v-if="selectable">
+            <div class="form-check form-switch justify-content-end" v-if="selectable">
+              <input v-if="isEdit" :id="`amountOfUser-${id}`" class="mb-0 w-60 text-sm form-control" type="number"
+                placeholder="Số tiền" :value="getAmountByUserId(id)" @input="e => updateUserTransactions(id, e)" />
               <input type="checkbox" :value="id" :id="'checkbox-' + id" :checked="props.selectedUsers.includes(id)"
                 @change="toggleSelectUser(id)" />
             </div>

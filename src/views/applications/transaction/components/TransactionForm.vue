@@ -31,7 +31,7 @@ const emits = defineEmits(['save', 'cancel'])
 </script>
 <template>
     <div class="mt-4 card card-body">
-        <h6 class="mb-0 font-weight-bolder text-dark">{{ isEdit ? 'Chi tiết ghi chú' : 'Ghi chú mới' }}</h6>
+        <h6 class="mb-0 font-weight-bolder text-dark">{{ props.isEdit ? 'Chi tiết ghi chú' : 'Ghi chú mới' }}</h6>
         <p class="mb-4 text-sm">Thông tin chi tiết</p>
         <form role="form" class="form-group" @submit.prevent="emits('save')">
             <div class="d-flex align-items-center">
