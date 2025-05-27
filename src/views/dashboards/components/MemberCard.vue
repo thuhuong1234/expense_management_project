@@ -1,17 +1,13 @@
 <script setup>
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineProps, defineEmits, onMounted } from "vue";
 const showMenu = ref(false);
 const toggleShowMenu = (index) => {
   showMenu.value = { [index]: !showMenu.value[index] };
 }
 const props = defineProps({
-  title: {
-    type: String,
-    default: "Danh sách thành viên",
-  },
+  title: { type: String, default: "Danh sách thành viên", },
   members: {
-    type: Array,
-    required: true,
+    type: Array, required: true,
     id: Number,
     avatar: String,
     name: String,
@@ -19,19 +15,11 @@ const props = defineProps({
     isLeader: Boolean,
   },
   dropdown: {
-    type: Array,
-    default: () => [],
-    label: String,
-    route: String,
+    type: Array, default: () => [],
+    label: String, route: String,
   },
-  selectable: {
-    type: Boolean,
-    default: false,
-  },
-  selectedUsers: {
-    type: Array,
-    default: () => [],
-  }
+  selectable: { type: Boolean, default: false, },
+  selectedUsers: { type: Array, default: () => [], }
 });
 const getAvatarUrl = (avatar) => {
   if (!avatar) {
@@ -39,16 +27,11 @@ const getAvatarUrl = (avatar) => {
   }
   return `${import.meta.env.VITE_URL_UPLOAD}${avatar}`
 }
-
-
+const emit = defineEmits(['dropdown-action', 'update:selectedUsers']);
 const toggleSelectUser = (id) => {
-  const userIndex = props.selectedUsers.indexOf(id);
-  if (userIndex === -1) props.selectedUsers.push(id);
-
-  else props.selectedUsers.splice(userIndex, 1);
-
+  const updated = props.selectedUsers.includes(id) ? props.selectedUsers.filter(item => item !== id) : [...props.selectedUsers, id]
+  emit('update:selectedUsers', updated);
 }
-const emit = defineEmits(['dropdown-action']);
 </script>
 <template>
   <div class="card h-100">
@@ -78,12 +61,13 @@ const emit = defineEmits(['dropdown-action']);
           </div>
           <div class="ms-auto">
             <div class="form-check" v-if="selectable">
-              <input type="checkbox"  :value="id" :id="'checkbox-' + id" @change="toggleSelectUser(id)"/>
+              <input type="checkbox" :value="id" :id="'checkbox-' + id" :checked="props.selectedUsers.includes(id)"
+                @change="toggleSelectUser(id)" />
             </div>
             <div class="dropdown" v-if="!selectable">
               <button id="navbarDropdownMenuLink" class="btn btn-link text-secondary ps-0 pe-2"
                 :class="{ show: showMenu }" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                @click="toggleShowMenu(index)">
+                @click.stop="toggleShowMenu(index)">
                 <i class="text-lg fa fa-ellipsis-v"></i>
               </button>
               <ul class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" :class="{ show: showMenu[index] }"

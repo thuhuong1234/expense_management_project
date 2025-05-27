@@ -16,6 +16,7 @@ const props = defineProps({
     required: true,
     description: String,
     createdAt: String,
+    date: String,
     id: String,
     room: String,
     category: String,
@@ -31,8 +32,12 @@ const props = defineProps({
       label: String,
     },
   },
+  onSubmit: {
+    type: Function,
+    default: () => { }
+  }
 });
-const emit = defineEmits(["save"]);
+const emit = defineEmits(["save", "edit"]);
 const emitSave = () => {
   emit("save", { name: props.header.title });
 };
@@ -47,7 +52,6 @@ const showUserColumn = computed(() =>
     <div class="p-3 card-header">
       <div class="row">
         <div class="col-md-6">
-          <!-- <h6 class="mb-0">{{ header.title }}</h6> -->
           <input type="text" @blur="emitSave" placeholder="Nhập tên phòng...."
             class="form-control mb-0 border-0 text-lg font-weight-bold" v-model="header.title" />
         </div>
@@ -67,38 +71,24 @@ const showUserColumn = computed(() =>
                   <th class="p-1">Ghi chú</th>
                   <th class="p-1">Thanh toán</th>
                   <th class="p-1 text-center">Ngày tạo</th>
-                  <th class="p-1 text-center">Trạng thái</th>
                   <th class="p-1" v-if="showUserColumn">Người dùng</th>
                   <th class="p-1">Danh mục</th>
                 </tr>
               </thead>
-              <tbody
-                v-for="({ description, createdAt, id, room, isComplete, userTransactions, category, amount, }, index) of transactions"
-                :key="index">
+              <tbody class="item-row"
+                v-for="({ description, createdAt ,date, id, room, userTransactions, category, amount, }, index) of transactions"
+                :key="index"
+                @click.stop="emit('edit', { description, createdAt,date, id, room, userTransactions, category, amount })">
                 <tr>
                   <td class="text-xs">
                     <span class="my-2 text-xs">{{ description }}</span>
                   </td>
                   <td class="text-xs">
-                    <span class="my-2 text-xs">{{
-                      amount.toLocaleString("vi-VN") + " VND"
-                    }}</span>
+                    <span class="my-2 text-xs">{{ amount.toLocaleString("vi-VN") + " VND" }}</span>
                   </td>
                   <td class="text-xs text-center">
                     <span class="my-2 text-xs">
-                      {{ dayjs(createdAt).format("DD/MM/YYYY HH:mm") }}</span>
-                  </td>
-                  <td class="text-xs">
-                    <div class="d-flex align-items-center justify-content-center">
-                      <argon-button v-if="isComplete" size="sm" color="success" variant="outline"
-                        class="btn-icon-only btn-rounded mb-0 me-2 btn-sm d-flex align-items-center justify-content-center">
-                        <i class="fas fa-check" aria-hidden="true"></i>
-                      </argon-button>
-                      <argon-button v-if="!isComplete" size="sm" color="danger" variant="outline"
-                        class="btn-icon-only btn-rounded mb-0 me-2 btn-sm d-flex align-items-center justify-content-center">
-                        <i class="fas fa-times" aria-hidden="true"></i>
-                      </argon-button>
-                    </div>
+                      {{ dayjs(date).format("DD/MM/YYYY") }}</span>
                   </td>
                   <td class="text-xs" v-if="showUserColumn">
                     <div class="d-flex align-items-center">
@@ -129,3 +119,9 @@ const showUserColumn = computed(() =>
     </div>
   </div>
 </template>
+<style scoped>
+.item-row :hover {
+  cursor: pointer;
+  background-color: #e3e4e4;
+}
+</style>

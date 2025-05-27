@@ -38,10 +38,11 @@ const getRoom = async () => {
             return {
                 description: transaction.description,
                 createdAt: new Date(transaction.createdAt),
+                date: new Date(transaction.date),
                 id: transaction.id,
                 amount: Number(transaction.amount),
                 category: response?.data.name || transaction.categoryId,
-                userTransactions: transaction.userTransactions?.length,
+                userTransactions: transaction.userTransactions,
                 categoryType: response?.data.categoryType,
             }
         })
@@ -90,6 +91,13 @@ const onSubmit = () => {
     console.log("submit");
 
 }
+const selectedTransaction = ref(null);
+
+const handleEditTransaction = (transaction) => {
+    console.log(transaction);
+    selectedTransaction.value = { ...transaction };
+};
+
 onMounted(async () => {
     await getRoom();
     categories.value = await categoryStore.getCategories();
@@ -177,7 +185,7 @@ onMounted(async () => {
             <div class="py-4 row">
                 <div class="col-lg-8 col-12">
                     <todo-list :header="{ title: room.name, dateTime: room.updatedAt }" :transactions="transactions"
-                        @save="saveRoomName(room.id, $event)" />
+                        @save="saveRoomName(room.id, $event)" @edit="handleEditTransaction" />
                 </div>
                 <div class="col-lg-4 col-12 mb-4 mb-lg-0">
                     <member-card :members="users" :title="room.name" :selectable="false" :dropdown="[
