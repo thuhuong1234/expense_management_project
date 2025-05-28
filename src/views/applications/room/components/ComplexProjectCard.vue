@@ -48,7 +48,7 @@ defineEmits(['dropdown-action'])
         <div class="p-2 avatar avatar-xl bg-gradient-dark border-radius-md ">
           <img :src="logo" :alt="title" />
         </div>
-        <div class="my-auto ms-3">
+        <div class="my-auto ms-3 text-sm">
           <router-link :to="{ path: `/pages/room/detail/${roomId}` }">{{ title }}</router-link>
           <div class="avatar-group">
             <a v-for="(member, index) of members" :key="index" href="#" class="avatar avatar-xs rounded-circle"
@@ -75,10 +75,8 @@ defineEmits(['dropdown-action'])
           </div>
         </div>
       </div>
-      <p class="mt-3 text-sm">
-        {{ leader }}
-      </p>
-      <p class="mt-3 text-sm">
+      <p class="mt-3 text-xs">Trưởng nhóm: {{ leader }}" </p>
+      <p class="mt-3 text-xs">
         Phòng có tất cả: {{ quality }} thành viên
       </p>
 
@@ -90,7 +88,7 @@ defineEmits(['dropdown-action'])
           </button>
         </div>
         <div class="text-end ">
-          <h6 class="mb-0 text-xs">{{ dayjs(dateTime).format('DD/MM/YYYY HH:mm')  }}</h6>
+          <h6 class="mb-0 text-xs">{{ dayjs(dateTime).format('DD/MM/YYYY HH:mm') }}</h6>
         </div>
       </div>
     </div>

@@ -32,6 +32,8 @@ const getRoom = async () => {
     const response = await getById('rooms', roomId);
     room.value = response.data;
     users.value = await roomStore.getUserInfos(roomId);
+    console.log(users.value);
+
     transactions.value = await Promise.all(
         room.value.transactions?.map(async (transaction) => {
             const response = await getById('categories', transaction.categoryId);
@@ -93,12 +95,12 @@ const onSubmit = () => {
 }
 const handleEditTransaction = async (transaction) => {
     const response = await getById('transactions', transaction.id);
-     router.push({
+    router.push({
         path: `/pages/transaction/update`,
         query: {
             roomId: response.data.roomId,
             transactionId: response.data.id,
-            categoryId:  response.data.categoryId,
+            categoryId: response.data.categoryId,
         }
     });
 };
@@ -193,7 +195,7 @@ onMounted(async () => {
                         @save="saveRoomName(room.id, $event)" @edit="handleEditTransaction" />
                 </div>
                 <div class="col-lg-4 col-12 mb-4 mb-lg-0">
-                    <member-card :members="users" :title="room.name" :selectable="false" :dropdown="[
+                    <member-card :members="users" :selectable="false" :dropdown="[
                         {
                             label: 'Xóa',
                             route: 'javascript:;',

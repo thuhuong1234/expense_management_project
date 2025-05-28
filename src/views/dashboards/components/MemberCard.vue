@@ -64,15 +64,15 @@ const updateUserTransactions = (userId, event) => {
 
 </script>
 <template>
-  <div class="card h-100">
+  <div class="card ">
     <div class="card-header">
       <h5 class="mb-0 text-capitalize text-sm">{{ title }}</h5>
     </div>
     <div class="card-body pt-0">
       <ul class="list-group list-group-flush">
         <li v-for="({ avatar, name, email, isLeader, id }, index) of members" :key="index"
-          class="d-flex align-items-center list-group-item px-0">
-          <div class="d-flex align-items-center gap-1">
+          class="d-flex align-items-center list-group-item px-0 w-100">
+          <div :class="['d-flex align-items-center gap-1', selectable ? 'w-65' : 'w-95']">
             <div class="col-auto d-flex align-items-center">
               <a href="javascript:;" class="avatar position-relative">
                 <img class="img-avatar" alt="Image placeholder" :src="getAvatarUrl(avatar)" />
@@ -89,7 +89,7 @@ const updateUserTransactions = (userId, event) => {
               </p>
             </div>
           </div>
-          <div class="ms-auto">
+          <div class="ms-auto d-flex align-items-center" :class="selectable ? 'w-35' : 'w-5'">
             <div class="form-check form-switch justify-content-end" v-if="selectable">
               <input v-if="isEdit" :id="`amountOfUser-${id}`" class="mb-0 w-60 text-sm form-control" type="number"
                 placeholder="Số tiền" :value="getAmountByUserId(id)" @input="e => updateUserTransactions(id, e)" />

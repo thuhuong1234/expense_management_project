@@ -69,18 +69,27 @@ const getTransaction = async (id) => {
         setFieldValue('amount', Number(res.data.amount))
         setFieldValue('description', res.data.description)
         setFieldValue('date', dayjs(res.data.date).startOf('day').toISOString())
-        setFieldValue('roomId', res.data.roomId)
-        setFieldValue('categoryId', res.data.categoryId)
+        setFieldValue('roomId', roomId.value)
+        setFieldValue('categoryId', categoryId.value)
     }
 }
 const onSubmit = handleSubmit(async (values) => {
-    const data = {
-        ...values,
-        userTransactions: userTransactionsUpdate.value
+    try {
+        const data = {
+            ...values,
+            categoryId: selectedCategoryId.value,
+            userTransactions: userTransactionsUpdate.value
+        }
+        const res = await update(`transactions/${transactionId.value}`, data);
+        console.log(res.data);
+        if (!res.data) return
+        showToast('Chỉnh sửa ghi chú thành công.', 'success');
+        getTransaction(transactionId.value);
+    } catch (error) {
+        getTransaction(transactionId.value);
+        showToast(error.message, 'error');
     }
-    await update(`transactions/${transactionId.value}`, data);
-    resetForm();
-    showToast('Chỉnh sửa ghi chú thành công.', 'success');
+
 })
 const onClose = () => {
     router.push('/pages/room/detail/' + roomId.value);
