@@ -70,31 +70,32 @@ const updateUserTransactions = (userId, event) => {
     </div>
     <div class="card-body pt-0">
       <ul class="list-group list-group-flush">
-        <li v-for="({ avatar, name, email, isLeader, id }, index) of members" :key="index"
+        <li v-for="(member, index) in members" :key="index"
           class="d-flex align-items-center list-group-item px-0 w-100">
           <div :class="['d-flex align-items-center gap-1', selectable ? 'w-65' : 'w-95']">
             <div class="col-auto d-flex align-items-center">
               <a href="javascript:;" class="avatar position-relative">
-                <img class="img-avatar" alt="Image placeholder" :src="getAvatarUrl(avatar)" />
-                <span v-if="isLeader" class="key-icon position-absolute bottom-0 end-0"><i class="fas fa-key text-xs"
-                    style="color: #ffb600"></i></span>
+                <img class="img-avatar" alt="Image placeholder" :src="getAvatarUrl(member?.avatar)" />
+                <span v-if="member?.isLeader" class="key-icon position-absolute bottom-0 end-0"><i
+                    class="fas fa-key text-xs" style="color: #ffb600"></i></span>
               </a>
             </div>
             <div class=" col ml-2">
               <h6 class="mb-0 text-sm">
-                <a href="#">{{ name }}</a>
+                <a href="#">{{ member?.name }}</a>
               </h6>
               <p class="mb-0 text-sm text-muted text-xs">
-                {{ email }}
+                {{ member?.email }}
               </p>
             </div>
           </div>
           <div class="ms-auto d-flex align-items-center justify-content-end" :class="selectable ? 'w-35' : 'w-5'">
             <div class="form-check form-switch justify-content-end" v-if="selectable">
-              <input v-if="isEdit" :id="`amountOfUser-${id}`" class="mb-0 w-60 text-sm form-control" type="number"
-                placeholder="Số tiền" :value="getAmountByUserId(id)" @input="e => updateUserTransactions(id, e)" />
-              <input type="checkbox" :value="id" :id="'checkbox-' + id" :checked="props.selectedUsers.includes(id)"
-                @change="toggleSelectUser(id)" />
+              <input v-if="isEdit" :id="`amountOfUser-${member?.id}`" class="mb-0 w-60 text-sm form-control"
+                type="number" placeholder="Số tiền" :value="getAmountByUserId(member?.id)"
+                @input="e => updateUserTransactions(member?.id, e)" />
+              <input type="checkbox" :value="member?.id" :id="'checkbox-' + member?.id"
+                :checked="props.selectedUsers.includes(member?.id)" @change="toggleSelectUser(member?.id)" />
             </div>
             <div class="dropdown" v-if="!selectable">
               <button id="navbarDropdownMenuLink" class="btn btn-link text-secondary ps-0 pe-2"

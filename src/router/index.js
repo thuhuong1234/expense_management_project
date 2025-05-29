@@ -53,6 +53,11 @@ const router = createRouter({
         import("@/views/applications/transaction/UpdatedTransaction.vue"),
     },
     {
+      path: "/pages/room/add-user",
+      name: "Thêm người dùng",
+      component: () => import("@/views/applications/room/UserInRoom.vue"),
+    },
+    {
       path: "/super-admin-panel",
       name: "Quản lý chung",
       children: [

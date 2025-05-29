@@ -32,8 +32,6 @@ const getRoom = async () => {
     const response = await getById('rooms', roomId);
     room.value = response.data;
     users.value = await roomStore.getUserInfos(roomId);
-    console.log(users.value);
-
     transactions.value = await Promise.all(
         room.value.transactions?.map(async (transaction) => {
             const response = await getById('categories', transaction.categoryId);
@@ -106,7 +104,7 @@ const handleEditTransaction = async (transaction) => {
 };
 const addUser = async () => {
     router.push({
-        path: `/pages/user/create`,
+        path: `/pages/room/add-user`,
         query: {
             roomId: roomId,
         }
