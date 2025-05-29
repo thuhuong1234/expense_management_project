@@ -72,10 +72,11 @@ const valueColor = computed(() => {
   if (typeof props.value === 'number' && props.value < 0) return 'text-danger';
 })
 const formatCurrency = (val) => {
-  if (typeof val === 'number') return val.toLocaleString('vi-VN')+' '+ props.unit;
-  if (typeof val === 'string' && !isNaN(val)) return Number(val).toLocaleString('vi-VN') +' '+props.unit;
+  if (typeof val === 'number') return val.toLocaleString('vi-VN') + ' ' + props.unit;
+  if (typeof val === 'string' && !isNaN(val)) return Number(val).toLocaleString('vi-VN') + ' ' + props.unit;
   return val;
 };
+const emits = defineEmits(["onClick"]);
 </script>
 <template>
   <div class="mb-3 card">
@@ -86,7 +87,7 @@ const formatCurrency = (val) => {
             ? `${icon.background} ${icon.shape}`
             : 'border-radius-md',
           rowReverse ? 'me-2' : '',
-        ]">
+        ]" @click.stop="emits('onClick')" style="cursor: pointer">
           <i class="text-lg opacity-10" :class="typeof icon === 'string' ? icon : icon.component"
             aria-hidden="true"></i>
         </div>

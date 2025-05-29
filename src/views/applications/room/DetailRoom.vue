@@ -5,7 +5,7 @@ import Category from "@/views/applications/category/Category.vue";
 import ProgressLineChart from "@/examples/Charts/ProgressLineChart.vue";
 import MemberCard from "@/views/dashboards/components/MemberCard.vue";
 import MiniStatisticsCard from "@/examples/Cards/MiniStatisticsCard.vue";
-
+import SubNarbar from "@/examples/Navbars/SubNavbar.vue";
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useCategoryStore, useRoomStore } from "@/stores";
@@ -104,7 +104,22 @@ const handleEditTransaction = async (transaction) => {
         }
     });
 };
-
+const addUser = async () => {
+    router.push({
+        path: `/pages/user/create`,
+        query: {
+            roomId: roomId,
+        }
+    });
+}
+const downloadDetailRoom = async () => {
+    const res = await axios.get(`rooms/download-detail/${roomId}`, { responseType: 'blob' });
+    const url = window.URL.createObjectURL(res.data);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${room.value.name}.xlsx`;
+    link.click();
+}
 onMounted(async () => {
     await getRoom();
     categories.value = await categoryStore.getCategories();
@@ -131,10 +146,10 @@ onMounted(async () => {
                     <mini-statistics-card title="Người dùng" :value="users.length" unit='Người' description="<span
                 class='text-sm font-weight-bolder text-success'
                 >+3%</span> since last week" :icon="{
-                    component: 'ni ni-world',
+                    component: 'ni ni-fat-add',
                     background: 'bg-gradient-danger',
                     shape: 'rounded-circle',
-                }" />
+                }" @on-click="addUser" />
                 </div>
                 <div class="col-lg-3 col-md-6 col-12">
                     <mini-statistics-card title="Chi tiêu" :value="totalExpense" unit='VND' description="<span
@@ -191,6 +206,7 @@ onMounted(async () => {
             </div>
             <div class="py-4 row">
                 <div class="col-lg-8 col-12">
+                    <SubNarbar @add="createTransaction" @export="downloadDetailRoom" />
                     <todo-list :header="{ title: room.name, dateTime: room.updatedAt }" :transactions="transactions"
                         @save="saveRoomName(room.id, $event)" @edit="handleEditTransaction" />
                 </div>

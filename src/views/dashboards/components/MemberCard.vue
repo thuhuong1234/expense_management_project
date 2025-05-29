@@ -89,7 +89,7 @@ const updateUserTransactions = (userId, event) => {
               </p>
             </div>
           </div>
-          <div class="ms-auto d-flex align-items-center" :class="selectable ? 'w-35' : 'w-5'">
+          <div class="ms-auto d-flex align-items-center justify-content-end" :class="selectable ? 'w-35' : 'w-5'">
             <div class="form-check form-switch justify-content-end" v-if="selectable">
               <input v-if="isEdit" :id="`amountOfUser-${id}`" class="mb-0 w-60 text-sm form-control" type="number"
                 placeholder="Số tiền" :value="getAmountByUserId(id)" @input="e => updateUserTransactions(id, e)" />
