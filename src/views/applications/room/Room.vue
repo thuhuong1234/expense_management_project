@@ -19,12 +19,12 @@ import team3 from "@/assets/img/math-svgrepo-com.svg";
 import team4 from "@/assets/img/math-svgrepo-com.svg";
 import slackLogo from "@/assets/img/math-svgrepo-com.svg";
 
-
 const router = useRouter();
 const roomsData = ref([]);
 const store = useUiStore();
 const roomList = ref([]);
 const errorMessage = ref('');
+const isGridView = ref(true);
 const { getAll, getById, create, deleteById } = useCRUD();
 const schema = yup.object({
     name: yup.string().required('Vui lòng nhập tên phòng'),
@@ -89,7 +89,6 @@ const getList = async () => {
         })
     )
 }
-
 const addUsers = async (roomId) => {
     router.push({
         path: `/pages/room/add-user`,
@@ -128,7 +127,8 @@ onBeforeUnmount(() => {
         <div class="container-fluid">
             <section class="py-3">
                 <div class="row">
-                    <SubNavbar :show-btn-add="false" @export="downloadRooms">
+                    <SubNavbar :show-btn-add="false" @export="downloadRooms" :is-show-grid="isGridView"
+                        @toggle="isGridView = !isGridView">
                         <template #btn>
                             <button type="button" class="btn btn-outline-primary m-0 btn-add" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal">
@@ -146,11 +146,13 @@ onBeforeUnmount(() => {
                         </template>
                     </SubNavbar>
                 </div>
-                <div class="mt-2 row mt-lg-4" v-if="roomList.length > 0">
-                    <div class="mb-4 col-lg-4 col-md-6" v-for="room in roomList" :key="room.id">
-                        <complex-project-card :logo="slackLogo" :title="room.name" :quality="room.quality"
-                            :date-time="room.createdAt" :members="[team3, team4, team2, team3, team4]" :roomId="room.id"
-                            :leader="room.leaderName" :dropdown="[
+                <div class="mt-2" :class="!isGridView ? 'row mt-lg-4' : ''" v-if="roomList.length > 0">
+                    <div class="mb-4" :class="!isGridView ? 'col-lg-4 col-md-6' : ''" v-for="room in roomList"
+                        :key="room.id">
+                        <complex-project-card :is-grid-view="!isGridView" :logo="slackLogo" :title="room.name"
+                            :quality="room.quality" :date-time="room.createdAt"
+                            :members="[team3, team4, team2, team3, team4]" :roomId="room.id" :leader="room.leaderName"
+                            :dropdown="[
                                 {
                                     label: 'Xóa phòng',
                                     route: 'javascript:;',
