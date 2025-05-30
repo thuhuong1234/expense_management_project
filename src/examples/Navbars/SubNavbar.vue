@@ -18,15 +18,15 @@ const props = defineProps({
             <input type="text" class="form-control" placeholder="Nhập tìm kiếm..." />
         </div>
         <div class=" d-flex align-items-center justify-content-end gap-2">
-            <slot name="btn" />
             <div v-if="showBtnAdd" class="btn btn-custom p-1 border-1 btn-color" @click.stop="emits('add')">
                 <img :src="PlusIcon" width="20px"><span class="ms-2 fw-bold text-sm" v-if="titleAdd">{{ titleAdd
-                }}</span>
+                    }}</span>
             </div>
             <div v-if="showBtnExport" class="btn btn-custom p-1 border-1  btn-color" @click.stop="emits('export')">
                 <img :src="ExportIcon" width="20px"><span class="ms-2 fw-bold text-sm " v-if="titleExport">{{
                     titleExport }}</span>
             </div>
+            <slot name="btn" />
         </div>
     </div>
 </template>
@@ -37,5 +37,6 @@ const props = defineProps({
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 0 !important;
 }
 </style>

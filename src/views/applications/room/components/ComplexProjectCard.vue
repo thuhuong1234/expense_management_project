@@ -39,7 +39,7 @@ defineProps({
     default: 0,
   }
 });
-defineEmits(['dropdown-action'])
+defineEmits(['dropdown-action', 'add-users'])
 </script>
 <template>
   <div class="card">
@@ -83,9 +83,8 @@ defineEmits(['dropdown-action'])
       <hr class="horizontal dark" />
       <div class=" d-flex align-items-center">
         <div class="input-group">
-          <button type="button" class="z-index-2 btn btn-outline-primary p-1 m-0 text-xs btn-add">Thêm thành
-            viên
-          </button>
+          <button type="button" class="z-index-2 btn btn-outline-primary p-1 m-0 text-xs btn-add"
+            @click.stop="$emit('add-users')">Thêm thành viên </button>
         </div>
         <div class="text-end ">
           <h6 class="mb-0 text-xs">{{ dayjs(dateTime).format('DD/MM/YYYY HH:mm') }}</h6>

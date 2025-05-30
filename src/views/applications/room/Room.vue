@@ -6,20 +6,21 @@ import useCRUD from "@/composables/useCRUD";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
 import { useRouter } from "vue-router";
-const router = useRouter();
-// components
+import axios from "@/configs/axios.js";
+
+import setNavPills from "@/assets/js/nav-pills.js";
+import ArgonInput from "@/components/Icons/ArgonInput.vue";
+import SubNavbar from "@/examples/Navbars/SubNavbar.vue";
 import ComplexProjectCard from "./components/ComplexProjectCard.vue";
-import NavbarRoom from './components/NavbarRoom.vue';
 import DialogFormRoom from "./components/DialogFormRoom.vue";
 import { showToast, showConfirmDialog } from "@/helpers/sweetalertHelper";
-// images
 import team2 from "@/assets/img/math-svgrepo-com.svg";
 import team3 from "@/assets/img/math-svgrepo-com.svg";
 import team4 from "@/assets/img/math-svgrepo-com.svg";
 import slackLogo from "@/assets/img/math-svgrepo-com.svg";
-import setNavPills from "@/assets/js/nav-pills.js";
-import ArgonInput from "@/components/Icons/ArgonInput.vue";
 
+
+const router = useRouter();
 const roomsData = ref([]);
 const store = useUiStore();
 const roomList = ref([]);
@@ -83,15 +84,25 @@ const getList = async () => {
             const user = await getById('users', room.userId)
             return {
                 ...room,
-                leaderName: user?.data.name|| 'Không rõ',
+                leaderName: user?.data.name || 'Không rõ',
             }
         })
     )
 }
 
-
-const goToDetail = async (roomId) => {
-    router.push({ path: `/pages/room/detail/${roomId}` });
+const addUsers = async (roomId) => {
+    router.push({
+        path: `/pages/room/add-user`,
+        query: { roomId: roomId }
+    });
+}
+const downloadRooms = async () => {
+    const res = await axios.get(`rooms/download`, { responseType: 'blob' });
+    const url = window.URL.createObjectURL(res.data);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Danh sách phòng.xlsx`;
+    link.click();
 }
 onMounted(async () => {
     store.isAbsolute = true;
@@ -117,8 +128,8 @@ onBeforeUnmount(() => {
         <div class="container-fluid">
             <section class="py-3">
                 <div class="row">
-                    <NavbarRoom>
-                        <template #nav-child-item>
+                    <SubNavbar :show-btn-add="false" @export="downloadRooms">
+                        <template #btn>
                             <button type="button" class="btn btn-outline-primary m-0 btn-add" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal">
                                 Thêm phòng
@@ -133,7 +144,7 @@ onBeforeUnmount(() => {
                                 </template>
                             </DialogFormRoom>
                         </template>
-                    </NavbarRoom>
+                    </SubNavbar>
                 </div>
                 <div class="mt-2 row mt-lg-4" v-if="roomList.length > 0">
                     <div class="mb-4 col-lg-4 col-md-6" v-for="room in roomList" :key="room.id">
@@ -145,10 +156,11 @@ onBeforeUnmount(() => {
                                     route: 'javascript:;',
                                 },
                                 {
-                                    label: 'Sao chép lời mời',
+                                    label: 'Rời khỏi phòng',
                                     route: 'javascript:;',
                                 },
-                            ]" @dropdown-action="(action) => handleDropdownAction(action, room)" />
+                            ]" @dropdown-action="(action) => handleDropdownAction(action, room)"
+                            @add-users="addUsers(room.id)" />
                     </div>
                 </div>
             </section>
