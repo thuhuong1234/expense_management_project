@@ -95,6 +95,9 @@ const addUsers = async (roomId) => {
         query: { roomId: roomId }
     });
 }
+const goToDetail = (roomId) => {
+    router.push(`/pages/room/detail/${roomId}`);
+};
 const downloadRooms = async () => {
     const res = await axios.get(`rooms/download`, { responseType: 'blob' });
     const url = window.URL.createObjectURL(res.data);
@@ -162,7 +165,7 @@ onBeforeUnmount(() => {
                                     route: 'javascript:;',
                                 },
                             ]" @dropdown-action="(action) => handleDropdownAction(action, room)"
-                            @add-users="addUsers(room.id)" />
+                            @add-users="addUsers(room.id)" @active="goToDetail(room.id)" />
                     </div>
                 </div>
             </section>

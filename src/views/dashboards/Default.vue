@@ -116,6 +116,10 @@ const addUsers = async (roomId) => {
     query: { roomId: roomId }
   });
 }
+const goToDetail = (roomId) => {
+  router.push(`/pages/room/detail/${roomId}`);
+};
+
 onMounted(async () => {
   await getList();
   user.value = await authStore.getUser();
@@ -240,7 +244,7 @@ onMounted(async () => {
                     },
                   ]" @dropdown-action="
                     (action) => handleDropdownAction(action, room)
-                  " @add-users="addUsers(room.id)" />
+                  " @add-users="addUsers(room.id)" @active="goToDetail(room.id)" />
               </div>
             </div>
             <div class="  mb-4 mb-lg-0">

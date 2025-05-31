@@ -14,23 +14,21 @@ defineProps({
   roomId: { type: Number, default: 0, },
   isGridView: { type: Boolean, default: true }
 });
-defineEmits(['dropdown-action', 'add-users'])
+defineEmits(['dropdown-action', 'add-users', 'active'])
 </script>
 <template>
-  <div class="card w-100">
+  <div class="card w-100" @click.stop="$emit('active', roomId)" style="cursor: pointer;">
     <div class="p-2" :class="!isGridView ? 'd-flex align-items-center justify-content-between w-100 ' : ''">
       <div class="d-flex" :class="!isGridView ? 'align-items-center justify-content-between gap-2' : ''">
         <div class="p-2 avatar  bg-gradient-dark border-radius-md">
           <img :src="logo" :alt="title" />
         </div>
-        <div class=" ms-3 text-sm">
-          <router-link :to="{ path: `/pages/room/detail/${roomId}` }">{{ title }}</router-link>
-        </div>
+        <div class="ms-3 text-sm"> {{ title }} </div>
         <div class="ms-auto" v-if="isGridView">
           <div class="dropdown">
             <button id="navbarDropdownMenuLink" class="btn btn-link text-secondary ps-0 pe-2 mb-0"
               :class="{ show: showMenu }" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-              @click="showMenu = !showMenu">
+              @click.stop="showMenu = !showMenu">
               <i class="text-lg fa fa-ellipsis-v"></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" :class="{ show: showMenu }"
