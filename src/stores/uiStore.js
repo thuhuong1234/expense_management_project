@@ -52,21 +52,17 @@ export const useUiStore = defineStore("ui", {
         sidenav_show.classList.add("g-sidenav-hidden");
       }
     },
-
-    setSidebarType(payload) {
-      this.sidebarType = payload;
-    },
-
     navbarFixed() {
       this.isNavFixed = !this.isNavFixed;
     },
-
     toggleDefaultLayout() {
       this.showNavbar = !this.showNavbar;
       this.showSidenav = !this.showSidenav;
       this.showFooter = !this.showFooter;
     },
-
+    setSidebarType(payload) {
+      this.sidebarType = payload;
+    },
     toggleSidebarColor(payload) {
       this.setSidebarType(payload);
     },

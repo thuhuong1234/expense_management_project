@@ -14,7 +14,7 @@ defineProps({
 </script>
 <template>
     <div id="sidenav-collapse-main" class=" navbar-collapse w-auto h-auto h-100">
-        <ul class="navbar-nav ">
+        <ul class="navbar-nav">
             <li class="nav-item " v-for="(section, index) in list" :key="index">
                 <sidenav-collapse :collapse-ref="section.collapseRef" :nav-text="section.navText"
                     :items="section.items">
