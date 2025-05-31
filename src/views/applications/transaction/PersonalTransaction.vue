@@ -45,7 +45,7 @@ const onSubmit = handleSubmit(async (values) => {
     const data = {
         amount: Number(amount),
         ...values,
-       roomId: +(roomId ? { roomId } : { userId: user.value?.id }),
+        roomId: +(roomId ? { roomId } : { userId: user.value?.id }),
         categoryId,
         userTransactions: selectedUsers.value,
     }
@@ -53,7 +53,7 @@ const onSubmit = handleSubmit(async (values) => {
     showToast('Tạo giao dịch thành công', 'success');
 })
 const onClose = () => {
-    router.push('/pages/room/detail/' + roomId);
+    router.back();
 }
 const selectedCategoryId = ref(categoryId);
 const handleCategorySelect = (id) => {
@@ -69,120 +69,122 @@ const getRooms = async (userId) => {
     if (!userId) return;
     const response = await getById("users", userId);
     roomsOfUser.value = response.data.rooms;
-    
+
 }
 onMounted(async () => {
     user.value = await authStore.getUser();
     categories.value = await categoryStore.getCategories();
-    users.value = await roomStore.getUserInfos(roomId|| 10);
+    users.value = await roomStore.getUserInfos(roomId || 10);
     fund.value = roomStore.fund;
     await getRooms(user.value.id);
-    
+
 });
 </script>
 <template>
     <DashboardLayout>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="mx-auto col-lg-10 col-12">
-                <div class="mt-4 card card-body">
-                    <h6 class="mb-0 font-weight-bolder text-dark">Ghi chú mới</h6>
-                    <p class="mb-4 text-sm">Thông tin chi tiết</p>
-                    <div class="d-flex align-items-center">
-                        <label for="amount" class="w-20 form-label text-sm">Số tiền</label>
-                        <argon-input id="amount" class="w-80 text-sm" name="amount" type="number" placeholder="Amount"
-                            value="0" />
-                    </div>
-                    <hr class="my-0 dark" />
-                    <div class="d-flex align-items-center">
-                        <label for="description" class="w-20 form-label text-sm"> Mô tả</label>
-                        <argon-input id="description" class="w-80 text-sm" name="description" type="text"
-                            placeholder="Mô tả..." />
-                    </div>
-                    <hr class="my-0 dark" />
-                    <div class="d-flex align-items-center">
-                        <label for="createAt" class="w-20 form-label text-sm"> Ngày chi</label>
-                        <flat-pickr id="createAt" v-model="createAt"
-                            class="mb-3 w-80 form-control datetimepicker text-sm" placeholder="Ngày chi"
-                            :config="config"></flat-pickr>
-                    </div>
-                    <hr class="my-0 dark" />
-                    <div class="d-flex align-items-center" v-if="!roomId">
-                        <label for="roomId" class="w-20 form-label text-sm">Phòng</label>
-                        <select v-model="roomId" class="w-80 form-select text-sm" aria-label="Default select example">
-                            <option value="" selected>-- Chọn phòng --</option>
-                            <option v-for="room in roomsOfUser" :key="room.id" :value="room.id">{{
-                                room.name }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="p-2">
-                        <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active font-weight-bold text-sm" id="users-tab"
-                                    data-bs-toggle="tab" data-bs-target="#users-tab-pane" type="button" role="tab"
-                                    aria-controls="users-tab-pane" aria-selected="true">Người sử dụng</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link font-weight-bold text-sm" id="category-tab" data-bs-toggle="tab"
-                                    data-bs-target="#category-tab-pane" type="button" role="tab"
-                                    aria-controls="category-tab-pane" aria-selected="false">Danh
-                                    mục</button>
-                            </li>
-                        </ul>
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="users-tab-pane" role="tabpanel"
-                                aria-labelledby="users-tab" tabindex="0">
-                                <member-card :members="users" :selectable="true"
-                                    v-model:selected-users="selectedUsers" />
-                            </div>
-                            <div class="tab-pane fade" id="category-tab-pane" role="tabpanel"
-                                aria-labelledby="category-tab" tabindex="0">
-                                <div class="p-2">
-                                    <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link active text-sm" id="category-expense-tab"
-                                                data-bs-toggle="tab" data-bs-target="#category-expense-tab-pane"
-                                                type="button" role="tab" aria-controls="category-expense-tab-pane"
-                                                aria-selected="true">Chi tiêu</button>
-                                        </li>
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link text-sm" id="category-income-tab"
-                                                data-bs-toggle="tab" data-bs-target="#category-income-tab-pane"
-                                                type="button" role="tab" aria-controls="category-income-tab-pane"
-                                                aria-selected="false">Thu nhập</button>
-                                        </li>
-                                    </ul>
-                                    <div class="tab-content" id="myTabContent">
-                                        <div class="tab-pane fade show active" id="category-expense-tab-pane"
-                                            role="tabpanel" aria-labelledby="category-expense-tab" tabindex="0">
-                                            <category :categories="categories" type="Expense"
-                                                :selected-id="selectedCategoryId" @select="handleCategorySelect" />
-                                        </div>
-                                        <div class="tab-pane fade" id="category-income-tab-pane" role="tabpanel"
-                                            aria-labelledby="category-income-tab" tabindex="0">
-                                            <category :categories="categories" type="Income"
-                                                :selected-id="selectedCategoryId" @select="handleCategorySelect" />
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-lg-10 col-12">
+                    <div class="mt-4 card card-body">
+                        <h6 class="mb-0 font-weight-bolder text-dark">Ghi chú mới</h6>
+                        <p class="mb-4 text-sm">Thông tin chi tiết</p>
+                        <div class="d-flex align-items-center">
+                            <label for="amount" class="w-20 form-label text-sm">Số tiền</label>
+                            <argon-input id="amount" class="w-80 text-sm" name="amount" type="number"
+                                placeholder="Amount" value="0" />
+                        </div>
+                        <hr class="my-0 dark" />
+                        <div class="d-flex align-items-center">
+                            <label for="description" class="w-20 form-label text-sm"> Mô tả</label>
+                            <argon-input id="description" class="w-80 text-sm" name="description" type="text"
+                                placeholder="Mô tả..." />
+                        </div>
+                        <hr class="my-0 dark" />
+                        <div class="d-flex align-items-center">
+                            <label for="createAt" class="w-20 form-label text-sm"> Ngày chi</label>
+                            <flat-pickr id="createAt" v-model="createAt"
+                                class="mb-3 w-80 form-control datetimepicker text-sm" placeholder="Ngày chi"
+                                :config="config"></flat-pickr>
+                        </div>
+                        <hr class="my-0 dark" />
+                        <div class="d-flex align-items-center" v-if="!roomId">
+                            <label for="roomId" class="w-20 form-label text-sm">Phòng</label>
+                            <select v-model="roomId" class="w-80 form-select text-sm"
+                                aria-label="Default select example">
+                                <option value="" selected>-- Chọn phòng --</option>
+                                <option v-for="room in roomsOfUser" :key="room.id" :value="room.id">{{
+                                    room.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="p-2">
+                            <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active font-weight-bold text-sm" id="users-tab"
+                                        data-bs-toggle="tab" data-bs-target="#users-tab-pane" type="button" role="tab"
+                                        aria-controls="users-tab-pane" aria-selected="true">Người sử dụng</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link font-weight-bold text-sm" id="category-tab"
+                                        data-bs-toggle="tab" data-bs-target="#category-tab-pane" type="button"
+                                        role="tab" aria-controls="category-tab-pane" aria-selected="false">Danh
+                                        mục</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="users-tab-pane" role="tabpanel"
+                                    aria-labelledby="users-tab" tabindex="0">
+                                    <member-card :members="users" :selectable="true"
+                                        v-model:selected-users="selectedUsers" />
+                                </div>
+                                <div class="tab-pane fade" id="category-tab-pane" role="tabpanel"
+                                    aria-labelledby="category-tab" tabindex="0">
+                                    <div class="p-2">
+                                        <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link active text-sm" id="category-expense-tab"
+                                                    data-bs-toggle="tab" data-bs-target="#category-expense-tab-pane"
+                                                    type="button" role="tab" aria-controls="category-expense-tab-pane"
+                                                    aria-selected="true">Chi tiêu</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link text-sm" id="category-income-tab"
+                                                    data-bs-toggle="tab" data-bs-target="#category-income-tab-pane"
+                                                    type="button" role="tab" aria-controls="category-income-tab-pane"
+                                                    aria-selected="false">Thu nhập</button>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content" id="myTabContent">
+                                            <div class="tab-pane fade show active" id="category-expense-tab-pane"
+                                                role="tabpanel" aria-labelledby="category-expense-tab" tabindex="0">
+                                                <category :categories="categories" type="Expense"
+                                                    :selected-id="selectedCategoryId" @select="handleCategorySelect" />
+                                            </div>
+                                            <div class="tab-pane fade" id="category-income-tab-pane" role="tabpanel"
+                                                aria-labelledby="category-income-tab" tabindex="0">
+                                                <category :categories="categories" type="Income"
+                                                    :selected-id="selectedCategoryId" @select="handleCategorySelect" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="mt-4 d-flex justify-content-end">
+                            <button type="button" name="button" class="m-0 btn btn-light" @click="onClose">
+                                Hủy
+                            </button>
+                            <button type="button" name="button" class="m-0 btn bg-gradient-success ms-2"
+                                @click="onSubmit">
+                                Lưu
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="mt-4 d-flex justify-content-end">
-                        <button type="button" name="button" class="m-0 btn btn-light" @click="onClose">
-                            Hủy
-                        </button>
-                        <button type="button" name="button" class="m-0 btn bg-gradient-success ms-2" @click="onSubmit">
-                            Lưu
-                        </button>
-                    </div>
                 </div>
-
             </div>
         </div>
-    </div>
     </DashboardLayout>
 
 </template>

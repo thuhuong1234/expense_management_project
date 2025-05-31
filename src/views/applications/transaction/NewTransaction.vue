@@ -68,7 +68,7 @@ const onSubmit = handleSubmit(async (values) => {
     showToast('Tạo giao dịch thành công', 'success');
 })
 const onClose = () => {
-    router.push('/pages/room/detail/' + roomId.value);
+    router.back();
 }
 const selectedCategoryId = ref(categoryId);
 const handleCategorySelect = (id) => {

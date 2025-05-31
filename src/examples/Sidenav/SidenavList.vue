@@ -16,7 +16,8 @@ defineProps({
     <div id="sidenav-collapse-main" class=" navbar-collapse w-auto h-auto h-100">
         <ul class="navbar-nav ">
             <li class="nav-item " v-for="(section, index) in list" :key="index">
-                <sidenav-collapse :collapse-ref="section.collapseRef" :nav-text="section.navText">
+                <sidenav-collapse :collapse-ref="section.collapseRef" :nav-text="section.navText"
+                    :items="section.items">
                     <template #icon>
                         <i :class="section.icon + ' text-dark text-sm opacity-10'"></i>
                     </template>
@@ -46,6 +47,17 @@ defineProps({
 ::v-deep(.nav-item .nav-link:hover) {
     color: #ee3672 !important;
     font-weight: 1000;
+
+    i {
+        color: #ee3672 !important;
+    }
+}
+
+::v-deep(.active-link) {
+    background-color: #f0f0f0;
+    color: #ee3672 !important;
+    font-weight: bold;
+
     i {
         color: #ee3672 !important;
     }
