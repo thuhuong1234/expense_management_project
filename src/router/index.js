@@ -41,6 +41,12 @@ const router = createRouter({
       component: () => import("@/views/applications/room/DetailRoom.vue"),
     },
     {
+      path: "/pages/room/statistics/users-by-room/:id",
+      name: "Thống kê chi tiết",
+      component: () =>
+        import("@/views/applications/room/StatisticUserByRoom.vue"),
+    },
+    {
       path: "/pages/transaction/create",
       name: "Ghi chú mới",
       component: () =>
