@@ -29,6 +29,7 @@ import useCRUD from "@/composables/useCRUD";
 import { useRouter } from "vue-router";
 import { useRoomStore, useCategoryStore, useAuthStore, useUserStore, useUiStore } from "@/stores";
 import { useStatisticChart } from "@/composables/useStatisticChart";
+import { showToast, showConfirmDialog } from "@/helpers/sweetalertHelper";
 
 const router = useRouter();
 const roomList = ref([]);
@@ -40,6 +41,7 @@ const authStore = useAuthStore();
 const userStore = useUserStore();
 const uiStore = useUiStore();
 const showFooter = computed(() => uiStore.showFooter);
+const userId = computed(() => authStore.user?.id);
 const getList = async () => {
   const response = await getAll("rooms");
   roomsData.value = {
@@ -127,6 +129,43 @@ const getStatistic = async () => {
   return response.data;
 }
 const { chartData, loadChartData } = useStatisticChart(getStatistic);
+const handleDropdownAction = async (action, room) => {
+
+  if (action === 'Xóa phòng') {
+    const confirm = await showConfirmDialog("Bạn có chắn chắn muốn xóa?", `${room.name}`);
+    if (confirm) {
+      try {
+        const response = await deleteById('rooms', room.id);
+        if (response?.data) {
+          showToast('Xoá phòng thành công', 'success');
+          await getList();
+        }
+      } catch (error) {
+        showToast('Xoá thất bại', 'error');
+      }
+    }
+  }
+  if (action === "Rời khỏi phòng") {
+    if (userId.value === room.userId) {
+      showToast("Vui lòng chuyển quyền trưởng trước khi rời phòng!", "warning");
+      return;
+    }
+    const confirm = await showConfirmDialog("Bạn có chắn chắn rời khỏi phòng?", `${room.name}`);
+    if (confirm) {
+      try {
+        const response = await axios.delete(`rooms/${room.id}/remove-user`, {
+          userId: userId.value
+        })
+        if (response?.data) {
+          showToast('Đã rời khỏi phòng.', 'success');
+          await getList();
+        }
+      } catch (error) {
+        showToast('Rời khỏi phòng thất bại', 'error');
+      }
+    }
+  }
+}
 onMounted(async () => {
   await getList();
   user.value = await authStore.getUser();

@@ -34,7 +34,7 @@ defineEmits(['dropdown-action', 'add-users', 'active'])
             <ul class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" :class="{ show: showMenu }"
               aria-labelledby="navbarDropdownMenuLink">
               <li v-for="(drop, index) in dropdown" :key="index">
-                <a class="dropdown-item" href="#" @click.prevent="$emit('dropdown-action', drop.label)">
+                <a class="dropdown-item" href="#" @click.stop="$emit('dropdown-action', drop.label)">
                   {{ drop.label }}
                 </a>
               </li>

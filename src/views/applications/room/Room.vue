@@ -1,24 +1,27 @@
 <script setup>
 import DefaultLayout from "@/layouts/DashboardLayout.vue"
-import { onBeforeMount, onMounted, onBeforeUnmount, ref } from "vue";
-import { useUiStore } from "@/stores/uiStore";
-import useCRUD from "@/composables/useCRUD";
-import { useForm } from "vee-validate";
-import * as yup from "yup";
-import { useRouter } from "vue-router";
-import axios from "@/configs/axios.js";
-
 import setNavPills from "@/assets/js/nav-pills.js";
 import ArgonInput from "@/components/Icons/ArgonInput.vue";
 import SubNavbar from "@/examples/Navbars/SubNavbar.vue";
 import ComplexProjectCard from "./components/ComplexProjectCard.vue";
 import DialogFormRoom from "./components/DialogFormRoom.vue";
-import { showToast, showConfirmDialog } from "@/helpers/sweetalertHelper";
 import team2 from "@/assets/img/math-svgrepo-com.svg";
 import team3 from "@/assets/img/math-svgrepo-com.svg";
 import team4 from "@/assets/img/math-svgrepo-com.svg";
 import slackLogo from "@/assets/img/math-svgrepo-com.svg";
+import { showToast, showConfirmDialog } from "@/helpers/sweetalertHelper";
 
+import { onBeforeMount, onMounted, onBeforeUnmount, ref, computed } from "vue";
+import { useUiStore } from "@/stores/uiStore";
+import { useForm } from "vee-validate";
+import { useAuthStore } from "@/stores";
+import { useRouter } from "vue-router";
+import useCRUD from "@/composables/useCRUD";
+import axios from "@/configs/axios.js";
+import * as yup from "yup";
+
+const authStore = useAuthStore();
+const userId = computed(() => authStore.user?.id);
 const router = useRouter();
 const roomsData = ref([]);
 const store = useUiStore();
@@ -61,6 +64,26 @@ const handleDropdownAction = async (action, room) => {
                 }
             } catch (error) {
                 showToast('Xoá thất bại', 'error');
+            }
+        }
+    }
+    if (action === "Rời khỏi phòng") {
+        if (userId.value === room.userId) {
+            showToast("Vui lòng chuyển quyền trưởng trước khi rời phòng!", "warning");
+            return;
+        }
+        const confirm = await showConfirmDialog("Bạn có chắn chắn rời khỏi phòng?", `${room.name}`);
+        if (confirm) {
+            try {
+                const response = await axios.delete(`rooms/${room.id}/remove-user`, {
+                    userId: userId.value
+                })
+                if (response?.data) {
+                    showToast('Đã rời khỏi phòng.', 'success');
+                    await getList();
+                }
+            } catch (error) {
+                showToast('Rời khỏi phòng thất bại', 'error');
             }
         }
     }
@@ -149,10 +172,10 @@ onBeforeUnmount(() => {
                         </template>
                     </SubNavbar>
                 </div>
-                <div class="mt-2" :class="!isGridView ? 'row mt-lg-4' : ''" v-if="roomList.length > 0">
-                    <div class="mb-4" :class="!isGridView ? 'col-lg-4 col-md-6' : ''" v-for="room in roomList"
+                <div class="mt-2" :class="isGridView ? 'row mt-lg-4' : ''" v-if="roomList.length > 0">
+                    <div class="mb-4" :class="isGridView ? 'col-lg-4 col-md-6' : ''" v-for="room in roomList"
                         :key="room.id">
-                        <complex-project-card :is-grid-view="!isGridView" :logo="slackLogo" :title="room.name"
+                        <complex-project-card :is-grid-view="isGridView" :logo="slackLogo" :title="room.name"
                             :quality="room.quality" :date-time="room.createdAt"
                             :members="[team3, team4, team2, team3, team4]" :roomId="room.id" :leader="room.leaderName"
                             :dropdown="[

@@ -1,7 +1,5 @@
 <script setup>
-import { computed } from "vue";
 import { getAvatarUrl } from "@/helpers/avatar";
-// Định nghĩa props
 const props = defineProps({
     users: {
         type: Array,
@@ -9,9 +7,6 @@ const props = defineProps({
         default: () => [],
     },
 });
-
-// Cấu hình đường dẫn ảnh
-
 </script>
 
 <template>
