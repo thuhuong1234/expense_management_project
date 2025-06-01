@@ -3,9 +3,11 @@ import DashboardLayout from "@/layouts/DashboardLayout.vue";
 import MemberCard from "@/views/dashboards/components/MemberCard.vue";
 import MiniStatisticsCard from "@/examples/Cards/MiniStatisticsCard.vue";
 import UserList from "./components/UserList.vue";
-import { onMounted, ref } from "vue";
+import { showToast, showConfirmDialog } from "@/helpers/sweetalertHelper";
+
+import { onMounted, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useCategoryStore, useRoomStore } from "@/stores";
+import { useCategoryStore, useRoomStore, useAuthStore } from "@/stores";
 import axios from "@/configs/axios.js";
 import useCRUD from "@/composables/useCRUD";
 
@@ -13,6 +15,7 @@ const route = useRoute();
 const router = useRouter();
 const roomStore = useRoomStore();
 const categoryStore = useCategoryStore();
+const authStore = useAuthStore();
 const roomId = route.params?.id || null;
 const room = ref({});
 const users = ref([]);
@@ -23,6 +26,7 @@ const balance = ref(0);
 const totalExpense = ref(0);
 const totalIncome = ref(0);
 const { getById } = useCRUD();
+const userId = computed(() => authStore.user?.id);
 
 const getRoom = async () => {
     const response = await getById('rooms', roomId);
@@ -71,8 +75,38 @@ const addUser = async () => {
 const userStatistics = ref([]);
 const getUserStatics = async (type) => {
     const response = await axios.get(`rooms/statistics/users-by-room?roomId=${roomId}&type=${type}`);
-    console.log(response.data);
     userStatistics.value = response.data.data;
+}
+const handleDropdownAction = async (action, user) => {
+    const currentUserId = userId.value;
+    const currentUserInRoom = users.value.find(u => u.id === currentUserId);
+
+    if (action === "Xóa") {
+        if (!currentUserInRoom || currentUserInRoom.role !== "Leader") {
+            showToast("Chỉ trưởng nhóm mới có quyền xóa thành viên!", "warning");
+            return;
+        }
+        if (user.role === "Leader" || user.isLeader) {
+            showToast("Không thể xóa trưởng nhóm. Vui lòng chuyển quyền trước!", "warning");
+            return;
+        }
+        const confirm = await showConfirmDialog("Bạn có chắc chắn muốn xóa thành viên này khỏi phòng?", `${user.name}`);
+        if (confirm) {
+            try {
+                const response = await axios.delete(`rooms/${roomId}/remove-user`, {
+                    data: {
+                        userId: user.id,
+                    },
+                })
+                if (response?.data) {
+                    showToast('Xóa thành viên thành công.', 'success');
+                    await getRoom();
+                }
+            } catch (error) {
+                showToast('Xóa thành viên thất bại', 'error');
+            }
+        }
+    }
 }
 onMounted(async () => {
     await getRoom();
@@ -134,7 +168,7 @@ onMounted(async () => {
                             label: 'Xóa',
                             route: 'javascript:;',
                         },
-                    ]" />
+                    ]" @dropdown-action="handleDropdownAction" />
                 </div>
             </div>
         </div>

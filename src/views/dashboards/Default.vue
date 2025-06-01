@@ -154,7 +154,9 @@ const handleDropdownAction = async (action, room) => {
     if (confirm) {
       try {
         const response = await axios.delete(`rooms/${room.id}/remove-user`, {
-          userId: userId.value
+          data: {
+            userId: user.id,
+          },
         })
         if (response?.data) {
           showToast('Đã rời khỏi phòng.', 'success');
