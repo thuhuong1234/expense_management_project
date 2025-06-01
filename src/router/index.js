@@ -79,6 +79,11 @@ const router = createRouter({
       ],
     },
     {
+      path: "/filter",
+      name: "Tìm kiếm",
+      component: () => import("@/examples/Filter.vue"),
+    },
+    {
       path: "/login",
       name: "Đăng nhập",
       component: () => import("@/views/auth/Login.vue"),

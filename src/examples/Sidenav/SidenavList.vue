@@ -4,6 +4,9 @@ import { useUiStore } from "@/stores/uiStore";
 import SidenavItem from "./SidenavItem.vue";
 import SidenavCollapse from "./SidenavCollapse.vue";
 import SidenavCollapseItem from "./SidenavCollapseItem.vue";
+const logout = () => {
+    localStorage.removeItem('access_token');
+};
 const store = useUiStore();
 defineProps({
     list: {
@@ -39,6 +42,8 @@ defineProps({
             <li class="nav-item ">
                 <sidenav-item :to="{ name: 'Tài khoản' }" mini-icon="ni ni-single-02 text-dark text-sm opacity-10"
                     text="Hồ sơ" />
+                <sidenav-item @click="logout" :to="{ name: 'Đăng nhập' }"
+                    mini-icon="ni ni-button-power text-dark text-sm opacity-10" text="Đăng xuất" />
             </li>
         </ul>
     </div>

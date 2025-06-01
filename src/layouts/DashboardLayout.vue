@@ -19,11 +19,10 @@ const hideConfigButton = computed(() => store.hideConfigButton);
   <div class="d-flex min-vh-100">
     <sidenav :list="sidebarDashboardList" v-if="showSidenav" />
     <main class="main-content position-relative max-height-vh-100 h-100 w-100">
-      <navbar v-if="showNavbar" />
+      <navbar />
       <div class="container-fluid">
         <slot />
       </div>
-      <app-footer v-show="showFooter" />
       <!-- <configurator :class="[showConfig ? 'show' : '', hideConfigButton ? 'd-none' : '']" /> -->
     </main>
   </div>

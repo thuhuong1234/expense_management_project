@@ -9,6 +9,8 @@ import AuthorsTable from "./components/AuthorsTable.vue";
 import CategoriesList from "@/examples/Cards/CategoriesList.vue";
 import ComplexProjectCard from "@/views/applications/room/components/ComplexProjectCard.vue";
 import TodoList from "@/views/applications/room/components/TodoList.vue";
+import AppFooter from "@/examples/Footer.vue";
+import ProgressLineChart from "@/examples/Charts/ProgressLineChart.vue";
 
 import slackLogo from "@/assets/img/math-svgrepo-com.svg";
 import image2 from "../../assets/img/img-2.jpg";
@@ -21,12 +23,14 @@ import team3 from "../../assets/img/team-3.jpg";
 import team5 from "../../assets/img/team-5.jpg";
 import team4 from "../../assets/img/team-4.jpg";
 
-import { onMounted, ref } from "vue";
+import axios from "@/configs/axios.js";
+import { onMounted, ref, computed } from "vue";
 import useCRUD from "@/composables/useCRUD";
 import { useRouter } from "vue-router";
-import { useRoomStore, useCategoryStore, useAuthStore, useUserStore } from "@/stores";
-const router = useRouter();
+import { useRoomStore, useCategoryStore, useAuthStore, useUserStore, useUiStore } from "@/stores";
+import { useStatisticChart } from "@/composables/useStatisticChart";
 
+const router = useRouter();
 const roomList = ref([]);
 const roomsData = ref([]);
 const user = ref([]);
@@ -34,6 +38,8 @@ const transactions = ref([]);
 const { getAll, getById } = useCRUD();
 const authStore = useAuthStore();
 const userStore = useUserStore();
+const uiStore = useUiStore();
+const showFooter = computed(() => uiStore.showFooter);
 const getList = async () => {
   const response = await getAll("rooms");
   roomsData.value = {
@@ -99,17 +105,12 @@ const personalFund = ref(0);
 const totalExpense = ref(0);
 const totalIncome = ref(0);
 const totalRooms = ref(0);
-const calculateSummary = () => {
-  totalExpense.value = transactions.value
-    .filter((t) => t.categoryType === "Expense")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  totalIncome.value = transactions.value
-    .filter((t) => t.categoryType === "Income")
-    .reduce((sum, t) => sum + t.amount, 0);
-
+const getTotal = async () => {
+  const res = await axios.get(`users/count-by-user`);
+  totalExpense.value = res.data.totalExpense;
+  totalIncome.value = res.data.totalIncome;
   personalFund.value = totalIncome.value - totalExpense.value;
-};
+}
 const addUsers = async (roomId) => {
   router.push({
     path: `/pages/room/add-user`,
@@ -119,12 +120,19 @@ const addUsers = async (roomId) => {
 const goToDetail = (roomId) => {
   router.push(`/pages/room/detail/${roomId}`);
 };
-
+const progress = ref(0);
+const getStatistic = async () => {
+  const response = await axios.get(`transactions/statistics?type=week&roomId=12`);
+  progress.value = Number(response.data?.totalExpense) / (Number(response.data?.totalExpense) + Number(response.data?.totalIncome)) * 100;
+  return response.data;
+}
+const { chartData, loadChartData } = useStatisticChart(getStatistic);
 onMounted(async () => {
   await getList();
   user.value = await authStore.getUser();
   await getTransactions();
-  calculateSummary();
+  await getTotal();
+  await loadChartData();
 });
 </script>
 <template>
@@ -171,27 +179,25 @@ onMounted(async () => {
             </div>
           </div>
           <div class="row">
-            <div class="col-lg-7 mb-lg">
-              <gradient-line-chart id="chart-line" title="Tổng quan" description="<i class='fa fa-arrow-up text-success'></i>
-      <span class='font-weight-bold'>4% more</span> in 2021" :chart="{
-        labels: [
-          'Apr',
-          'May',
-          'Jun',
-          'Jul',
-          'Aug',
-          'Sep',
-          'Oct',
-          'Nov',
-          'Dec',
-        ],
-        datasets: [
-          {
-            label: 'Mobile Apps',
-            data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-          },
-        ],
-      }" />
+            <div class="col-lg-7 mb-lg bg-gradient-warning border-radius-lg">
+              <div class="d-flex justify-content-between align-items-center chart-header p-3 ">
+                <div class="chart-header-title">
+                  <span class="title font-weight-bold text-md text-dark">THỐNG KÊ CHI TIÊU</span>
+                </div>
+
+                <div class="chart-header-filters">
+                  <button class="border-1" :class="{ active: selectedRange === '1D' }"
+                    @click="setRange('1D')">Ngày</button>
+                  <button class="border-1" :class="{ active: selectedRange === '1W' }"
+                    @click="setRange('1W')">Tuần</button>
+                  <button class="border-1" :class="{ active: selectedRange === '1M' }"
+                    @click="setRange('1M')">Tháng</button>
+                  <button class="border-1" :class="{ active: selectedRange === '1Y' }"
+                    @click="setRange('1Y')">Năm</button>
+                </div>
+              </div>
+              <progress-line-chart v-if="chartData" :height="280" id="my-chart" title="Thống kê theo tuần" count=""
+                :progress="progress.toFixed(2)" :chart="chartData" :on-submit="onSubmit" />
             </div>
             <div class="col-lg-5">
               <carousel :items="[
@@ -289,5 +295,6 @@ onMounted(async () => {
         </div>
       </div>
     </div>
+    <app-footer v-show="showFooter" class="py-3 bg-white border-radius-lg" />
   </DashboardLayout>
 </template>

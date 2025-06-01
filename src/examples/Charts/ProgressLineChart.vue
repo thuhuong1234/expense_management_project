@@ -11,8 +11,8 @@ const props = defineProps({
         default: "progress-line-chart",
     },
     height: {
-        type: String,
-        default: "100",
+        type: Number,
+        default: 120,
     },
     icon: {
         type: String,
