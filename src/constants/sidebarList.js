@@ -4,8 +4,8 @@ export const sidebarDashboardList = [
     collapseRef: "dashboardExamples",
     icon: "ni ni-shop",
     items: [
-      { to: { name: "Landing" }, text: "Landing", miniIcon: "L" },
-      { to: { name: "Mặc định" }, text: "Default", miniIcon: "D" },
+      { to: { name: "Landing" }, text: "Giới thiệu", miniIcon: "L" },
+      { to: { name: "Mặc định" }, text: "Mặc định", miniIcon: "D" },
     ],
   },
   {
@@ -18,7 +18,6 @@ export const sidebarDashboardList = [
         text: "Danh sách phòng",
         miniIcon: "",
       },
-      { to: { name: "" }, text: "Tham gia phòng", miniIcon: "" },
       { to: { name: "" }, text: "Tạo phòng", miniIcon: "" },
     ],
   },
