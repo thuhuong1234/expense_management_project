@@ -1,12 +1,7 @@
 <script setup>
 import DashboardLayout from "@/layouts/DashboardLayout.vue";
 import MiniStatisticsCard from "../../examples/Cards/MiniStatisticsCard.vue";
-import GradientLineChart from "../../examples/Charts/GradientLineChart.vue";
 import Carousel from "././components/Carousel.vue";
-import MemberCard from "./components/MemberCard.vue";
-import TodoListCard from "./components/TodoListCard.vue";
-import AuthorsTable from "./components/AuthorsTable.vue";
-import CategoriesList from "@/examples/Cards/CategoriesList.vue";
 import ComplexProjectCard from "@/views/applications/room/components/ComplexProjectCard.vue";
 import TodoList from "@/views/applications/room/components/TodoList.vue";
 import AppFooter from "@/examples/Footer.vue";
@@ -296,41 +291,6 @@ onMounted(async () => {
             </div>
             <div class="  mb-4 mb-lg-0">
               <todo-list :header="{ title: 'Ghi chú', dateTime: new Date() }" :transactions="transactions" />
-            </div>
-          </div>
-          <div class="row mt-4">
-            <div class="col-12 col-md-8 mb-4 mb-md-0">
-              <authors-table />
-            </div>
-            <div class="col-md-4">
-              <categories-list :categories="[
-                {
-                  icon: {
-                    component: 'ni ni-mobile-button',
-                    background: 'dark',
-                  },
-                  label: 'Devices',
-                  description: '250 in stock <strong>346+ sold</strong>',
-                },
-                {
-                  icon: {
-                    component: 'ni ni-tag',
-                    background: 'dark',
-                  },
-                  label: 'Tickets',
-                  description: '123 closed <strong>15 open</strong>',
-                },
-                {
-                  icon: { component: 'ni ni-box-2', background: 'dark' },
-                  label: 'Error logs',
-                  description: '1 is active <strong>40 closed</strong>',
-                },
-                {
-                  icon: { component: 'ni ni-satisfied', background: 'dark' },
-                  label: 'Happy Users',
-                  description: '1 is active <strong>+ 430</strong>',
-                },
-              ]" />
             </div>
           </div>
         </div>

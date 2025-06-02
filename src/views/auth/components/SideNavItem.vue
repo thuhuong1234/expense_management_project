@@ -4,11 +4,16 @@ import ArgonButton from "@/components/Icons/ArgonButton.vue";
 import ArgonSwitch from "@/components/Icons/ArgonSwitch.vue";
 import ArgonInput from "@/components/Icons/ArgonInput.vue";
 import axios from "@/configs/axios.js";
-import { showToast } from '@/helpers/sweetalertHelper';
+import { showToast, showConfirmDialog } from '@/helpers/sweetalertHelper';
 import Avatar from 'primevue/avatar';
 import FileUpload from 'primevue/fileupload';
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
+import { useAuthStore } from "@/stores";
+import useCRUD from "@/composables/useCRUD";
+
+const authStore = useAuthStore();
+const { deleteById } = useCRUD();
 const url = import.meta.env.VITE_URL_UPLOAD
 const user = ref({});
 const errorMessage = ref('');
@@ -81,6 +86,20 @@ const updateAvatar = async (event) => {
         showToast('Đã cập nhật avatar!', 'success');
     } catch (error) {
         console.error('Error updating avatar:', error);
+    }
+};
+const deleteAccount = async () => {
+    const confirm = await showConfirmDialog("Bạn có chắc chắn muốn xóa tài khoản?", "Thao tác này không thể hoàn tác.");
+    if (confirm) {
+        try {
+            const response = await deleteById(`users/${user.value.id}`);
+            if (response?.data) {
+                showToast('Tài khoản đã được xóa thành công.', 'success');
+                router.push({ name: 'Đăng nhập' })
+            }
+        } catch (error) {
+            showToast('Xóa tài khoản thất bại.', 'error');
+        }
     }
 };
 onMounted(() => {
@@ -213,124 +232,6 @@ onBeforeUnmount(() => {
                 khẩu</argon-button>
         </div>
     </div>
-    <div id="notifications" class="card mt-4">
-        <div class="card-header">
-            <h5>Thông báo</h5>
-            <p class="text-sm">
-                Chọn cách bạn muốn nhận thông báo. Những cài đặt này áp dụng cho những nội dung bạn đang theo dõi.
-            </p>
-        </div>
-        <div class="card-body pt-0">
-            <div class="table-responsive">
-                <table class="table mb-0">
-                    <thead>
-                        <tr>
-                            <th class="ps-1" colspan="4">
-                                <p class="mb-0">Hoạt động</p>
-                            </th>
-                            <th class="text-center">
-                                <p class="mb-0">Email</p>
-                            </th>
-                            <th class="text-center">
-                                <p class="mb-0">Thông báo đẩy</p>
-                            </th>
-                            <th class="text-center">
-                                <p class="mb-0">SMS</p>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="ps-1" colspan="4">
-                                <div class="my-auto">
-                                    <span class="text-dark d-block text-sm">Đề cập</span>
-                                    <span class="text-xs font-weight-normal">Thông báo khi người khác đề cập bạn trong
-                                        bình luận</span>
-                                </div>
-                            </td>
-                            <td>
-                                <argon-switch id="notify-email" name="Email"
-                                    class="form-check form-switch mb-0 d-flex align-items-center justify-content-center"
-                                    checked />
-                            </td>
-                            <td>
-                                <argon-switch id="notify-push" name="Push"
-                                    class="form-check form-switch mb-0 d-flex align-items-center justify-content-center" />
-                            </td>
-                            <td>
-                                <argon-switch id="notify-sms" name="Sms"
-                                    class="form-check form-switch mb-0 d-flex align-items-center justify-content-center" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="ps-1" colspan="4">
-                                <div class="my-auto">
-                                    <span class="text-dark d-block text-sm">Bình luận</span>
-                                    <span class="text-xs font-weight-normal">Thông báo khi có người bình luận vào nội
-                                        dung của bạn</span>
-                                </div>
-                            </td>
-                            <td>
-                                <argon-switch id="notify-comment-email" name="Email"
-                                    class="form-check form-switch mb-0 d-flex align-items-center justify-content-center"
-                                    checked />
-                            </td>
-                            <td>
-                                <argon-switch id="notify-comment-push" name="Push"
-                                    class="form-check form-switch mb-0 d-flex align-items-center justify-content-center"
-                                    checked />
-                            </td>
-                            <td>
-                                <argon-switch id="notify-comment-sms" name="SMS"
-                                    class="form-check form-switch mb-0 d-flex align-items-center justify-content-center" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="ps-1" colspan="4">
-                                <div class="my-auto">
-                                    <span class="text-dark d-block text-sm">Theo dõi</span>
-                                    <span class="text-xs font-weight-normal">Thông báo khi ai đó bắt đầu theo dõi
-                                        bạn</span>
-                                </div>
-                            </td>
-                            <td>
-                                <argon-switch id="notify-follow-email" name="Email"
-                                    class="mb-0 d-flex align-items-center justify-content-center" checked />
-                            </td>
-                            <td>
-                                <argon-switch id="notify-follow-push" name="Push"
-                                    class="mb-0 d-flex align-items-center justify-content-center" checked />
-                            </td>
-                            <td>
-                                <argon-switch id="notify-follow-sms" name="SMS"
-                                    class="mb-0 d-flex align-items-center justify-content-center" checked />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="ps-1" colspan="4">
-                                <div class="my-auto">
-                                    <p class="text-sm mb-0">Đăng nhập từ thiết bị mới</p>
-                                </div>
-                            </td>
-                            <td>
-                                <argon-switch id="notify-login-email" name="Email"
-                                    class="mb-0 d-flex align-items-center justify-content-center" checked />
-                            </td>
-                            <td>
-                                <argon-switch id="notify-login-push" name="Push"
-                                    class="mb-0 d-flex align-items-center justify-content-center" checked />
-                            </td>
-                            <td>
-                                <argon-switch id="notify-login-sms" name="SMS"
-                                    class="mb-0 d-flex align-items-center justify-content-center" checked />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
     <div id="delete" class="card mt-4">
         <div class="card-header">
             <h5>Xóa tài khoản</h5>
@@ -339,21 +240,8 @@ onBeforeUnmount(() => {
             </p>
         </div>
         <div class="card-body d-sm-flex pt-0">
-            <div class="d-flex align-items-center mb-sm-0 mb-4">
-                <div>
-                    <argon-switch id="delete-account" name="Xóa tài khoản" />
-                </div>
-                <div class="ms-2">
-                    <span class="text-dark font-weight-bold d-block text-sm">Xác nhận</span>
-                    <span class="text-xs d-block">Bạn muốn xóa tài khoản.</span>
-                </div>
-            </div>
-            <argon-button color="secondary" variant="outline" class="mb-0 ms-auto" type="button" name="button"
-                size="sm">Vô
-                hiệu hóa</argon-button>
-            <argon-button color="" variant="gradient" class="mb-0 ms-2 btn-save" type="button" name="button"
-                size="sm">Xóa
-                tài khoản</argon-button>
+            <argon-button color="" variant="gradient" class="mb-0 ms-2 btn-save" type="button" name="button" size="sm"
+                @click="deleteAccount">Xóa tài khoản</argon-button>
         </div>
     </div>
 </template>

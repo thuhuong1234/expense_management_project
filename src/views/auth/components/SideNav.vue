@@ -20,18 +20,6 @@
                 </a>
             </li>
             <li class="nav-item pt-2">
-                <a class="nav-link text-body d-flex align-items-center" data-scroll href="#notifications">
-                    <i class="ni ni-bell-55 me-2 text-dark opacity-6"></i>
-                    <span class="text-sm">Thông báo </span>
-                </a>
-            </li>
-            <li class="nav-item pt-2">
-                <a class="nav-link text-body d-flex align-items-center" data-scroll href="#sessions">
-                    <i class="ni ni-watch-time me-2 text-dark opacity-6"></i>
-                    <span class="text-sm">Phần </span>
-                </a>
-            </li>
-            <li class="nav-item pt-2">
                 <a class="nav-link text-body d-flex align-items-center" data-scroll href="#delete">
                     <i class="ni ni-settings-gear-65 me-2 text-dark opacity-6"></i>
                     <span class="text-sm">Xóa tài khoản</span>

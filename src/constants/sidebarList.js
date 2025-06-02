@@ -33,15 +33,6 @@ export const sidebarDashboardList = [
       },
     ],
   },
-  {
-    navText: "Thông báo",
-    collapseRef: "notificationExamples",
-    icon: "ni ni-bell-55",
-    items: [
-      { to: { name: "Trang chủ" }, text: "Chi tiêu", miniIcon: "L" },
-      { to: { name: "Trang chủ" }, text: "Thu nhập ", miniIcon: "D" },
-    ],
-  },
 ];
 export const sidebarAdminList = [
   {
@@ -62,7 +53,6 @@ export const sidebarAdminList = [
       { to: { name: "Danh mục" }, text: "Danh mục", miniIcon: "" },
       { to: { name: "Phòng" }, text: "Phòng", miniIcon: "" },
       { to: { name: "" }, text: "Ghi chú", miniIcon: "" },
-      { to: { name: "" }, text: "Thông báo", miniIcon: "" },
     ],
   },
 ];
