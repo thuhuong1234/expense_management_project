@@ -53,6 +53,12 @@ const router = createRouter({
         import("@/views/applications/transaction/NewTransaction.vue"),
     },
     {
+      path: "/pages/transaction/personal/create",
+      name: "Tạo mới",
+      component: () =>
+        import("@/views/applications/transaction/PersonalTransaction.vue"),
+    },
+    {
       path: "/pages/transaction/update",
       name: "Chỉnh sửa ghi chú",
       component: () =>

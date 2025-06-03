@@ -124,7 +124,7 @@ onMounted(async () => {
                 <div class="col-lg-3 col-md-6 col-12">
                     <mini-statistics-card title="Tổng số tiền" :value="balance" unit='VND' description="<span
                 class='text-sm font-weight-bolder text-success'
-                >+55%</span> since yesterday" :icon="{
+                >+55%</span> ngày qua" :icon="{
                     component: 'ni ni-money-coins',
                     background: 'bg-gradient-primary',
                     shape: 'rounded-circle',
@@ -133,7 +133,7 @@ onMounted(async () => {
                 <div class="col-lg-3 col-md-6 col-12">
                     <mini-statistics-card title="Người dùng" :value="users.length" unit='Người' description="<span
                 class='text-sm font-weight-bolder text-success'
-                >+3%</span> since last week" :icon="{
+                >+3%</span> tuần qua" :icon="{
                     component: 'ni ni-fat-add',
                     background: 'bg-gradient-danger',
                     shape: 'rounded-circle',
@@ -142,7 +142,7 @@ onMounted(async () => {
                 <div class="col-lg-3 col-md-6 col-12">
                     <mini-statistics-card title="Chi tiêu" :value="totalExpense" unit='VND' description="<span
                 class='text-sm font-weight-bolder text-danger'
-                >-2%</span> since last quarter" :icon="{
+                >-2%</span> quý trước" :icon="{
                     component: 'ni ni-cart',
                     background: 'bg-gradient-success',
                     shape: 'rounded-circle',
@@ -151,7 +151,7 @@ onMounted(async () => {
                 <div class="col-lg-3 col-md-6 col-12">
                     <mini-statistics-card title="Thu nhập" :value="totalIncome" unit='VND' description="<span
                 class='text-sm font-weight-bolder text-success'
-                >+5%</span> than last month" :icon="{
+                >+5%</span> tháng trước" :icon="{
                     component: 'ni ni-paper-diploma',
                     background: 'bg-gradient-warning',
                     shape: 'rounded-circle',

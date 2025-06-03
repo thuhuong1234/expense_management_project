@@ -63,7 +63,9 @@ const onSubmit = handleSubmit(async (values) => {
         categoryId: categoryId.value,
         userTransactions: selectedUsers.value,
     }
+
     await create('transactions', data);
+
     resetForm();
     showToast('Tạo giao dịch thành công', 'success');
 })

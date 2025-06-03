@@ -96,10 +96,10 @@ const { handleSubmit } = useForm({
 
 const onSubmit = handleSubmit(async (values) => {
     try {
-        const response = await axios.post('users', values);
+        const response = await axios.post('auth/register', values);
         if (response?.data) {
             await showToast("Đăng ký thành công!", "success");
-            return router.push({ name: 'dashboard' });
+            return router.push({ name: 'Đăng nhập' });
         }
     } catch (error) {
         errorMessage.value = error.response?.data.message || error.message;

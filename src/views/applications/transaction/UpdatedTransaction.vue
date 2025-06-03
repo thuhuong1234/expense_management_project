@@ -81,7 +81,6 @@ const onSubmit = handleSubmit(async (values) => {
             userTransactions: userTransactionsUpdate.value
         }
         const res = await update(`transactions/${transactionId.value}`, data);
-        console.log(res.data);
         if (!res.data) return
         showToast('Chỉnh sửa ghi chú thành công.', 'success');
         getTransaction(transactionId.value);

@@ -27,8 +27,8 @@ export const sidebarDashboardList = [
     icon: "ni ni-building",
     items: [
       {
-        to: { name: "Ghi chú mới" },
-        text: "Ghi chú mới",
+        to: { name: "Tạo mới" },
+        text: "Tạo mới",
         miniIcon: "",
       },
     ],

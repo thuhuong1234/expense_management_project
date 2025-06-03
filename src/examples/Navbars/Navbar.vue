@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, onBeforeUpdate, onMounted } from "vue";
 import { useUiStore } from "@/stores/uiStore";
-import { useRoute } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 import Breadcrumbs from "@/examples/Breadcrumbs.vue";
 import { useAuthStore } from "@/stores/authStore";
 import Avatar from "primevue/avatar";
@@ -16,6 +16,7 @@ const darkMode = computed(() => store.darkMode);
 const navbarMinimize = () => store.navbarMinimize();
 const route = useRoute();
 const user = ref({});
+const router = useRouter();
 
 const currentRouteName = computed(() => {
     return route.name;
@@ -45,7 +46,9 @@ const getAvatarUrl = (avatar) => {
     }
     return `${url}${avatar}`
 }
-
+const showProfile = () => {
+    router.push({name: 'Tài khoản'});
+}
 onBeforeUpdate(() => {
     toggleNavigationOnMobile();
 });
@@ -86,13 +89,10 @@ onMounted(async () => {
                 </div>
                 <ul class="navbar-nav justify-content-end">
                     <li class="nav-item d-flex align-items-center">
-                        <router-link :to="{ name: 'Tài khoản' }" class="px-0 nav-link font-weight-bold" :class="isNavFixed && !darkMode ? ' opacity-8 text-dark' : 'text-dark'
-                            " target="_blank">
-                            <div class="col-sm-auto col-4 ">
+                            <div class="col-sm-auto col-4 " @click.stop="showProfile">
                                 <Avatar :image="getAvatarUrl(user.avatar)" shape="circle"
                                     class="flex items-center justify-center mr-2 img-avatar" size="sm" />
                             </div>
-                        </router-link>
                     </li>
                     <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
                         <a id="iconNavbarSidenav" href="#" class="p-0 nav-link text-white"

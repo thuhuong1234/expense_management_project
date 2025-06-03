@@ -24,6 +24,7 @@ onBeforeUnmount(() => {
     store.layout = "default";
     store.showNavbar = true;
     store.showFooter = true;
+    store.showSidenav = true;
     store.hideConfigButton = false;
     body.classList.remove("landing");
     if (store.isPinned === false) {

@@ -53,14 +53,14 @@ const emits = defineEmits(['save', 'cancel'])
                 </div>
             </div>
             <hr class="my-0 dark" />
-            <div class="d-flex align-items-center" v-if="!roomId">
+            <!-- <div class="d-flex align-items-center" v-if="!roomId">
                 <label for="roomId" class="w-20 form-label text-sm">Phòng</label>
                 <select :v-model="roomId" class="input-group w-80 text-sm form-select"
                     aria-label="Default select example">
                     <option value="" selected>-- Chọn phòng --</option>
                     <option v-for="({ id, name }, index) of roomsOfUser" :key="id" :value="id"> {{ name }} </option>
                 </select>
-            </div>
+            </div> -->
             <div class="p-2">
                 <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">

@@ -31,7 +31,7 @@ const roomList = ref([]);
 const roomsData = ref([]);
 const user = ref([]);
 const transactions = ref([]);
-const { getAll, getById } = useCRUD();
+const { getAll, getById, deleteById } = useCRUD();
 const authStore = useAuthStore();
 const userStore = useUserStore();
 const uiStore = useUiStore();
@@ -106,7 +106,10 @@ const getTotal = async () => {
   const res = await axios.get(`users/count-by-user`);
   totalExpense.value = res.data.totalExpense;
   totalIncome.value = res.data.totalIncome;
-  personalFund.value = totalIncome.value - totalExpense.value;
+  const response = await getById(`users`, user.value.id);
+  const funds = response.data.fund;
+  const balance = funds.find(f => f.roomId === null);
+  personalFund.value = Number(balance?.balance) + totalIncome.value - totalExpense.value;
 }
 const addUsers = async (roomId) => {
   router.push({
@@ -118,8 +121,9 @@ const goToDetail = (roomId) => {
   router.push(`/pages/room/detail/${roomId}`);
 };
 const progress = ref(0);
+const selectedRange = ref("day");
 const getStatistic = async () => {
-  const response = await axios.get(`transactions/statistics?type=week&roomId=12`);
+  const response = await axios.get(`transactions/statistics?type=week`);
   progress.value = Number(response.data?.totalExpense) / (Number(response.data?.totalExpense) + Number(response.data?.totalIncome)) * 100;
   return response.data;
 }
@@ -131,6 +135,7 @@ const handleDropdownAction = async (action, room) => {
     if (confirm) {
       try {
         const response = await deleteById('rooms', room.id);
+
         if (response?.data) {
           showToast('Xoá phòng thành công', 'success');
           await getList();
@@ -163,6 +168,7 @@ const handleDropdownAction = async (action, room) => {
     }
   }
 }
+
 onMounted(async () => {
   await getList();
   user.value = await authStore.getUser();
@@ -220,17 +226,6 @@ onMounted(async () => {
                 <div class="chart-header-title">
                   <span class="title font-weight-bold text-md text-dark">THỐNG KÊ CHI TIÊU</span>
                 </div>
-
-                <div class="chart-header-filters">
-                  <button class="border-1" :class="{ active: selectedRange === '1D' }"
-                    @click="setRange('1D')">Ngày</button>
-                  <button class="border-1" :class="{ active: selectedRange === '1W' }"
-                    @click="setRange('1W')">Tuần</button>
-                  <button class="border-1" :class="{ active: selectedRange === '1M' }"
-                    @click="setRange('1M')">Tháng</button>
-                  <button class="border-1" :class="{ active: selectedRange === '1Y' }"
-                    @click="setRange('1Y')">Năm</button>
-                </div>
               </div>
               <progress-line-chart v-if="chartData" :height="280" id="my-chart" title="Thống kê theo tuần" count=""
                 :progress="progress.toFixed(2)" :chart="chartData" :on-submit="onSubmit" />
@@ -249,9 +244,9 @@ onMounted(async () => {
                 },
                 {
                   img: image1,
-                  title: 'Faster way to create web pages',
+                  title: 'Quản lý chi tiêu.',
                   description:
-                    'That’s my skill. I’m not really specifically talented at anything except for the ability to learn.',
+                    'Chi tiêu có kế hoạch là bí quyết giúp bạn kiểm soát tài chính cá nhân.',
                   icon: {
                     component: 'ni ni-bulb-61 text-dark',
                     background: 'bg-white',
@@ -259,9 +254,9 @@ onMounted(async () => {
                 },
                 {
                   img: image3,
-                  title: 'Share with us your design tips!',
+                  title: 'Quản lý chi tiêu.',
                   description:
-                    'Don’t be afraid to be wrong because you can’t learn anything from a compliment.',
+                    'Chi tiêu có kế hoạch là bí quyết giúp bạn kiểm soát tài chính cá nhân.',
                   icon: {
                     component: 'ni ni-trophy text-dark',
                     background: 'bg-white',
