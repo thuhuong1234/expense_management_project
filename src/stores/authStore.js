@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "@/configs/axios.js";
+import Cookies from "js-cookie";
+
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     isLoggedIn: false,
@@ -14,20 +16,31 @@ export const useAuthStore = defineStore("auth", {
     login(userData, token) {
       this.isLoggedIn = true;
       this.user = userData;
-      this.token = token;
-      localStorage.setItem("access_token", token);
+      this.token = token || null;
+
+      const expirationDate = new Date();
+      expirationDate.setDate(
+        expirationDate.getDate() +
+          Number(import.meta.env.VITE_COOKIE_EXPIRATION)
+      );
+
+      Cookies.set("access_token", token, {
+        secure: true,
+        sameSite: "Strict",
+        expires: expirationDate,
+      });
     },
     logout() {
       this.isLoggedIn = false;
       this.user = null;
       this.token = null;
-      localStorage.removeItem("access_token");
+      Cookies.remove("access_token");
     },
     checkAuth() {
-      const storedToken = localStorage.getItem("access_token");
-      if (storedToken) {
+      const token = Cookies.get("access_token");
+      if (token) {
         this.isLoggedIn = true;
-        this.token = storedToken;
+        this.token = token;
       }
     },
     async getUser() {
